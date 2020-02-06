@@ -1,0 +1,237 @@
+﻿
+@{
+    ViewBag.Title = "CuotasLenguas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>CuotasLenguas</h2>
+
+<div id="CuotasLenguas" ng-app="LenguasWeb" ng-controller="CuotasLenguasController as ctrl" ng-init="ctrl.Inicio()">
+    <div class="form-inline">
+        <div class=".col-sm-12">
+            <div id="precarga" class="hidden"><input type="image" class="center" src="~/Images/loader.gif" /></div>
+        </div>
+        <div id="divError" class="alert alert-danger hidden" role="alert">
+            {{ctrl.mensaje_gral}}
+        </div>
+        <div class="row">
+            <div class="col-sm-1">
+                <p>Escuela</p>
+            </div>
+            <div class="col-sm-5">
+                <div>
+                    <select class="form-control" style="width:100%" name="cmbEscuela" id="cmbDependencia" ng-change="ctrl.ObtCuotasLeng()" ng-options="option.Id as option.Descripcion for option in ctrl.dependencias" ng-model="ctrl.cve_escuela"></select>
+                </div>
+            </div>
+
+            <div class="col-sm-1">
+                <p>Tipo</p>
+            </div>
+            <div class="col-sm-5">
+                <div>
+                    <select class="form-control" id="cmbStatus" ng-model="ctrl.cve_tipo" ng-change="ctrl.ObtCuotasLeng()">
+                        <option value="T">--Todos--</option>
+                        <option value="5">SABATINO</option>
+                        <option value="6">VERANO</option>
+                        <option value="7">INVIERNO</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <table id="tablaDatos" class="table table-hover">
+            <thead class="thead-dark font-weight-bold">
+                <tr>
+                    <td>ESCUELA</td>
+                    <td>STATUS</td>
+                    <td>NIVEL</td>
+                    <td>INGLES</td>
+                    <td>ITALIANO</td>
+                    <td>FRANCES</td>
+                    <td>ALEMAN</td>
+                    <td>CHINO</td>
+                    <td>TZOTZIL</td>
+                    <td>TZENTAL</td>
+                    <td>ESPAÑOL</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" ng-click="ctrl.AgregarCuotaLenguas()" style="width:100%;" id="bttnTipo" data-toggle="modal" data-target="#Editar">Nuevo</button>
+                    </td>
+                </tr>
+            </thead>
+            <tbody ng-repeat="cts in ctrl.cuotas_sabatinos">
+                <tr>
+                    <td>{{cts.Escuela}}</td>
+                    <td>{{cts.Status}}</td>
+                    <td>{{cts.Nivel}}</td>
+                    <td>{{cts.Ingles | currency}}</td>
+                    <td>{{cts.Italiano | currency}}</td>
+                    <td>{{cts.Frances | currency}}</td>
+                    <td>{{cts.Aleman | currency}}</td>
+                    <td>{{cts.Chino | currency}}</td>
+                    <td>{{cts.Tzotzil | currency}}</td>
+                    <td>{{cts.Tzental | currency}}</td>
+                    <td>{{cts.Espaniol | currency}}</td>
+
+
+                    <td style="text-align:center">
+                        <button type="button" class="btn" style="width:50px" ng-click="ctrl.IrCuotaLenguas(cts.Id)" data-toggle="modal" data-target="#Editar">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-danger" data-toggle="confirmation" data-title="¿Estás seguro de borrar el registro?" ng-click="ctrl.BorrarCuota(cts.Id)" style="width:50px">
+                            <i class="fa fa-eraser" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Modal Editar-->
+    <div class="modal fade" id="Editar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">{{ctrl.NombreModal}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="Formulario">
+                        <form name="FormsCuotas" novalidate>
+                            <input type="hidden" name="hddnId" id="hddnId" ng-model="ctrl.cve_id">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p style="font-weight:bold">Escuela</p>
+                                </div>
+                                <div class="col-sm-12">
+                                    <p style="font-weight:bold">{{ctrl.cve_desc_escuela}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p style="font-weight:bold">Tipo</p>
+                                </div>
+                                <div class="col-sm-12">
+                                    <p style="font-weight:bold">{{ctrl.cve_desc_tipo}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p>Nivel</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" name="txtNivel" type="text" ng-model="ctrl.cve_nivel" required />
+                                    <span style="color:red" ng-show="FormsCuotas.txtNivel.$invalid" />
+                                    <span ng-show="FormsCuotas.txtNivel.$error.required">*Requerido</span>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p>Status</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="radio-inline"><input type="radio" value="A" name="optStatus" ng-model="ctrl.cve_status">Alta</label>
+                                    <label class="radio-inline"><input type="radio" value="B" name="optStatus" ng-model="ctrl.cve_status">Baja</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p>Ingles</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" name="txtIngles" type="text" ng-model="ctrl.cve_importe_ingles" required />
+                                    <span style="color:red" ng-show="FormsCuotas.txtIngles.$invalid" />
+                                    <span ng-show="FormsCuotas.txtIngles.$error.required">*Requerido</span>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <p>Italiano</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" name="txtItaliano" type="text" ng-model="ctrl.cve_importe_italiano" required />
+                                    <span style="color:red" ng-show="FormsCuotas.txtItaliano.$invalid" />
+                                    <span ng-show="FormsCuotas.txtItaliano.$error.required">*Requerido</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p>Frances</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" name="txtFrances" type="text" ng-model="ctrl.cve_importe_frances" required />
+                                    <span style="color:red" ng-show="FormsCuotas.txtFrances.$invalid" />
+                                    <span ng-show="FormsCuotas.txtFrances.$error.required">*Requerido</span>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <p>Aleman</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" name="txtAleman" type="text" ng-model="ctrl.cve_importe_aleman" required />
+                                    <span style="color:red" ng-show="FormsCuotas.txtAleman.$invalid" />
+                                    <span ng-show="FormsCuotas.txtAleman.$error.required">*Requerido</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p>Chino</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" name="txtChino" type="text" ng-model="ctrl.cve_importe_chino" required />
+                                    <span style="color:red" ng-show="FormsCuotas.txtChino.$invalid" />
+                                    <span ng-show="FormsCuotas.txtChino.$error.required">*Requerido</span>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <p>Tzotzil</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" name="txtTzotzil" type="text" ng-model="ctrl.cve_importe_tzotzil" required />
+                                    <span style="color:red" ng-show="FormsCuotas.txtTzotzil.$invalid" />
+                                    <span ng-show="FormsCuotas.txtTzotzil.$error.required">*Requerido</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p>Tzental</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" name="txtTzental" type="text" ng-model="ctrl.cve_importe_tzental" required />
+                                    <span style="color:red" ng-show="FormsCuotas.txtTzental.$invalid" />
+                                    <span ng-show="FormsCuotas.txtTzental.$error.required">*Requerido</span>
+
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <p>Español</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" name="txtEspaniol" type="text" ng-model="ctrl.cve_importe_espaniol" required />
+                                    <span style="color:red" ng-show="FormsCuotas.txtEspaniol.$invalid" />
+                                    <span ng-show="FormsCuotas.txtEspaniol.$error.required">*Requerido</span>
+
+                                </div>
+                            </div>
+                            <br />
+                            <div style="text-align:center">
+                                <button type="button" id="bttnNuevo" class="btn btn-success" ng-click="ctrl.NuevoCuotaLenguas()" data-dismiss="modal" ng-disabled="FormsCuotas.txtNivel.$invalid||FormsCuotas.txtIngles.$invalid||FormsCuotas.txtItaliano.$invalid||FormsCuotas.txtFrances.$invalid||FormsCuotas.txtAleman.$invalid||FormsCuotas.txtChino.$invalid||FormsCuotas.txtTzotzil.$invalid||FormsCuotas.txtTzental.$invalid||FormsCuotas.txtEspaniol.$invalid">Guardar</button>
+                                <button type="button" id="bttnModificar" class="btn btn-primary" ng-click="ctrl.ModificarCuotaLenguas()" data-dismiss="modal" ng-disabled="FormsCuotas.txtNivel.$invalid||FormsCuotas.txtIngles.$invalid||FormsCuotas.txtItaliano.$invalid||FormsCuotas.txtFrances.$invalid||FormsCuotas.txtAleman.$invalid||FormsCuotas.txtChino.$invalid||FormsCuotas.txtTzotzil.$invalid||FormsCuotas.txtTzental.$invalid||FormsCuotas.txtEspaniol.$invalid">Modificar</button>
+                                <button type="button" id="btnGuardarC" class="btn btn-warning" data-dismiss="modal">Salir</button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/global.js"></script>
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular.ng-modules.js"></script>
+<script src="~/Scripts/funcionSubirArchivo.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script src="~/Scripts/Controllers/CuotasLenguasController.js"></script>
+<script src="~/Scripts/Models/CuotasLenguasModel.js"></script>
+@*https://sysweb.unach.mx/INGRESOS_MVC/Home/Index?WXI=1310411610111511510510803&Formulario=CuotasLeng*@

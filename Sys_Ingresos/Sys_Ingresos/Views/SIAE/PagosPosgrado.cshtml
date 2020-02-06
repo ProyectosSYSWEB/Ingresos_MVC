@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "PagosPosgrado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="PagosPosgrado" ng-app="PosgradoWeb" ng-controller="PagosController as ctrl" ng-init="ctrl.InicioCuotas()">
+    <div id="Formulario">
+        <form name="myForm" novalidate>
+
+            <div id="precarga" class="hidden"><input type="image" class="center" src="~/Images/loader.gif" /></div>
+            <div class="col-sm-1">
+                <label for="lblEscuela">Escuela:</label>
+            </div>
+            <div class="col-sm-4">
+                <select class="form-control select2" name="cmbEscuela" id="cmbIEscuela" ng-options="option.Id as option.Descripcion for option in ctrl.dependencias" ng-model="ctrl.cve_dependencia"></select>
+            </div>
+            <div class="col-sm-1">
+                <label for="lblMatricula">Matricula:</label>
+            </div>
+
+            <div class="col-sm-4">
+                <input type="text" name="txtMatricula" class="form-control" ng-model="ctrl.cve_matricula" required>
+                <div>
+                    <span style="color:red" ng-show="myForm.txtMatricula.$invalid">
+                        <span ng-show="myForm.txtMatricula.$error.required">*Requerido</span>
+                    </span>
+
+
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <button type="button" id="btnBuscar" class="btn btn-primary" ng-click="ctrl.BuscarPagos()" data-dismiss="modal">Ver Pagos</button>
+            </div>
+            <br />
+            <br />
+            <br />
+
+            <table style="width:80%" class="table table-striped">
+                <thead>
+                    <tr>
+                        <td>SEMESTRE</td>
+                        <td>CONCEPTO</td>
+                        <td># DE PAGO</td>
+                        <td align="right">IMPORTE</td>
+                        <td>REFERENCIA</td>
+                        <td>FECHA DE PAGO</td>
+                        <td align="center"><button type="button" class="btn btn-secondary" ng-click="ctrl.PdfPagosPosgrado()"><i class="glyphicon glyphicon-print" aria-hidden="true"></i> Concentrado de Pagos</button></td>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="p in ctrl.pagos_Posgrado">
+
+                    <tr>
+                        <td>{{p.Semestre}}</td>
+                        <td>{{p.Concepto}}</td>
+                        <td align="center">{{p.NoPago}}</td>
+                        <td align="right">{{p.Importe | currency }}</td>
+                        <td>{{p.Referencia}}</td>
+                        <td align="center">{{p.FechaPago}}</td>
+                        <td class=".col-7 .col-sm-4" align="center">
+                            <button type="button" class="btn btn-secondary" ng-click="ctrl.PdfReciboOficial(p.Referencia)">Ver Recibo</button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <div class="alert alert-primary" role="alert">
+                {{ctrl.msjGrid}}
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/global.js"></script>
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular.ng-modules.js"></script>
+<script src="~/Scripts/Models/CuotasPosgradoModel.js"></script>
+<script src="~/Scripts/Models/PagosPosgradoModel.js"></script>
+<script src="~/Scripts/Controllers/PagosPosgradoController.js"></script>
+<script type="text/javascript">
+    $("#cmbIEscuela").select2();
+</script>

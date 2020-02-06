@@ -1,0 +1,397 @@
+﻿
+@{
+    ViewBag.Title = "CuotasPosgrado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="CuotasPosgrado" ng-app="PosgradoWeb" ng-controller="CuotasController as ctrl" ng-init="ctrl.InicioCuotas()">
+    <br />
+    <br />
+
+    <div class="form-inline">
+        <div class=".col-sm-12">
+            <div id="precarga" class="show"><input type="image" class="center" src="~/Images/loader.gif" /></div>
+        </div>
+        <div id="divError" class="alert alert-danger hidden" role="alert">
+            {{ctrl.mensaje_gral}}
+        </div>
+        <div class="col-sm-1">
+            <p>Escuela</p>
+        </div>
+        <div class="col-sm-4">
+            <div>
+                <select class="form-control select2" style="width:100%" name="cmbEscuela" id="cmbIEscuela" ng-change="ctrl.ObtenerCarreras()" ng-options="option.Id as option.Descripcion for option in ctrl.dependencias" ng-model="ctrl.cve_dependencia"></select>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <p>Carrera</p>
+        </div>
+        <div class="col-sm-4">
+            <div>
+                <select class="form-control select2" name="cmbCarrera" style="width:100%" id="cmbCarrera" ng-change="ctrl.ObtenerCuotas()" ng-options="option.Id as option.Descripcion for option in ctrl.carreras" ng-model="ctrl.cve_carrera"></select>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div id="TablaDatos">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td class=".col-7 .col-sm-4"><strong>GENERACIÓN</strong></td>
+                    <td class=".col-7 .col-sm-4">
+                        <div>
+                            <button type="button" id="bttnNewGen" class="btn btn-primary {{ctrl.TipoUsuario}}" data-toggle="modal" data-target="#Agregar" ng-click="ctrl.AgregarCuota(0)">Nueva Generación</button>
+                        </div>
+                    </td>
+                    <td><button type="button" class="btn btn-dark" ng-click="ctrl.PdfReportGral(ctrl.cve_carrera, ctrl.cve_dependencia)">Generar Reporte</button></td>
+                    <td></td>
+                    @*<td class=".col-7 .col-sm-4" align="center"><strong>VISTO BUENO</strong></td>
+                        <td class=".col-7 .col-sm-4" align="center"><strong>AUTORIZADO</strong></td>*@
+
+                </tr>
+
+            </thead>
+            <tbody ng-repeat="generacion in ctrl.cuotas_Posgrado">
+                <tr>
+                    <td class=".col-7 .col-sm-4 text-primary">{{generacion.CicloDesc}}</td>
+                    <td class=".col-7 .col-sm-4"><button type="button" class="btn btn-primary {{generacion.ClaseTipoUsu}}" data-toggle="modal" data-target="#Agregar" ng-click="ctrl.AgregarCuota(generacion.Ciclo)">Agregar</button></td>
+                    <td class=".col-7 .col-sm-4">
+                        <button id="1{{generacion.Ciclo}}" type="button" class="btn btn-dark" ng-click="ctrl.VerDetalle(generacion.Ciclo)">Mostrar Detalle</button>
+                        <button id="2{{generacion.Ciclo}}" type="button" class="btn btn-dark hidden" ng-click="ctrl.OcultarDetalle(generacion.Ciclo)">Ocultar Detalle</button>
+                    </td>
+                    <td class=".col-7 .col-sm-4">
+                        <button id="bttnOficio" type="button" class="btn btn-dark {{generacion.ClaseTipoUsu}}" data-toggle="modal" ng-click="ctrl.ObtOficio(ctrl.cve_carrera, ctrl.cve_dependencia, generacion.Ciclo)" data-target="#Adjuntar">Oficio</button>
+                        <button id="bttnVerOficio" type="button" class="btn btn-info {{generacion.NClaseTipoUsu}}" ng-click="ctrl.VerOficio(generacion.RutaAdj)">Ver Oficio</button>
+                        <input type="hidden" name="hddnGeneracion" id="hddnGeneracion">
+                    </td>
+                    @*<td align="center">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        </td>
+                        <td align="center">
+                            <input type="checkbox" class="form-check-input" id="chkAutorizado">
+                        </td>*@
+
+                </tr>
+
+                <tr>
+                    <td colspan="7" align="center">
+                        <div id="{{generacion.Ciclo}}" class="hidden">
+                            <table style="width:80%" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <td>TIPO</td>
+                                        <td>SEMESTRE</td>
+                                        <td># DE PAGO</td>
+                                        <td>CONCEPTO</td>
+                                        <td align="right">IMPORTE</td>
+                                        <td align="right">RECARGO %</td>
+                                        <td>FECHA LIMITE</td>
+                                        <td># PQ</td>
+                                        <td align="center"><button type="button" class="btn btn-primary" ng-click="ctrl.PdfReport(ctrl.cve_carrera, ctrl.cve_dependencia, generacion.Ciclo)">Reporte</button></td>
+                                        <td align="center"><button type="button" class="btn btn-danger {{generacion.ClaseTipoUsu}}" ng-click="ctrl.CicloSelec(generacion.Ciclo)" data-toggle="modal" data-target="#Borrar">Borrar</button></td>
+                                    </tr>
+                                </thead>
+                                <tbody ng-repeat="i in generacion.DatosCiclo track by $index">
+                                    <tr>
+                                        <td>{{i.TIPO_PROGRAMA}}</td>
+                                        <td>{{i.SEMESTRE}}</td>
+                                        <td>{{i.NO_PAGO}}</td>
+                                        <td>{{i.CONCEPTO_DESCRIPCION}}</td>
+                                        <td align="right">{{i.CUOTA | currency}}</td>
+                                        <td align="right">{{i.VALOR}}</td>
+                                        <td>{{i.FECHA_LIMITE}}</td>
+                                        <td>{{i.NO_PAQUETE}}</td>
+                                        <td align="center" class=".col-7 .col-sm-4"><button type="button" class="btn btn-secondary {{i.ClaseTipoUsu}}" ng-click="ctrl.ObtDatos(i.ID, $index)" data-toggle="modal" data-target="#Agregar">Editar</button></td>
+                                        <td align="center" class=".col-7 .col-sm-4">
+                                            <input type="checkbox" class="{{generacion.ClaseTipoUsu}}" ng-change="ctrl.CuotaSel(i.ID, generacion.Ciclo)" ng-true-value="1" ng-false-value="0" ng-model="ctrl.cuotaselec[i.ID]" >
+                                        </td>
+
+                                        @*<td class=".col-7 .col-sm-4"><button type="button" class="btn btn-danger {{i.ClaseTipoUsu}}" ng-click="ctrl.ModalEliminar(i.ID)" data-toggle="modal" data-target="#Borrar">Eliminar</button></td>*@
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="Agregar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Agregar/Editar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="Formulario">
+                        <form name="myForm" novalidate>
+                            <div class="alert alert-info" role="alert">
+                                <label for="lblTipo">¿El cobro de este programa sera por?:</label>
+                                @*<select class="form-control" name="cmbTipo" ng-model="ctrl.cve_tipoProg" required>
+            <option value="S">--Seleccionar--</option>
+            <option value="M">Materia</option>
+            <option value="C">Colegiatura</option>
+        </select>*@
+                                <label class="radio-inline">
+                                    <input type="radio" value="M" name="optTipo" id="optTipo" ng-model="ctrl.cve_tipoProg" required>Materia
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="C" name="optTipo" id="optTipo" ng-model="ctrl.cve_tipoProg" required>Colegiatura
+                                </label>
+                                <span style="color:red" ng-show="myForm.optTipo.$invalid">
+                                    <span ng-show="myForm.optTipo.$error.required">*Requerido</span>
+                                </span>
+                            </div>
+                            
+                            
+                            <div style="overflow-y:scroll; height:400px;">
+                                <input type="hidden" ng-model="ctrl.valor_id" />
+                                <input type="hidden" ng-model="ctrl.indice" />
+                                <label for="lblCiclo">Generación: {{ctrl.valor_ciclo}}</label>
+                                <div ng-init="ctrl.ObtenerCiclos()">
+                                    <select class="form-control" name="cmbCicloN" id="cmbCiclo" ng-options="option.Id as option.Descripcion group by option.Grupo for option in ctrl.ciclos" ng-model="ctrl.cve_ciclo" required></select>
+                                </div>
+                                <div>
+                                    <span style="color:red" ng-show="myForm.cmbCicloN.$invalid">
+                                        <span ng-show="myForm.cmbCicloN.$error.required">*Requerido</span>
+                                    </span>
+                                </div>
+                                <label for="lblNivel">Nivel:</label>
+                                <select class="form-control" name="cmbNivel" ng-model="ctrl.cve_nivel" ng-change="ctrl.ObtenerConceptosNew()" required>
+                                    <option value="M">Maestria</option>
+                                    <option value="D">Doctorado</option>
+                                    <option value="E">Especialidad</option>
+                                </select>
+                                <div>
+                                    <span style="color:red" ng-show="myForm.cmbNivel.$invalid">
+                                        <span ng-show="myForm.cmbNivel.$error.required">*Requerido</span>
+                                    </span>
+
+                                </div>
+                                <label for="lblSemestre">Semestre:</label>
+                                <input class="form-control" name="txtSemestre" type="text" ng-model="ctrl.cve_semestre" ng-maxlength="50" required />
+                                <div>
+                                    <span style="color:red" ng-show="myForm.txtSemestre.$invalid">
+                                        <span ng-show="myForm.txtSemestre.$error.required">*Requerido</span>
+                                    </span>
+
+                                </div>
+
+                                <label for="lblNumPago"># de Pago:</label>
+                                <input class="form-control" name="txtNumPago" type="text" ng-model="ctrl.cve_numPago" ng-maxlength="50" required />
+                                <div>
+                                    <span style="color:red" ng-show="myForm.txtNumPago.$invalid">
+                                        <span ng-show="myForm.txtNumPago.$error.required">*Requerido</span>
+                                    </span>
+
+                                </div>
+                                <label for="sel1">Concepto:</label>
+                                <select class="form-control" id="cmbConcepto" name="cmbConcepto" ng-options="option.Id as option.Descripcion for option in ctrl.conceptos" ng-model="ctrl.cve_concepto" required></select>
+                                <div>
+                                    <span style="color:red" ng-show="myForm.cmbConcepto.$invalid">
+                                        <span ng-show="myForm.cmbConcepto.$error.required">*Requerido</span>
+                                    </span>
+
+                                </div>
+                                <label for="lblImporte">Importe:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    <input type="text" name="txtImporte" class="form-control" ng-model="ctrl.valor_importe" required>
+                                </div>
+                                <div>
+                                    <span style="color:red" ng-show="myForm.txtImporte.$invalid">
+                                        <span ng-show="myForm.txtImporte.$error.required">*Requerido</span>
+                                    </span>
+                                </div>
+                                <label for="sel1">¿Aplica descuento por paquete?</label>
+                                <label class="checkbox-inline"><input type="checkbox" id="chkAplicaDescuento" value="S" data-toggle="collapse" data-target="#collapseDescuento" aria-expanded="false" aria-controls="collapseDescuento">Si</label>
+                                <div class="collapse" id="collapseDescuento">
+                                    <div class="card card-body">
+                                        <label for="lblImporteDesc">Importe con el Descuento:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">$</span>
+                                            <input type="text" name="txtImporteDesc" class="form-control" ng-model="ctrl.valor_importe_Paquete">
+                                        </div>
+                                        <label for="lblNumPaquete"># del Paquete:</label>
+                                        <input type="text" name="txtNumPaquete" class="form-control" ng-model="ctrl.valor_num_Paquete">
+
+                                    </div>
+                                </div>
+                                <br />
+                                <label for="sel1">¿Aplica recargo?</label>
+                                <label class="checkbox-inline"><input type="checkbox" id="chkAplicaRecargo" value="S" data-toggle="collapse" data-target="#collapseR" aria-expanded="false" aria-controls="collapseR">Si</label>
+                                <div class="collapse" id="collapseR">
+                                    <div class="card card-body">
+                                        <label for="lblPorcentaje">Porcentaje:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">%</span>
+                                            <input type="text" name="txtPorcentaje" class="form-control" ng-model="ctrl.cve_porcentaje">
+                                        </div>
+                                        <label for="lblFechaLimite">Fecha Limite:</label>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class='col-sm-6'>
+                                                    <div class="form-group">
+                                                        <div class='input-group date'>
+                                                            <input type="text" id="fecha" name="fechaN" ng-model="ctrl.cve_fecha_limite" />
+                                                            <span class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="alert alert-danger" role="alert">
+                                {{ctrl.mensaje}}
+                            </div>
+                            <button type="button" id="btnGuardarC" class="btn btn-primary" ng-click="ctrl.GuardarCuota()" ng-disabled="myForm.optTipo.$invalid||myForm.cmbCicloN.$invalid||myForm.cmbNivel.$invalid||myForm.txtSemestre.$invalid||myForm.txtNumPago.$invalid||myForm.cmbConcepto.$invalid||myForm.txtImporte.$invalid">Guardar y Continuar</button>
+                            <button type="button" id="btnGuardar" class="btn btn-success" ng-click="ctrl.GuardarCuota()" ng-disabled="myForm.optTipo.$invalid||myForm.cmbCicloN.$invalid||myForm.cmbNivel.$invalid||myForm.txtSemestre.$invalid||myForm.txtNumPago.$invalid||myForm.cmbConcepto.$invalid||myForm.txtImporte.$invalid" data-dismiss="modal">Guardar y Salir</button>
+                            <button type="button" id="btnModificar" class="btn btn-primary hidden" ng-click="ctrl.ModificarCuota()" data-dismiss="modal">Modificar</button>
+                            <button type="button" class="btn btn-warning" ng-click="ctrl.Cancelar()" data-dismiss="modal" aria-label="Close">Salir</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Borrar-->
+    <div class="modal fade" id="Borrar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Eliminar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="Formulario">
+                        <form name="FormsEliminarCuota" novalidate>
+                            <label for="lblTipo">¿Estas seguro de eliminar esta(s) cuota(s)?:</label>
+                            <br />
+                            <button type="button" class="btn btn-danger" ng-click="ctrl.EliminarCuotasSeleccionadas()" data-dismiss="modal">Si, borrar</button>
+                            <button type="button" id="btnGuardarC" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Adjuntar-->
+    <div class="modal fade" id="Adjuntar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Datos del Oficio</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="Formulario">
+                        <form name="FormsArchivos" novalidate>
+                            <br />
+                            <div id="precargaOficio" class="show"><input type="image" class="center" src="~/Images/loader.gif" /></div>
+                            <br />
+                            <label for="lblNumOficio"># de Oficio:</label>
+                            <input class="form-control" id="txtINumOficio" name="txtNumOficio" ng-model="ctrl.num_ofic" type="text" ng-maxlength="50" ng-required="true" />
+                            <span style="color:red" ng-show="FormsArchivos.txtNumOficio.$invalid">
+                                <span ng-show="FormsArchivos.txtNumOficio.$error.required">*Requerido</span>
+                            </span>
+                            <br />
+                            <label for="lblFechaOficio">Fecha del Oficio:</label>
+                            <input class="form-control" id="txtIFechaOficio" name="txtFechaOficio" type="text" ng-model="ctrl.fecha_ofic" ng-maxlength="50" ng-required="true" />
+                            <span style="color:red" ng-show="FormsArchivos.txtFechaOficio.$invalid">
+                                <span ng-show="FormsArchivos.txtFechaOficio.$error.required">*Requerido</span>
+                            </span>
+                            <br />
+                            <div>
+                                <input type="file" id="FileUpload1" multiple />
+                                <button id="btnUpload" class="btn btn-primary" ng-disabled="FormsArchivos.txtNumOficio.$invalid || FormsArchivos.txtFechaOficio.$invalid">Subir Oficio</button>
+                                <br />
+                                <div class="alert alert-info" role="alert">
+                                    <a id="linkOficio" href="{{ctrl.link_ofic}}" target="_blank">{{ctrl.nombre_ofic}}</a>
+                                </div>
+                            </div>
+
+
+                            <button type="button" id="btnCancelar" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="reporte">pass this to the new window</div>
+    <div class="modal fade" id="modalCargandoDatos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <i>Cargando Datos</i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/global.js"></script>
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular.ng-modules.js"></script>
+<script src="~/Scripts/funcionSubirArchivo.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+
+<script src="~/Scripts/Models/CuotasPosgradoModel.js"></script>
+<script src="~/Scripts/Controllers/CuotasPosgradoController.js"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        $.datepicker.regional['es'] = {
+            closeText: 'Cerrar',
+            prevText: '&#x3c;Ant',
+            nextText: 'Sig&#x3e;',
+            currentText: 'Hoy',
+            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+                'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi&eacute;rcoles', 'Jueves', 'Viernes', 'S&aacute;bado'],
+            dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mi&eacute;', 'Juv', 'Vie', 'S&aacute;b'],
+            dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'S&aacute;'],
+            weekHeader: 'Sm',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: '',
+            useCurrent: true
+
+        };
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+    });
+
+    //$('#fecha').datepicker();
+    //$('#txtIFechaOficio').datepicker();
+    $("#cmbIEscuela").select2();
+    $("#cmbCarrera").select2();
+
+</script>

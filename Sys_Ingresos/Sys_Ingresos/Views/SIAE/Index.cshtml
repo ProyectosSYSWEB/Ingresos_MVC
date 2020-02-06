@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Posgrado</h2>
+<form ng-app="PosgradoWeb" ng-controller="CuotasController as ctrl" ng-init="ctrl.Inicio()">
+    <div class="form-group">
+        <div class="centrado-porcentual">
+            <div class=".col-sm-12">
+                <div id="precarga" class="show"><input type="image" class="center" src="~/Images/loader.gif" /></div>
+            </div>
+            <div id="divError" class="alert alert-danger hidden" role="alert">
+                {{ctrl.mensaje_gral}}
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">CUOTAS DE POSGRADO</h5>
+                            <p class="card-text"><div style="color:#383d41">Son las cuotas de ficha, inscripción, reinscripción y colegiatura a los estudiantes de posgrado de la Universidad Autónoma de Chiapas.</div></p>
+                            <a href="#" class="btn btn-primary" ng-click="ctrl.VerCuotas()">Ver Cuotas</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">PAGOS DE POSGRADO</h5>
+                            <p class="card-text"><div style="color:#383d41">Son todos los pagos realizados por los alumnos.</div></p>
+                            <a href="#" class="btn btn-primary">Ver Pagos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/global.js"></script>
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular.ng-modules.js"></script>
+<script src="~/Scripts/Models/CuotasPosgradoModel.js"></script>
+<script src="~/Scripts/Controllers/CuotasPosgradoController.js"></script>

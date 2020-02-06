@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "CuotasPosgradoRegistro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>CuotasPosgradoRegistro</h2>
+
+<div ng-app="PosgradoWeb" ng-controller="CuotasController as ctrl">
+    <form>       
+        <div class="form-group">
+            <label for="lblSemestre">Nivel</label>
+            <select class="form-control" id="cboNivel" name="cboNivel" ng-model="cve_nivel">
+                <option value="M">MAESTRIA</option>
+                <option value="E">ESPECIALIDAD</option>
+                <option value="D">DOCTORADO</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="lblSemestre">Semestre</label>
+            <select class="form-control" id="cboNivel" name="cboNivel" ng-model="cve_semestre">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="lblTipo">Tipo</label>
+            <select class="form-control" id="cboTipo" ng-model="cve_tipo">
+                <option value="COLEGIATURA">COLEGIATURA</option>
+                <option value="MATERIA">MATERIA</option>
+                <option value="FICHA">FICHA</option>
+                <option value="INSCRIPCION">INSCRIPCION</option>
+                <option value="REINSCRIPCION">REINSCRIPCION</option>
+                <option>5</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Example textarea</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+    </form>
+</div>
