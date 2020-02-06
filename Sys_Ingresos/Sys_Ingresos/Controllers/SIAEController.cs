@@ -593,16 +593,22 @@ namespace Sys_Ingresos.Controllers
             }
         }
 
-        public JsonResult AgregarPagoSIAE(string Matricula, string Ciclo, string Semestre, string Tipo, string Referencia )
+        public JsonResult AgregarPagoSIAE(string Matricula, string Ciclo, string Semestre, string Tipo, string Referencia)
         {
             string Verificador = string.Empty;
             FEL_FACTURA objDatosSYSWEB = new FEL_FACTURA();
             RESULTADOFACTURA objResultado = new RESULTADOFACTURA();
+
+            if (Session["UsuarioIng"] != null)
+                SesionUsu = (SESION)System.Web.HttpContext.Current.Session["UsuarioIng"];
+
+
             objDatosSYSWEB.MATRICULA = Matricula;
             objDatosSYSWEB.CICLO = Ciclo;
             objDatosSYSWEB.SEMESTRE = Convert.ToInt32(Semestre);
             objDatosSYSWEB.TIPO = Tipo;
             objDatosSYSWEB.REFERENCIA = Referencia;
+            objDatosSYSWEB.USUARIO = SesionUsu.Usu_Nombre;
             try
             {
                 GuardarDataContext.AgregarPagoSIAE(objDatosSYSWEB, ref Verificador);

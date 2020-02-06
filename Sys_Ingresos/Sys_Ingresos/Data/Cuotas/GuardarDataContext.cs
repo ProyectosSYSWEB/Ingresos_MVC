@@ -273,8 +273,8 @@ namespace Sys_Ingresos.Data.Cuotas
             {
 
                 OracleDataReader dr = null;
-                string[] Parametros = { "P_MATRICULA", "P_CICLO", "P_SEMESTRE", "P_TIPO", "P_REFERENCIA" };
-                object[] Valores = { objDatosSYSWEB.MATRICULA, objDatosSYSWEB.CICLO, objDatosSYSWEB.SEMESTRE, objDatosSYSWEB.TIPO, objDatosSYSWEB.REFERENCIA };
+                string[] Parametros = { "P_MATRICULA", "P_CICLO", "P_SEMESTRE", "P_TIPO", "P_REFERENCIA", "P_USUARIO" };
+                object[] Valores = { objDatosSYSWEB.MATRICULA, objDatosSYSWEB.CICLO, objDatosSYSWEB.SEMESTRE, objDatosSYSWEB.TIPO, objDatosSYSWEB.REFERENCIA, objDatosSYSWEB.USUARIO };
                 string[] ParametrosOut = { "P_BANDERA" };
                 cmd = exeProc.GenerarOracleCommand("ins_pagos_sysweb_siae", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
 
@@ -290,6 +290,5 @@ namespace Sys_Ingresos.Data.Cuotas
             return list;
             //return registroAgregado;
         }
-
     }
 }
