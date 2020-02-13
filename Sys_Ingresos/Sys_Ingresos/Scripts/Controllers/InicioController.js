@@ -26,6 +26,8 @@
                             var Formulario = "SIAE/CuotasLenguas";
                         else if (inicioContext.datosUsuIng[0].Formulario == "PagosSYSWEB")
                             var Formulario = "SIAE/PagosSYSWEB_a_SIAE";
+                        else if (inicioContext.datosUsuIng[0].Formulario == "ReferenciasSYS")
+                            var Formulario = "SIAE/Referencias";
                         else
                             var Formulario = "Home/Index";
 

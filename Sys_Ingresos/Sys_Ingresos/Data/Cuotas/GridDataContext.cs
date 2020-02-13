@@ -573,6 +573,45 @@ namespace Sys_Ingresos.Data.Cuotas
             }
 
         }
+        public static List<SCE_ALUMNOS_UNACH> ObtenerAlumnos(string Matricula)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+
+            try
+            {
+                string[] Parametros = { "P_Matricula" };
+                object[] Valores = { Matricula };
+                OracleDataReader dr = null;
+                cmd = exeProc.GenerarOracleCommandCursor("pkg_configuracion.Obt_Grid_Cat_Alumnos", ref dr, Parametros, Valores);
+                List<SCE_ALUMNOS_UNACH> listarAlumnos = new List<SCE_ALUMNOS_UNACH>();
+                while (dr.Read())
+                {
+                    SCE_ALUMNOS_UNACH objAlumnos = new SCE_ALUMNOS_UNACH();
+                    objAlumnos.DEPENDENCIA = Convert.ToString(dr[0]);
+                    objAlumnos.MATRICULA = Convert.ToString(dr[1]);
+                    objAlumnos.NOMBRE_COMPLETO = Convert.ToString(dr[2]);
+                    objAlumnos.SEMESTRE = Convert.ToString(dr[3]);
+                    objAlumnos.CARRERA = Convert.ToString(dr[4]);
+                    objAlumnos.EMAIL = Convert.ToString(dr[5]);
+                    objAlumnos.CICLO_ESCOLAR = Convert.ToString(dr[6]);
+                    objAlumnos.TIPO = Convert.ToString(dr[7]);
+                    listarAlumnos.Add(objAlumnos);
+                }
+                return listarAlumnos;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+
+        }
+
 
     }
 }

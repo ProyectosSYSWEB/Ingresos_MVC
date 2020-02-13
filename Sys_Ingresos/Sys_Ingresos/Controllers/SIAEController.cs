@@ -16,29 +16,11 @@ namespace Sys_Ingresos.Controllers
         // GET: SIAE
         SESION SesionUsu = new SESION();
         SCE_CUOTAS_POSGRADO_DATOS SesionCuota = new SCE_CUOTAS_POSGRADO_DATOS();
-
-        //public ActionResult Index(string WXI)
-        //{
-        //    SesionUsu.UsuWXI = WXI;
-        //    Session["UsuarioIng"] = SesionUsu;
-        //    Session.Timeout = 120;
-        //    return View();
-        //}
-
+       
         public ActionResult CuotasPosgrado()
         {
             return View();
         }
-
-        //public ActionResult CuotasPosgrado(string WXI)
-        //{
-        //    //if (Request.QueryString["WXI"] != null)
-
-        //    SesionUsu.UsuWXI = WXI;
-        //    Session["UsuarioIng"] = SesionUsu;
-        //    Session.Timeout = 120;
-        //    return View();
-        //}
 
         public ActionResult PagosPosgrado()
         {
@@ -56,6 +38,11 @@ namespace Sys_Ingresos.Controllers
         }
 
         public ActionResult PagosSYSWEB_a_SIAE()
+        {
+            return View();
+        }
+
+        public ActionResult Referencias()
         {
             return View();
         }
@@ -131,7 +118,7 @@ namespace Sys_Ingresos.Controllers
     //        return Json("RERROR"+ Request.QueryString["WXI"] + Verificador, JsonRequestBehavior.AllowGet);
     //}
 
-    public JsonResult ObtUsuario()
+        public JsonResult ObtUsuario()
         {
             string Verificador = string.Empty;
             List<GRL_USUARIOS> Lista = new List<GRL_USUARIOS>();
@@ -803,7 +790,55 @@ namespace Sys_Ingresos.Controllers
             return Json(Lista, JsonRequestBehavior.AllowGet);
         }
 
-        //
+
+        public JsonResult ListarAlumnos(string Matricula)
+        {
+            RESULTADO_ALUMNOS_UNACH objResultado = new RESULTADO_ALUMNOS_UNACH();
+
+            try
+            {
+                string Verificador = string.Empty;
+                var Lista =GridDataContext.ObtenerAlumnos(Matricula);
+                    objResultado.ERROR = false;
+                    objResultado.MENSAJE_ERROR = "";
+                    objResultado.RESULTADO = Lista;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        public JsonResult GenerarReferencia(string Matricula, string Escuela, string Semestre, string Ciclo, string Movimiento, int DiasVigencia = 1, string Nombre)
+        {
+            string Verificador = string.Empty;
+            SCE_CUOTAS_POSGRADO_DATOS objDatosCuotas = new SCE_CUOTAS_POSGRADO_DATOS();
+            objDatosCuotas.ESCUELA = Dependencia;
+            objDatosCuotas.CARRERA = Carrera;
+            objDatosCuotas.GENERACION = Ciclo;
+            objDatosCuotas.NO_PAGO = NumPago;
+            objDatosCuotas.NIVEL = Nivel;
+            objDatosCuotas.SEMESTRE = Semestre;
+            objDatosCuotas.CONCEPTO = Concepto;
+            objDatosCuotas.CONCEPTO_DESCRIPCION = ConceptoDesc;
+            objDatosCuotas.CUOTA = Cuota;
+            objDatosCuotas.CUOTA_PAQUETE = CuotaPaq;
+            objDatosCuotas.NO_PAQUETE = NumPaq;
+            objDatosCuotas.FECHA_LIMITE = FechaLimite;
+            //objDatosCuotas.TIPO = Tipo;
+            objDatosCuotas.VALOR = Valor;
+            objDatosCuotas.TIPO_PROGRAMA = TipoProg;
+            GuardarDataContext.InsertarCuota(objDatosCuotas, ref Verificador);
+            if (Verificador == "0")
+                return Json("0", JsonRequestBehavior.AllowGet);
+            else
+                return Json(Verificador, JsonRequestBehavior.AllowGet);
+        }
 
 
         private void SetDBLogonForReport(ConnectionInfo connectionInfo, ReportDocument reportDocument)

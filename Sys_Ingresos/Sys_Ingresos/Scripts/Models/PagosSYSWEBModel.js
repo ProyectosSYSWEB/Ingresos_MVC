@@ -38,7 +38,6 @@ var pagosContext =
                     }
                 });
         },
-
         Ciclos: function (callBackResult) {
             var self = this;
             self.ciclos.length = 0;
@@ -67,8 +66,6 @@ var pagosContext =
                     }
                 });
         },
-
-
         ReferenciasSYSWEB: function (Referencia, callBackResult) {
             var self = this;
             self.ref_sysweb.length = 0;
@@ -98,8 +95,6 @@ var pagosContext =
                     }
                 });
         },
-
-
         ReferenciasSIAE: function (Referencia, callBackResult) {
             var self = this;
             self.ref_siae.length = 0;
@@ -129,8 +124,6 @@ var pagosContext =
                     }
                 });
         },
-
-
         AgregarSIAE: function (Matricula, Ciclo, Semestre, Tipo, Referencia, callBackResult) {
             var self = this;
             self.ref_sysweb.length = 0;
@@ -158,5 +151,4 @@ var pagosContext =
                     }
                 });
         },
-
     }

@@ -1,0 +1,198 @@
+﻿
+@{
+    ViewBag.Title = "Referencias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Referencias</h2>
+
+<div id="Referencias" ng-app="ReferenciasWeb" ng-controller="ReferenciasSYSWEBController as ctrl" ng-init="ctrl.Inicio()">
+    <div class="form-inline">
+        <div class=".col-sm-1">
+            <div id="precarga" class="hidden"><input type="image" class="center" src="~/Images/loader.gif" /></div>
+        </div>
+        <div id="divError" class="alert alert-danger hidden" role="alert">
+            {{ctrl.mensaje_gral}}
+        </div>
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-3">
+                    <p>Buscar por Ficha/Matricula:</p>
+                </div>
+                <div class="col-sm-9">
+                    <div>
+                        <input class="form-control" name="txtBuscar" type="text" ng-model="ctrl.cve_matricula" required />
+                        <button type="button" class="btn btn-primary" ng-click="ctrl.BuscarAlumno()" style="width:50px">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <h3 class="font-weight-bold">Aspirantes/Alumno</h3>
+                <div class="table-responsive" style="box-shadow: 10px 40px 96px rgba(0,0,0,.1)">
+                    <table class="table table-hover">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td>TIPO</td>
+                                <td>CICLO ACTUAL</td>
+                                <td>DEPENDENCIA</td>
+                                <td>CARRERA</td>
+                                <td>FICHA/MATRICULA</td>
+                                <td>NOMBRE</td>
+                                <td>SEMESTRE ACTUAL</td>
+                                <td>CORREO</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-pagination="cts in ctrl.catAlumnos |  itemsPerPage: 10 " pagination-id="PaginationGridAR">
+                            <tr>
+                                <td>{{cts.TipoAlumno}}</td>
+                                <td>{{cts.Ciclo}}</td>
+                                <td>{{cts.Dependencia}}</td>
+                                <td>{{cts.Carrera}}</td>
+                                <td>{{cts.Matricula}}</td>
+                                <td>{{cts.Nombre}}</td>
+                                <td>{{cts.Semestre}}</td>
+                                <td>{{cts.Correo}}</td>
+                                <td style="text-align:center">
+                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Agregar" ng-click="ctrl.Agregar(cts.Semestre,cts.Dependencia,cts.Nombre)">
+                                        Generar Referencia
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="mb-5" style="text-align:center">{{ctrl.NoActv}}</div>
+                </div>
+                <ng-pagination-control boundary-links="true" pagination-id="PaginationGridAR"></ng-pagination-control>
+            </div>
+        </div>
+    </div>
+
+    @*/*MODAL PARA DATOS DE LA REFERENCIA*/*@
+    <div class="modal fade" id="Agregar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Referencia SYSWEB</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="Formulario">
+                        <form name="FormsReferenciasSYSWEB" novalidate>
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p>Cve. Escuela:</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <input class="form-control" name="txtEscuela" type="text" ng-model="ctrl.cve_escuela" style="width:100px" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p>Nombre:</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <input class="form-control" name="txtNombre" type="text" ng-model="ctrl.cve_nombre" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p>Ciclo Escolar:</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <select class="form-control select2" name="cmbCiclo" id="cmbCiclo" ng-options="option.Id as option.Descripcion for option in ctrl.ciclos_escolares" ng-model="ctrl.cve_ciclo"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p>Tipo:</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <select class="form-control" id="cmbTipo" ng-model="ctrl.cve_tipo">
+                                                <option value="T">--Todos--</option>
+                                                <option value="F">EXAMEN DE SELECCIÓN</option>
+                                                <option value="I">INSCRIPCIÓN</option>
+                                                <option value="R">REINSCRIPCIÓN</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p>Ficha/Matricula:</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <input class="form-control" name="txtMatricula" type="text" ng-model="ctrl.cve_matricula" required />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p>Semestre:</p>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" name="txtSemestre" type="text" ng-model="ctrl.cve_semestre" style="width:60px" required />
+                                    </div>
+                                    @*<div class="col-sm-6 alert alert-warning" role="alert">
+                    Semestre que va a cursar.
+            </div>*@
+                                    <div class="col-sm-3">
+                                        <p>Dias de Vigencia:</p>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" name="txtDiasVigencia" type="text" ng-model="ctrl.cve_dias_vigencia" required />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p>¿Generar con cuota extemporanea?</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" ng-model="ctrl.cve_cuota_extemporanea">
+                                            <label class="form-check-label" for="inlineRadio1">No</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" ng-model="ctrl.cve_cuota_extemporanea">
+                                            <label class="form-check-label" for="inlineRadio2">Si</label>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <br />
+                                <div class="col-sm-12 text-center">
+                                    <button type="button" class="btn btn-dark" ng-click="ctrl.GenerarReferenciaSIAE()">Generar Referencia</button>
+                                    @* <button type="button" class="btn btn-info" ng-click="ctrl.AgregarSIAE()">Generar Registro en SIAE</button>*@
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*/**/*@
+</div>
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/global.js"></script>
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular.ng-modules.js"></script>
+<script src="~/Scripts/angular-pagination.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script src="~/Scripts/Models/ReferenciasModel.js"></script>
+<script src="~/Scripts/Controllers/ReferenciasController.js"></script>
