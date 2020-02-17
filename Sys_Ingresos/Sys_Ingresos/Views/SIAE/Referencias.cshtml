@@ -68,6 +68,9 @@
                                         Generar Referencia
                                     </button>
                                 </td>
+                                <td>
+                                    <input type="button" class="btn btn-warning" data-toggle="modal" data-target="#Oficio" value="Agregar Oficio" />
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -77,6 +80,57 @@
             </div>
         </div>
     </div>
+
+
+    @*MODAL PARA LOS OFICIOS*@
+    <div id="Oficio" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Datos del Oficio</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+
+
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Asunto</span>
+                            </div>
+                            <input ng-model="ctrl.ofc_asunto" type="text" class="form-control" placeholder="Asunto" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+
+                        <div class="input-group mb-3 col-md-8">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Número de Oficio</span>
+                            </div>
+                            <input ng-model="ctrl.ofc_numOfc" type="text" class="form-control" placeholder="# Oficio" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+
+                        <div class="input-group mb-3 col-md-8">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Fecha</span>
+                            </div>
+                            <input ng-model="ctrl.ofc_fecha" type="date" class="form-control" placeholder="" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-click="ctrl.DatosFolio()">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*/**/*@
 
     @*/*MODAL PARA DATOS DE LA REFERENCIA*/*@
     <div class="modal fade" id="Agregar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -93,15 +147,15 @@
                         <form name="FormsReferenciasSYSWEB" novalidate>
                             <div class="panel-heading">
                                 @*<div class="row">
-            <div class="col-sm-3">
-                <p>Cve. Escuela:</p>
-            </div>
-            <div class="col-sm-9">
-                <div>
-                    <input class="form-control" name="txtEscuela" type="text" ng-model="ctrl.cve_escuela" style="width:100px" disabled />
-                </div>
-            </div>
-        </div>*@
+                                        <div class="col-sm-3">
+                                            <p>Cve. Escuela:</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div>
+                                                <input class="form-control" name="txtEscuela" type="text" ng-model="ctrl.cve_escuela" style="width:100px" disabled />
+                                            </div>
+                                        </div>
+                                    </div>*@
                                 <input id="hddnEscuela" name="hddnEscuela" type="hidden" ng-model="ctrl.cve_escuela">
 
                                 <div class="row">
@@ -157,8 +211,8 @@
                                         <input class="form-control" name="txtSemestre" type="text" ng-model="ctrl.cve_semestre" style="width:60px" required />
                                     </div>
                                     @*<div class="col-sm-6 alert alert-warning" role="alert">
-                    Semestre que va a cursar.
-            </div>*@
+                                                Semestre que va a cursar.
+                                        </div>*@
                                     <div class="col-sm-3">
                                         <p>Dias de Vigencia:</p>
                                     </div>
@@ -205,13 +259,19 @@
                                     </div>
                                 </div>
 
-</form>
+                        </form>
                     </div>
                 </div>
+
+
+
             </div>
         </div>
     </div>
     @*/**/*@
+
+
+
 </div>
 <script src="~/Scripts/angular.min.js"></script>
 <script src="~/Scripts/global.js"></script>

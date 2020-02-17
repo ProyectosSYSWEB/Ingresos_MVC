@@ -138,6 +138,42 @@
         };  
 
 
+        this.DatosFolio = () => {        
+            let fechaOfc = self.ofc_fecha.toString();
+            var d = new Date(fechaOfc);
+            month = '' + (d.getMonth() + 1);
+            day = '' + d.getDate();
+            year = d.getFullYear();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            fechaOfc = day + '/' + month + '/' + year;
+
+            let asunto = self.ofc_asunto.toUpperCase();
+            let numOfc = self.ofc_numOfc.toUpperCase();                                    
+            var requestURL = 'https://sysweb.unach.mx/SUNVA/Folios/InsertarDatosCorrespondenciaFinanzas?Dependencia=42401&Emite=Prueba&Puesto=Prueba&Destinatario=72401&Asunto=' + asunto + '&Folio=' + numOfc + '&Fecha=' + fechaOfc + '&Ruta=ruta&Ejercicio='+ year+'&Usuario=ROSALES';
+            var request = new XMLHttpRequest();
+            request.open('POST', requestURL);
+            request.responseType = 'json';
+            request.send();
+
+
+            request.onload = function () {
+                let resultado = request.response.Error;
+                if (resultado === false)
+                    alert("Oficio agregado");
+                else
+                    alert(request.response.MensajeError);
+
+            };
+
+
+        };
+
+
 
     }]);
 })();
