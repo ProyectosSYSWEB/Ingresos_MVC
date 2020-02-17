@@ -321,25 +321,6 @@ namespace Sys_Ingresos.Controllers
         }
 
 
-        public JsonResult ListarCiclosLicenciatura()
-        {
-            RESULTADOCOMUN objResultado = new RESULTADOCOMUN();
-            try
-            {
-                var Lista = GridDataContext.ObtenerCiclosLicenciatura();
-                objResultado.ERROR = false;
-                objResultado.MENSAJE_ERROR = string.Empty;
-                objResultado.RESULTADO = Lista;
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                objResultado.ERROR = true;
-                objResultado.MENSAJE_ERROR = ex.Message;
-                objResultado.RESULTADO = null;
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
-            }
-        }
 
         public JsonResult ListarReferenciasSYSWEB(string Referencia)
         {
@@ -791,54 +772,7 @@ namespace Sys_Ingresos.Controllers
         }
 
 
-        public JsonResult ListarAlumnos(string Matricula)
-        {
-            RESULTADO_ALUMNOS_UNACH objResultado = new RESULTADO_ALUMNOS_UNACH();
 
-            try
-            {
-                string Verificador = string.Empty;
-                var Lista =GridDataContext.ObtenerAlumnos(Matricula);
-                    objResultado.ERROR = false;
-                    objResultado.MENSAJE_ERROR = "";
-                    objResultado.RESULTADO = Lista;
-                    return Json(objResultado, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                objResultado.ERROR = true;
-                objResultado.MENSAJE_ERROR = ex.Message;
-                objResultado.RESULTADO = null;
-                return Json(objResultado, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-
-        public JsonResult GenerarReferencia(string Matricula, string Escuela, string Semestre, string Ciclo, string Movimiento, int DiasVigencia = 1, string Nombre)
-        {
-            string Verificador = string.Empty;
-            SCE_CUOTAS_POSGRADO_DATOS objDatosCuotas = new SCE_CUOTAS_POSGRADO_DATOS();
-            objDatosCuotas.ESCUELA = Dependencia;
-            objDatosCuotas.CARRERA = Carrera;
-            objDatosCuotas.GENERACION = Ciclo;
-            objDatosCuotas.NO_PAGO = NumPago;
-            objDatosCuotas.NIVEL = Nivel;
-            objDatosCuotas.SEMESTRE = Semestre;
-            objDatosCuotas.CONCEPTO = Concepto;
-            objDatosCuotas.CONCEPTO_DESCRIPCION = ConceptoDesc;
-            objDatosCuotas.CUOTA = Cuota;
-            objDatosCuotas.CUOTA_PAQUETE = CuotaPaq;
-            objDatosCuotas.NO_PAQUETE = NumPaq;
-            objDatosCuotas.FECHA_LIMITE = FechaLimite;
-            //objDatosCuotas.TIPO = Tipo;
-            objDatosCuotas.VALOR = Valor;
-            objDatosCuotas.TIPO_PROGRAMA = TipoProg;
-            GuardarDataContext.InsertarCuota(objDatosCuotas, ref Verificador);
-            if (Verificador == "0")
-                return Json("0", JsonRequestBehavior.AllowGet);
-            else
-                return Json(Verificador, JsonRequestBehavior.AllowGet);
-        }
 
 
         private void SetDBLogonForReport(ConnectionInfo connectionInfo, ReportDocument reportDocument)
@@ -892,6 +826,123 @@ namespace Sys_Ingresos.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
 
         }
+
+
+
+        #region <Referencias Generadas en SYSWEB>
+        public JsonResult ListarAlumnos(string Matricula)
+        {
+            RESULTADO_ALUMNOS_UNACH objResultado = new RESULTADO_ALUMNOS_UNACH();
+
+            try
+            {
+                string Verificador = string.Empty;
+                var Lista = GridDataContext.ObtenerAlumnos(Matricula);
+                objResultado.ERROR = false;
+                objResultado.MENSAJE_ERROR = "";
+                objResultado.RESULTADO = Lista;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult ListarCiclosLicenciatura()
+        {
+            RESULTADOCOMUN objResultado = new RESULTADOCOMUN();
+            try
+            {
+                var Lista = GridDataContext.ObtenerCiclosLicenciatura();
+                objResultado.ERROR = false;
+                objResultado.MENSAJE_ERROR = string.Empty;
+                objResultado.RESULTADO = Lista;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult GenerarReferencia(string Matricula, string Escuela, string Semestre, string Ciclo, string Movimiento, string Nombre, int DiasVigencia = 1, string EsExtemporaneo="S")
+        {
+            string Verificador = string.Empty;
+            SCE_REFERENCIAS objDatosAlumno = new SCE_REFERENCIAS();
+            RESULTADO_SCE_REFERENCIAS objResultado = new RESULTADO_SCE_REFERENCIAS();
+            List<SCE_REFERENCIAS> list = new List<SCE_REFERENCIAS>(); 
+            objDatosAlumno.MATRICULA = Matricula;
+            objDatosAlumno.DEPENDENCIA = Escuela;
+            objDatosAlumno.SEMESTRE = Semestre;
+            objDatosAlumno.CICLO_ACTUAL = Ciclo;
+            objDatosAlumno.MOVIMIENTO = Movimiento;
+            objDatosAlumno.DIAS_VIGENCIA = DiasVigencia;
+            objDatosAlumno.NOMBRE = Nombre;
+            objDatosAlumno.ES_EXTEMPORANEO = EsExtemporaneo;
+            objDatosAlumno.MUNICIPIO_SEDE = "0";
+            if (Session["UsuarioIng"] != null)
+                SesionUsu = (SESION)System.Web.HttpContext.Current.Session["UsuarioIng"];
+
+            try
+            {
+                list=GuardarDataContext.Obt_Referencia_SYSWEB(objDatosAlumno, SesionUsu.Usu_Nombre, ref Verificador);
+                if (Verificador == "0")
+                {
+                    objResultado.ERROR = false;
+                    objResultado.MENSAJE_ERROR = string.Empty;
+                    objResultado.RESULTADO = list;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    objResultado.ERROR = true;
+                    objResultado.MENSAJE_ERROR = Verificador;
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public ActionResult ObtReferenciaPdf(int IdReferencia)
+        {
+
+            ConnectionInfo connectionInfo = new ConnectionInfo();
+            System.Web.UI.Page p = new System.Web.UI.Page();
+            ReportDocument rd = new ReportDocument();
+            string Ruta = Path.Combine(Server.MapPath("~/Reports"), "Ficha_Referenciada_SIAE.rpt");
+            rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Ficha_Referenciada_SIAE.rpt"));
+            rd.SetParameterValue(0, IdReferencia);
+            rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
+            connectionInfo.ServerName = "DSIA";
+            connectionInfo.UserID = "secadmin";
+            connectionInfo.Password = "secadmin34";
+            SetDBLogonForReport(connectionInfo, rd);
+
+            Response.Buffer = false;
+            Response.ClearContent();
+            Response.ClearHeaders();
+
+
+            Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            stream.Seek(0, SeekOrigin.Begin);
+            //fs.Read(imgbyte, 0, imgbyte.Length);
+            //fs.Close();
+            return File(stream, "application/pdf", "Ficha_Referenciada.pdf");
+        }
+
+        #endregion
+
 
         [HttpPost]
         public ActionResult UploadFiles()

@@ -17,11 +17,19 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-3">
+                    <label for="lblEscuela">Escuela:</label>
+                </div>
+                <div class="col-sm-9">
+                    <select class="form-control select2" name="cmbEscuela" id="cmbIEscuela" ng-options="option.Id as option.Descripcion for option in ctrl.dependencias" ng-model="ctrl.cve_dependencia"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
                     <p>Buscar por Ficha/Matricula:</p>
                 </div>
                 <div class="col-sm-9">
                     <div>
-                        <input class="form-control" name="txtBuscar" type="text" ng-model="ctrl.cve_matricula" required />
+                        <input class="form-control" name="txtBuscar" type="text" ng-model="ctrl.cve_busca" required />
                         <button type="button" class="btn btn-primary" ng-click="ctrl.BuscarAlumno()" style="width:50px">
                             <i class="fa fa-search" aria-hidden="true"></i>
                         </button>
@@ -56,7 +64,7 @@
                                 <td>{{cts.Semestre}}</td>
                                 <td>{{cts.Correo}}</td>
                                 <td style="text-align:center">
-                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Agregar" ng-click="ctrl.Agregar(cts.Semestre,cts.Dependencia,cts.Nombre)">
+                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Agregar" ng-click="ctrl.Agregar(cts.Matricula,cts.Semestre,cts.Dependencia,cts.Nombre)">
                                         Generar Referencia
                                     </button>
                                 </td>
@@ -84,16 +92,18 @@
                     <div id="Formulario">
                         <form name="FormsReferenciasSYSWEB" novalidate>
                             <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p>Cve. Escuela:</p>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <div>
-                                            <input class="form-control" name="txtEscuela" type="text" ng-model="ctrl.cve_escuela" style="width:100px" disabled />
-                                        </div>
-                                    </div>
-                                </div>
+                                @*<div class="row">
+            <div class="col-sm-3">
+                <p>Cve. Escuela:</p>
+            </div>
+            <div class="col-sm-9">
+                <div>
+                    <input class="form-control" name="txtEscuela" type="text" ng-model="ctrl.cve_escuela" style="width:100px" disabled />
+                </div>
+            </div>
+        </div>*@
+                                <input id="hddnEscuela" name="hddnEscuela" type="hidden" ng-model="ctrl.cve_escuela">
+
                                 <div class="row">
                                     <div class="col-sm-3">
                                         <p>Nombre:</p>
@@ -166,7 +176,7 @@
                                             <label class="form-check-label" for="inlineRadio1">No</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" ng-model="ctrl.cve_cuota_extemporanea">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" ng-model="ctrl.cve_cuota_extemporanea" checked>
                                             <label class="form-check-label" for="inlineRadio2">Si</label>
                                         </div>
                                     </div>
@@ -175,12 +185,27 @@
                                 </div>
                                 <br />
                                 <div class="col-sm-12 text-center">
-                                    <button type="button" class="btn btn-dark" ng-click="ctrl.GenerarReferenciaSIAE()">Generar Referencia</button>
+                                    <button type="button" class="btn btn-dark" ng-click="ctrl.GenerarReferencia();">Generar Referencia</button>
+                                    <input id="hddnIdReferencia" name="hddnIdReferencia" type="hidden" ng-model="ctrl.cve_id_referencia">
                                     @* <button type="button" class="btn btn-info" ng-click="ctrl.AgregarSIAE()">Generar Registro en SIAE</button>*@
                                 </div>
-                            </div>
+                                <div id="datosReferencia" ng-class="{'alert alert-success': ctrl.style == 'OK', 'alert alert-danger': ctrl.style == 'ERROR', 'hidden': ctrl.style == 'NOT'}" role="alert">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="font-weight-bold">Referencia:</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            {{ctrl.Referencia}}
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button type="button" ng-class="{'btn btn-danger': ctrl.style == 'OK', 'hidden': ctrl.style == 'ERROR'}" data-toggle="tooltip" data-placement="top" title="PDF" ng-click="ctrl.ObtReferencia()" style="width:40px">
+                                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
 
-                        </form>
+</form>
                     </div>
                 </div>
             </div>

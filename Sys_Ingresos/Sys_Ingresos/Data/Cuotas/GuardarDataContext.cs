@@ -290,5 +290,48 @@ namespace Sys_Ingresos.Data.Cuotas
             return list;
             //return registroAgregado;
         }
+
+
+        #region <Referencias Generadas en SYSWEB>
+        public static List<SCE_REFERENCIAS> Obt_Referencia_SYSWEB(SCE_REFERENCIAS objReferencia, string Usuario, ref string Verificador)
+        {
+            OracleCommand Cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+            List<SCE_REFERENCIAS> list = new List<SCE_REFERENCIAS>();
+            try
+            {
+                OracleDataReader dr = null;
+                string[] Parametros = { "p_Matricula", "p_Escuela", "p_Semestre", "p_Ciclo_Escolar", "p_Movimiento", "p_DiasVigencia",
+                "p_nombre","p_muni_sede","p_id_carrera", "p_extemporaneo", "p_usuario"};
+                object[] Valores = { objReferencia.MATRICULA, objReferencia.DEPENDENCIA, objReferencia.SEMESTRE, objReferencia.CICLO_ACTUAL,
+                    objReferencia.MOVIMIENTO, objReferencia.DIAS_VIGENCIA, objReferencia.NOMBRE, objReferencia.MUNICIPIO_SEDE, objReferencia.ID_CARRERA, objReferencia.ES_EXTEMPORANEO, Usuario
+                };
+                string[] ParametrosOut = { "p_Importe", "p_Vigencia", "p_descripcion", "p_Referencia", "p_id_referencia", "P_Bandera" };
+                Cmd = exeProc.GenerarOracleCommand("OBT_REFERENCIA_SYSWEB", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
+                objReferencia.TOTAL = Convert.ToDouble(Cmd.Parameters["p_Importe"].Value.ToString());
+                objReferencia.FECHA_LIMITE = Convert.ToString(Cmd.Parameters["p_Vigencia"].Value);
+                objReferencia.NOTAS = Convert.ToString(Cmd.Parameters["p_descripcion"].Value);
+                objReferencia.REFERENCIA = Convert.ToString(Cmd.Parameters["p_Referencia"].Value);
+                string valor=Convert.ToString(Cmd.Parameters["p_id_referencia"].Value);
+                if (valor == "null")
+                    Verificador = "Ya fue confirmado el pago de esta referencia "+ objReferencia.REFERENCIA+", favor de verificar.";
+                else
+                    objReferencia.ID = Convert.ToInt32(Cmd.Parameters["p_id_referencia"].Value.ToString());
+                list.Add(objReferencia);
+            }
+            catch (Exception ex)
+            {
+                Verificador = ex.Message;
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref Cmd);
+            }
+            return list;
+            //return registroAgregado;
+        }
+
+        #endregion
+
     }
 }

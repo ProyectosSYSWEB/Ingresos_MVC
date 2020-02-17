@@ -573,6 +573,8 @@ namespace Sys_Ingresos.Data.Cuotas
             }
 
         }
+
+        #region <Referencias Generadas en SYSWEB>
         public static List<SCE_ALUMNOS_UNACH> ObtenerAlumnos(string Matricula)
         {
             OracleCommand cmd = null;
@@ -611,7 +613,7 @@ namespace Sys_Ingresos.Data.Cuotas
             }
 
         }
-
+        #endregion
 
     }
 }

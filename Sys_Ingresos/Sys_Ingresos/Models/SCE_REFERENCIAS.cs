@@ -20,6 +20,7 @@ namespace Sys_Ingresos.Models
         public string FOLIO_BANCO { get; set; }
         public int ID { get; set; }
         public int ID_CARRERA { get; set; }
+        public int DIAS_VIGENCIA { get; set; }
         public string MATRICULA { get; set; }
         public string MOVIMIENTO { get; set; }
         public string MUNICIPIO_SEDE { get; set; }
@@ -30,6 +31,8 @@ namespace Sys_Ingresos.Models
         public string REFERENCIA { get; set; }
         public string SEMESTRE { get; set; }
         public double TOTAL { get; set; }
+        public string ES_EXTEMPORANEO { get; set; }
+
     }
     public class RESULTADO_SCE_REFERENCIAS
     {

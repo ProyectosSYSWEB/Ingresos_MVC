@@ -282,6 +282,7 @@
     <Content Include="Reports\rpt_CuotasPosgrado2.rpt" />
     <Content Include="Reports\rpt_PagosPosgrado.rpt" />
     <Content Include="Reports\rpt_CuotasPosgrado.rpt" />
+    <Content Include="Reports\Ficha_Referenciada_SIAE.rpt" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\checklist-model.js" />
     <Content Include="Scripts\Controllers\CuotasPosgradoController.js" />

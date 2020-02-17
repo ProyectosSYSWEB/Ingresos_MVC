@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div>
-                <h3 class="font-weight-bold">Referencia SYSWEB</h3>
+                <h3 class="panel-title row alert alert-info">Referencia SYSWEB</h3>
                 <div id="TablaDatos">
                     <table class="table table-hover">
                         <thead style="font-weight:bold">
@@ -61,10 +61,10 @@
                 </div>
             </div>
         </div>
-        
-        <div class="panel-heading">            
+
+        <div class="panel-heading">
             <div>
-                <h3 class="font-weight-bold">Referencia SIAE</h3>
+                <h3 class="panel-title row alert alert-info">Referencia SIAE</h3>
                 <div id="TablaDatos">
                     <table class="table table-hover">
                         <thead style="font-weight:bold">
@@ -86,106 +86,111 @@
                                 <td>{{cts.Nombre}}</td>
                                 <td>{{cts.Fecha_Pago}}</td>
                                 <td>{{cts.Tipo}}</td>
+                                @*<td style="text-align:center">
+                                        <button type="button" class="btn btn-info" style="width:50px" data-toggle="modal" data-target="#Agregar" ng-click="ctrl.DatosRefSYSWEB(cts.Referencia)">
+                                            <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                        </button>
+                                    </td>*@
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        </div>
-        <div class="modal fade" id="Agregar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Referencia SYSWEB</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="Formulario">
-                            <form name="FormsReferenciasSYSWEB" novalidate>
-
-
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        @*<div class="col-sm-3">
-                <p>Escuela:</p>
-            </div>
-            <div class="col-sm-9">
-                <div>
-                    <select class="form-control select2" style="width:100%" name="cmbEscuela" id="cmbIEscuela" ng-change="ctrl.ObtenerCarreras()" ng-options="option.Id as option.Descripcion for option in ctrl.dependencias" ng-model="ctrl.cve_dependencia"></select>
-
+    </div>
+    <div class="modal fade" id="Agregar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Referencia SYSWEB</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>*@
+                <div class="modal-body">
+                    <div id="Formulario">
+                        <form name="FormsReferenciasSYSWEB" novalidate>
 
 
-                                        <div class="col-sm-3">
-                                            <p>Referencia:</p>
+                            <div class="panel-heading">
+                                <div class="row">
+                                    @*<div class="col-sm-3">
+                                            <p>Escuela:</p>
                                         </div>
                                         <div class="col-sm-9">
                                             <div>
-                                                <input class="form-control" name="txtReferencia" type="text" ng-model="ctrl.cve_referencia" required disabled />
+                                                <select class="form-control select2" style="width:100%" name="cmbEscuela" id="cmbIEscuela" ng-change="ctrl.ObtenerCarreras()" ng-options="option.Id as option.Descripcion for option in ctrl.dependencias" ng-model="ctrl.cve_dependencia"></select>
+
                                             </div>
-                                        </div>
+                                        </div>*@
 
 
-                                        <div class="col-sm-3">
-                                            <p>Ciclo Escolar:</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <div>
-                                                <select class="form-control select2" name="cmbCiclo" id="cmbCiclo" ng-options="option.Id as option.Descripcion for option in ctrl.ciclos_escolares" ng-model="ctrl.cve_ciclo"></select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <p>Tipo:</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <div>
-                                                <select class="form-control" id="cmbTipo" ng-model="ctrl.cve_tipo">
-                                                    <option value="T">--Todos--</option>
-                                                    <option value="F">EXAMEN DE SELECCIÓN</option>
-                                                    <option value="I">INSCRIPCIÓN</option>
-                                                    <option value="R">REINSCRIPCIÓN</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <p>Ficha/Matricula:</p>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div>
-                                                <input class="form-control" name="txtMatricula" type="text" ng-model="ctrl.cve_matricula" required />
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <p>Semestre:</p>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div>
-                                                <input class="form-control" name="txtSemestre" type="text" ng-model="ctrl.cve_semestre" required />
-                                            </div>
-                                        </div>
-
-                                        @*<button type="button" class="btn btn-info" ng-click="ctrl.Buscar()">
-                <i class="fa fa-search" aria-hidden="true"></i>
-            </button>*@
+                                    <div class="col-sm-3">
+                                        <p>Referencia:</p>
                                     </div>
-                                    <br />
-                                    <div class="col-sm-12 text-center">
-                                        <button type="button" class="btn btn-dark" ng-click="ctrl.AgregarSIAE()">Generar Registro en SIAE</button>
-                                        @* <button type="button" class="btn btn-info" ng-click="ctrl.AgregarSIAE()">Generar Registro en SIAE</button>*@
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <input class="form-control" name="txtReferencia" type="text" ng-model="ctrl.cve_referencia" required />
+                                        </div>
                                     </div>
+
+
+                                    <div class="col-sm-3">
+                                        <p>Ciclo Escolar:</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <select class="form-control select2" name="cmbCiclo" id="cmbCiclo" ng-options="option.Id as option.Descripcion for option in ctrl.ciclos_escolares" ng-model="ctrl.cve_ciclo"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <p>Tipo:</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <select class="form-control" id="cmbTipo" ng-model="ctrl.cve_tipo">
+                                                <option value="T">--Todos--</option>
+                                                <option value="F">EXAMEN DE SELECCIÓN</option>
+                                                <option value="I">INSCRIPCIÓN</option>
+                                                <option value="R">REINSCRIPCIÓN</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <p>Ficha/Matricula:</p>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div>
+                                            <input class="form-control" name="txtMatricula" type="text" ng-model="ctrl.cve_matricula" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <p>Semestre:</p>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div>
+                                            <input class="form-control" name="txtSemestre" type="text" ng-model="ctrl.cve_semestre" required />
+                                        </div>
+                                    </div>
+
+                                    @*<button type="button" class="btn btn-info" ng-click="ctrl.Buscar()">
+                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                        </button>*@
                                 </div>
-                                
-                            </form>
-                        </div>
+                                <br />
+                                <div class="col-sm-12 text-center">
+                                    <button type="button" class="btn btn-dark" ng-click="ctrl.AgregarSIAE()">Generar Registro en SIAE</button>
+                                    @* <button type="button" class="btn btn-info" ng-click="ctrl.AgregarSIAE()">Generar Registro en SIAE</button>*@
+                                </div>
+                            </div>
+
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
 <script src="~/Scripts/angular.min.js"></script>
