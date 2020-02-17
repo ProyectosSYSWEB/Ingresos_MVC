@@ -589,16 +589,16 @@ namespace Sys_Ingresos.Data.Cuotas
                 List<SCE_ALUMNOS_UNACH> listarAlumnos = new List<SCE_ALUMNOS_UNACH>();
                 while (dr.Read())
                 {
-                    SCE_ALUMNOS_UNACH objAlumnos = new SCE_ALUMNOS_UNACH();
-                    objAlumnos.DEPENDENCIA = Convert.ToString(dr[0]);
-                    objAlumnos.MATRICULA = Convert.ToString(dr[1]);
-                    objAlumnos.NOMBRE_COMPLETO = Convert.ToString(dr[2]);
-                    objAlumnos.SEMESTRE = Convert.ToString(dr[3]);
-                    objAlumnos.CARRERA = Convert.ToString(dr[4]);
-                    objAlumnos.EMAIL = Convert.ToString(dr[5]);
-                    objAlumnos.CICLO_ESCOLAR = Convert.ToString(dr[6]);
-                    objAlumnos.TIPO = Convert.ToString(dr[7]);
-                    listarAlumnos.Add(objAlumnos);
+                    SCE_ALUMNOS_UNACH objAlumno = new SCE_ALUMNOS_UNACH();
+                    objAlumno.DEPENDENCIA = Convert.ToString(dr[0]);
+                    objAlumno.MATRICULA = Convert.ToString(dr[1]);
+                    objAlumno.NOMBRE_COMPLETO = Convert.ToString(dr[2]);
+                    objAlumno.SEMESTRE = Convert.ToString(dr[3]);
+                    objAlumno.CARRERA = Convert.ToString(dr[4]);
+                    objAlumno.EMAIL = Convert.ToString(dr[5]);
+                    objAlumno.CICLO_ESCOLAR = Convert.ToString(dr[6]);
+                    objAlumno.TIPO = Convert.ToString(dr[7]);
+                    listarAlumnos.Add(objAlumno);
                 }
                 return listarAlumnos;
 
@@ -613,6 +613,46 @@ namespace Sys_Ingresos.Data.Cuotas
             }
 
         }
+        public static List<SCE_REFERENCIAS> ObtenerReferenciasGeneradas(string Matricula, string Escuela)
+        {
+            OracleCommand cmd = null;
+            ExeProcedimiento exeProc = new ExeProcedimiento();
+
+            try
+            {
+                string[] Parametros = { "P_Matricula", "P_Escuela" };
+                object[] Valores = { Matricula, Escuela };
+                OracleDataReader dr = null;
+                cmd = exeProc.GenerarOracleCommandCursor("pkg_configuracion.Obt_Grid_ReferenciasGen", ref dr, Parametros, Valores);
+                List<SCE_REFERENCIAS> listarReferencias = new List<SCE_REFERENCIAS>();
+                while (dr.Read())
+                {
+                    SCE_REFERENCIAS objReferencia = new SCE_REFERENCIAS();
+                    objReferencia.MATRICULA = Convert.ToString(dr[2]);
+                    objReferencia.CICLO_ACTUAL = Convert.ToString(dr[1]);
+                    objReferencia.MOVIMIENTO = Convert.ToString(dr[0]);
+                    objReferencia.DEPENDENCIA = Convert.ToString(dr[4]);
+                    objReferencia.ID_CARRERA = Convert.ToInt32(dr[13]);
+                    objReferencia.NOMBRE = Convert.ToString(dr[12]);
+                    objReferencia.SEMESTRE = Convert.ToString(dr[14]);
+                    objReferencia.PAGO_CONFIRMADO= Convert.ToString(dr[10]);
+                    objReferencia.FECHA_GENERACION = Convert.ToString(dr[9]);
+                    listarReferencias.Add(objReferencia);
+                }
+                return listarReferencias;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                exeProc.LimpiarOracleCommand(ref cmd);
+            }
+
+        }
+
         #endregion
 
     }

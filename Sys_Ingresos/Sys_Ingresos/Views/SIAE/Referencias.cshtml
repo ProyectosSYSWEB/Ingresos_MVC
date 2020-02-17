@@ -36,7 +36,7 @@
                     </div>
                 </div>
             </div>
-            <div class="">
+            <div>
                 <h3 class="font-weight-bold">Aspirantes/Alumno</h3>
                 <div class="table-responsive" style="box-shadow: 10px 40px 96px rgba(0,0,0,.1)">
                     <table class="table table-hover">
@@ -77,6 +77,46 @@
                     <div class="mb-5" style="text-align:center">{{ctrl.NoActv}}</div>
                 </div>
                 <ng-pagination-control boundary-links="true" pagination-id="PaginationGridAR"></ng-pagination-control>
+            </div>
+            <div>
+                <h3 class="font-weight-bold">Referencias Generadas</h3>
+                <div class="table-responsive" style="box-shadow: 10px 40px 96px rgba(0,0,0,.1)">
+                    <table class="table table-hover">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td>FICHA/MATRICULA</td>
+                                <td>CICLO</td>
+                                <td>TIPO</td>
+                                <td>DEPENDENCIA</td>
+                                <td>CARRERA</td>
+                                <td>NOMBRE</td>
+                                <td>SEMESTRE</td>
+                                <td>FECHA REFERENCIA</td>
+                                <td>PAGO CONFIRMADO</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-pagination="cts in ctrl.referencias_generadas |  itemsPerPage: 10 " pagination-id="PaginationGridRef">
+                            <tr>
+                                <td>{{cts.Matricula}}</td>
+                                <td>{{cts.Ciclo}}</td>
+                                <td>{{cts.Tipo}}</td>
+                                <td>{{cts.Dependencia}}</td>
+                                <td>{{cts.Carrera}}</td>
+                                <td>{{cts.Nombre}}</td>
+                                <td>{{cts.Semestre}}</td>
+                                <td>{{cts.FechaReferencia}}</td>
+                                <td>{{cts.PagoConfirmado}}</td>
+                                <td style="text-align:center"></td>
+                                <td>
+                                    <input type="button" class="btn btn-warning" data-toggle="modal" data-target="#Oficio" value="Agregar Oficio" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="mb-5" style="text-align:center">{{ctrl.NoActvRefGen}}</div>
+                </div>
+                <ng-pagination-control boundary-links="true" pagination-id="PaginationGridRef"></ng-pagination-control>
             </div>
         </div>
     </div>

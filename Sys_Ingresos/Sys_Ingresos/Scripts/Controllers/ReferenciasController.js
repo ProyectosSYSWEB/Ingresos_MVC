@@ -19,9 +19,10 @@
                 switch (resp.ressult) {
                     case "tgp":
                         self.catAlumnos = referenciasContext.alumnos;
-                        //console.log(self.catAlumnos);
-                        if (referenciasContext.alumnos.length>0)
+                        if (referenciasContext.alumnos.length > 0) {
                             self.NoActv = "";
+                            ObtenerReferenciasGeneradas();
+                        }
                         else
                             self.NoActv = "No se encontraron datos.";
 
@@ -38,6 +39,31 @@
             });
 
         };
+        var ObtenerReferenciasGeneradas = function () {
+            document.getElementById("precarga").className = "show";
+            referenciasContext.ReferenciasGeneradas(self.cve_busca, self.cve_dependencia, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.referencias_generadas = referenciasContext.referenciasGeneradas;
+                        if (referenciasContext.referenciasGeneradas.length > 0)
+                            self.NoActvRefGen = "";
+                        else
+                            self.NoActvRefGen = "No se encontraron datos.";
+
+                        document.getElementById("precarga").className = "hidden";
+                        break;
+                    case "notgp":
+                        self.mensaje_gral = resp.message;
+                        document.getElementById("divError").className = "alert alert-danger";
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+
+        };
+
         var ObtenerCiclos = function () {
             self.ciclos = "";
             referenciasContext.Ciclos(function (resp) {
@@ -118,7 +144,6 @@
             });
 
         };
-
         this.ObtReferencia = function () {            
             var xhr = new XMLHttpRequest();
             var ruta = urlServer + 'SIAE/ObtReferenciaPdf';            
@@ -136,8 +161,6 @@
             xhr.send("IdReferencia=" + self.cve_id_referencia);
             //$("#modalCargandoDoc").modal("hide");
         };  
-
-
         this.DatosFolio = () => {        
             let fechaOfc = self.ofc_fecha.toString();
             var d = new Date(fechaOfc);

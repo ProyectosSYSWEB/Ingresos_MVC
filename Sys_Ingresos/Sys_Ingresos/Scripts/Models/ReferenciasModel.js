@@ -7,6 +7,7 @@ var referenciasContext =
     ciclos: [],
     referencia: [],
     escuelas: [],
+    referenciasGeneradas: [],
     CatalogoAlumnos: function (Matricula, callBackResult) {
         var self = this;
         self.alumnos.length = 0;
@@ -36,6 +37,36 @@ var referenciasContext =
                 }
             });
     },
+    ReferenciasGeneradas: function (Matricula, Escuela, callBackResult) {
+        var self = this;
+        self.referenciasGeneradas.length = 0;
+        $.ajax(
+            {
+                type: 'GET',
+                cache: false,
+                url: urlServer + 'SIAE/ListarReferenciasGeneradas',
+                data: { Matricula, Escuela },
+                success: function (resp) {
+                    if (resp.ERROR == false) {
+                        for (var i = 0; i < resp.RESULTADO.length; i++) {
+                            self.referenciasGeneradas.push({ Matricula: resp.RESULTADO[i].MATRICULA, Ciclo: resp.RESULTADO[i].CICLO_ACTUAL, Tipo: resp.RESULTADO[i].MOVIMIENTO, Dependencia: resp.RESULTADO[i].DEPENDENCIA, Carrera: resp.RESULTADO[i].ID_CARRERA, Nombre: resp.RESULTADO[i].NOMBRE, Semestre: resp.RESULTADO[i].SEMESTRE, PagoConfirmado: resp.RESULTADO[i].PAGO_CONFIRMADO, FechaReferencia: resp.RESULTADO[i].FECHA_GENERACION});
+                        }
+                        if (callBackResult != undefined) {
+                            callBackResult({ ressult: 'tgp', message: null });
+                        }
+                    }
+                    else {
+                        callBackResult({ ressult: "notgp", message: resp.MENSAJE_ERROR });
+                    }
+                },
+                error: function (ex) {
+                    if (callBackResult != undefined) {
+                        callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener las referencias generadas." });
+                    }
+                }
+            });
+    },
+
     Ciclos: function (callBackResult) {
         var self = this;
         self.ciclos.length = 0;

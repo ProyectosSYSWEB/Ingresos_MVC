@@ -851,6 +851,28 @@ namespace Sys_Ingresos.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+        public JsonResult ListarReferenciasGeneradas(string Matricula, string Escuela)
+        {
+            RESULTADO_SCE_REFERENCIAS objResultado = new RESULTADO_SCE_REFERENCIAS();
+
+            try
+            {
+                string Verificador = string.Empty;
+                var Lista = GridDataContext.ObtenerReferenciasGeneradas(Matricula, Escuela);
+                objResultado.ERROR = false;
+                objResultado.MENSAJE_ERROR = "";
+                objResultado.RESULTADO = Lista;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public JsonResult ListarCiclosLicenciatura()
         {
             RESULTADOCOMUN objResultado = new RESULTADOCOMUN();
