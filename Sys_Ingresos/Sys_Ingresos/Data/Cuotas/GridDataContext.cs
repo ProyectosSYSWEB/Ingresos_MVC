@@ -637,6 +637,7 @@ namespace Sys_Ingresos.Data.Cuotas
                     objReferencia.SEMESTRE = Convert.ToString(dr[14]);
                     objReferencia.PAGO_CONFIRMADO= Convert.ToString(dr[10]);
                     objReferencia.FECHA_GENERACION = Convert.ToString(dr[9]);
+                    objReferencia.TOTAL = Convert.ToDouble(dr[15]);
                     listarReferencias.Add(objReferencia);
                 }
                 return listarReferencias;

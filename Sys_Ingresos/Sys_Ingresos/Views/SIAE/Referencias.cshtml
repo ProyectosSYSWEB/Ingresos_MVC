@@ -50,7 +50,6 @@
                                 <td>NOMBRE</td>
                                 <td>SEMESTRE ACTUAL</td>
                                 <td>CORREO</td>
-                                <td></td>
                             </tr>
                         </thead>
                         <tbody ng-pagination="cts in ctrl.catAlumnos |  itemsPerPage: 10 " pagination-id="PaginationGridAR">
@@ -63,14 +62,6 @@
                                 <td>{{cts.Nombre}}</td>
                                 <td>{{cts.Semestre}}</td>
                                 <td>{{cts.Correo}}</td>
-                                <td style="text-align:center">
-                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Agregar" ng-click="ctrl.Agregar(cts.Matricula,cts.Semestre,cts.Dependencia,cts.Nombre)">
-                                        Generar Referencia
-                                    </button>
-                                </td>
-                                <td>
-                                    <input type="button" class="btn btn-warning" data-toggle="modal" data-target="#Oficio" value="Agregar Oficio" />
-                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -79,7 +70,20 @@
                 <ng-pagination-control boundary-links="true" pagination-id="PaginationGridAR"></ng-pagination-control>
             </div>
             <div>
-                <h3 class="font-weight-bold">Referencias Generadas</h3>
+                @*<h3 class="font-weight-bold">Referencias Generadas</h3>*@
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col col-xs-6">
+                            <h3 class="panel-title font-weight-bold">Referencias Generadas</h3>
+                        </div>
+                        <div class="col col-xs-6 text-right">
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Agregar" ng-click="ctrl.Agregar(cts.Matricula,cts.Semestre,cts.Dependencia,cts.Nombre)">
+                                Generar Referencia
+                            </button>
+                            <input type="button" class="btn btn-warning" data-toggle="modal" data-target="#Oficio" value="Agregar Oficio" />
+                        </div>
+                    </div>
+                </div>
                 <div class="table-responsive" style="box-shadow: 10px 40px 96px rgba(0,0,0,.1)">
                     <table class="table table-hover">
                         <thead style="font-weight:bold">
@@ -93,7 +97,7 @@
                                 <td>SEMESTRE</td>
                                 <td>FECHA REFERENCIA</td>
                                 <td>PAGO CONFIRMADO</td>
-                                <td></td>
+                                <td>IMPORTE</td>
                             </tr>
                         </thead>
                         <tbody ng-pagination="cts in ctrl.referencias_generadas |  itemsPerPage: 10 " pagination-id="PaginationGridRef">
@@ -107,10 +111,7 @@
                                 <td>{{cts.Semestre}}</td>
                                 <td>{{cts.FechaReferencia}}</td>
                                 <td>{{cts.PagoConfirmado}}</td>
-                                <td style="text-align:center"></td>
-                                <td>
-                                    <input type="button" class="btn btn-warning" data-toggle="modal" data-target="#Oficio" value="Agregar Oficio" />
-                                </td>
+                                <td>{{cts.ImpTotal}}</td>
                             </tr>
                         </tbody>
                     </table>
