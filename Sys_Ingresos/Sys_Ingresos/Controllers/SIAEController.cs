@@ -1033,6 +1033,93 @@ namespace Sys_Ingresos.Controllers
             }
         }
 
+        
+
+
+
+        [HttpPost]
+        public ActionResult OficiosAdjuntos()
+        {
+            SCE_REFERENCIAS objReferencia = new SCE_REFERENCIAS();
+            string Respuesta = "";            
+            // Checking no of files injected in Request object  
+            if (Request.Files.Count > 0)
+            {
+                try
+                {
+                    objReferencia = (SCE_REFERENCIAS)System.Web.HttpContext.Current.Session["NombreOficio"];
+                    //  Get all files from Request object  
+                    HttpFileCollectionBase files = Request.Files;
+                    for (int i = 0; i < files.Count; i++)
+                    {
+                        //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
+                        //string filename = Path.GetFileName(Request.Files[i].FileName);  
+
+                        HttpPostedFileBase file = files[i];
+                        string fname;
+                        //string fnameCondicion;
+                        //char separador = '.';
+
+                        // Checking for Internet Explorer  
+                        if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+                        {
+                            string[] testfiles = file.FileName.Split(new char[] { '\\' });
+                            fname = testfiles[testfiles.Length - 1];
+                        }
+                        else
+                        {
+                            //fnameCondicion = file.FileName;
+                            fname = objReferencia.DEPENDENCIA + "-" + objReferencia.REFERENCIA;
+                            //fname = file.FileName;
+                        }
+
+                        //string[] valor = fnameCondicion.Split(separador);
+
+                        // Get the complete folder path and store the file inside it.
+                        string fnameDoc = "../OficiosAdjuntos/" + fname;
+                        //objArchivoFolio.ARCHIVO = fname;
+                        //System.Web.HttpContext.Current.Session["SessionRutaDoc"] = objArchivoFolio;
+                        fname = Server.MapPath(fnameDoc);
+                        file.SaveAs(fname);
+                        Respuesta = "1";
+                    }
+                    // Returns message that successfully uploaded  
+                    return Json(Respuesta);
+                }
+                catch (Exception ex)
+                {
+                    return Json("Un error ha ocurrido. Error: " + ex.Message);
+                }
+            }
+            else
+            {
+                return Json("No hay archivos seleccionados.");
+            }
+        }
+
+        public JsonResult GuardarNombreOficioAdjunto(string Dependencia, string NoOficio)
+        {
+            SCE_REFERENCIAS objReferencias = new SCE_REFERENCIAS();
+            RESULTADO_SCE_REFERENCIAS objResultado = new RESULTADO_SCE_REFERENCIAS();
+            try
+            {
+                objReferencias.DEPENDENCIA = Dependencia;
+                objReferencias.REFERENCIA = NoOficio;
+                System.Web.HttpContext.Current.Session["NombreOficio"] = objReferencias;
+                objResultado.ERROR = false;
+                objResultado.MENSAJE_ERROR = "";
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         // GET: SIAE/Details/5
         public ActionResult Details(int id)
         {
