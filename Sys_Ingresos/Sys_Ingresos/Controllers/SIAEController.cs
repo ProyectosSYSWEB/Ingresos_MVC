@@ -1042,6 +1042,10 @@ namespace Sys_Ingresos.Controllers
         {
             SCE_REFERENCIAS objReferencia = new SCE_REFERENCIAS();
             string Respuesta = "";            
+            //Variables para indicar el orgien y el destino del archivo a copiar
+            string sourceDir = "C:/inetpub/wwwroot/IngresosMVC/OficiosAdjuntos";
+            string backupDir = "C:/inetpub/wwwroot/SUNVA/DocsFolios";
+            
             // Checking no of files injected in Request object  
             if (Request.Files.Count > 0)
             {
@@ -1057,6 +1061,8 @@ namespace Sys_Ingresos.Controllers
 
                         HttpPostedFileBase file = files[i];
                         string fname;
+                        string extencion;
+                        string archivoNombre;
                         //string fnameCondicion;
                         //char separador = '.';
 
@@ -1065,23 +1071,26 @@ namespace Sys_Ingresos.Controllers
                         {
                             string[] testfiles = file.FileName.Split(new char[] { '\\' });
                             fname = testfiles[testfiles.Length - 1];
+                            archivoNombre = fname;
                         }
                         else
                         {
+                            extencion = Path.GetExtension(file.FileName);
                             //fnameCondicion = file.FileName;
-                            fname = objReferencia.DEPENDENCIA + "-" + objReferencia.REFERENCIA;
+                            fname = objReferencia.DEPENDENCIA + "-" + objReferencia.REFERENCIA + extencion;
+                            archivoNombre = fname;
                             //fname = file.FileName;
                         }
 
-                        //string[] valor = fnameCondicion.Split(separador);
+                        
 
                         // Get the complete folder path and store the file inside it.
                         string fnameDoc = "../OficiosAdjuntos/" + fname;
-                        //objArchivoFolio.ARCHIVO = fname;
-                        //System.Web.HttpContext.Current.Session["SessionRutaDoc"] = objArchivoFolio;
+                        
                         fname = Server.MapPath(fnameDoc);
                         file.SaveAs(fname);
                         Respuesta = "1";
+                        System.IO.File.Copy(Path.Combine(sourceDir, archivoNombre), Path.Combine(backupDir, archivoNombre), true);
                     }
                     // Returns message that successfully uploaded  
                     return Json(Respuesta);
