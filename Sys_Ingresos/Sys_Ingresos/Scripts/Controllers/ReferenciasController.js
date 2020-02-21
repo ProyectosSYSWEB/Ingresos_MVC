@@ -200,42 +200,109 @@
             xhr.send("IdReferencia=" + self.cve_id_referencia);
             //$("#modalCargandoDoc").modal("hide");
         };  
-        this.DatosFolio = () => {        
+
+
+
+        this.DatosFolio = () => {
+            GuardarNombreOficioAdjunto();
+            SubirOficiosAdjuntos();            
             let fechaOfc = self.ofc_fecha.toString();
             var d = new Date(fechaOfc);
             month = '' + (d.getMonth() + 1);
             day = '' + d.getDate();
             year = d.getFullYear();
-
             if (month.length < 2)
                 month = '0' + month;
             if (day.length < 2)
                 day = '0' + day;
-
             fechaOfc = day + '/' + month + '/' + year;
 
             let asunto = self.ofc_asunto.toUpperCase();
             let numOfc = self.ofc_numOfc.toUpperCase();                                    
             var requestURL = 'https://sysweb.unach.mx/SUNVA/Folios/InsertarDatosCorrespondenciaFinanzas?Dependencia=42401&Emite=Prueba&Puesto=Prueba&Destinatario=72401&Asunto=' + asunto + '&Folio=' + numOfc + '&Fecha=' + fechaOfc + '&Ruta=ruta&Ejercicio='+ year+'&Usuario=ROSALES';
+
             var request = new XMLHttpRequest();
             request.open('POST', requestURL);
             request.responseType = 'json';
             request.send();
 
-
             request.onload = function () {
                 let resultado = request.response.Error;
-                if (resultado === false)
+                if (resultado === false) {
                     alert("Oficio agregado");
+                   
+                }
                 else
                     alert(request.response.MensajeError);
+            };            
+        };
 
-            };
+        var SubirOficiosAdjuntos = () => {
+            if (window.FormData !== undefined) {
 
+                var fileUpload = $("#oficioAdjunto").get(0);
+                var files = fileUpload.files;
 
+                // Create FormData object  
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object  
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+
+                // Adding one more key to FormData object  
+                fileData.append('username', "UNACH-DSIA");
+
+                $.ajax({
+                    url: '../SIAE/OficiosAdjuntos',
+                    type: "POST",
+                    contentType: false, // Not to set any content header  
+                    processData: false, // Not to process data  
+                    data: fileData,
+                    success: function (result) {
+                        if (result === "1") {
+                            alert("Archivos subidos correctamente");
+                            var control = jQuery('#oficioAdjunto');
+                            control.replaceWith(control = control.val('').clone(true));
+                            return 0;
+                        }
+                        else if (result !== 0) {
+                            alert(result);
+                            return 1;
+                        }
+                        else {
+                            alert("Solo se aceptan archivos pdf");
+                            return 2;
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                        return err.statusText;
+                    }
+                });
+            }
+            else {
+                alert("FormData is not supported.");
+            }
         };
 
 
+
+        var GuardarNombreOficioAdjunto = function () {            
+            referenciasContext.GuardarNombreOficioAdjunto(72401, self.ofc_numOfc, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":                        
+                        break;
+                    case "notgp":                        
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+
+        };
 
     }]);
 })();

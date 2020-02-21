@@ -157,4 +157,24 @@ var referenciasContext =
                 }
             });
     },
+    GuardarNombreOficioAdjunto: function (Dependencia,NoOficio, callBackResult) {        
+        $.ajax(
+            {
+                type: 'POST',
+                cache: false,
+                url: urlServer + 'SIAE/GuardarNombreOficioAdjunto',
+                data: { Dependencia, NoOficio},
+                success: function (resp) {
+                    if (resp.Error === false)
+                        callBackResult({ ressult: 'tgp', message: null });
+                    else
+                        callBackResult({ ressult: 'notgp', message: resp.MensajeError });
+                },
+                error: function (ex) {
+                    if (callBackResult != undefined) {
+                        callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
+                    }
+                }
+            });
+    },
 }
