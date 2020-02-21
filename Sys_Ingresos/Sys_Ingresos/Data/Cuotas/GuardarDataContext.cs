@@ -314,7 +314,7 @@ namespace Sys_Ingresos.Data.Cuotas
                 objReferencia.REFERENCIA = Convert.ToString(Cmd.Parameters["p_Referencia"].Value);
                 string valor=Convert.ToString(Cmd.Parameters["p_id_referencia"].Value);
                 if (valor == "null")
-                    Verificador = "Ya fue confirmado el pago de esta referencia "+ objReferencia.REFERENCIA+", favor de verificar.";
+                    Verificador = Convert.ToString(Cmd.Parameters["P_Bandera"].Value);  //"Ya fue confirmado el pago de esta referencia " + objReferencia.REFERENCIA+", favor de verificar.";
                 else
                     objReferencia.ID = Convert.ToInt32(Cmd.Parameters["p_id_referencia"].Value.ToString());
                 list.Add(objReferencia);

@@ -37,19 +37,26 @@ var referenciasContext =
                 }
             });
     },
-    ReferenciasGeneradas: function (Matricula, Escuela, callBackResult) {
+    ReferenciasGeneradas: function (Matricula, callBackResult) {
         var self = this;
+        var EsPagado = true;
         self.referenciasGeneradas.length = 0;
         $.ajax(
             {
                 type: 'GET',
                 cache: false,
                 url: urlServer + 'SIAE/ListarReferenciasGeneradas',
-                data: { Matricula, Escuela },
+                data: { Matricula },
                 success: function (resp) {
                     if (resp.ERROR == false) {
                         for (var i = 0; i < resp.RESULTADO.length; i++) {
-                            self.referenciasGeneradas.push({ Matricula: resp.RESULTADO[i].MATRICULA, Ciclo: resp.RESULTADO[i].CICLO_ACTUAL, Tipo: resp.RESULTADO[i].MOVIMIENTO, Dependencia: resp.RESULTADO[i].DEPENDENCIA, Carrera: resp.RESULTADO[i].ID_CARRERA, Nombre: resp.RESULTADO[i].NOMBRE, Semestre: resp.RESULTADO[i].SEMESTRE, PagoConfirmado: resp.RESULTADO[i].PAGO_CONFIRMADO, FechaReferencia: resp.RESULTADO[i].FECHA_GENERACION, ImpTotal: resp.RESULTADO[i].TOTAL});
+                            if (resp.RESULTADO[i].PAGO_CONFIRMADO == "S") {
+                                EsPagado = true;
+                            }
+                            else {
+                                EsPagado = false;
+                            }
+                            self.referenciasGeneradas.push({ Matricula: resp.RESULTADO[i].MATRICULA, Ciclo: resp.RESULTADO[i].CICLO_ACTUAL, Tipo: resp.RESULTADO[i].MOVIMIENTO, Dependencia: resp.RESULTADO[i].DEPENDENCIA, Carrera: resp.RESULTADO[i].ID_CARRERA, Nombre: resp.RESULTADO[i].NOMBRE, Semestre: resp.RESULTADO[i].SEMESTRE, PagoConfirmado: resp.RESULTADO[i].PAGO_CONFIRMADO, FechaReferencia: resp.RESULTADO[i].FECHA_GENERACION, ImpTotal: resp.RESULTADO[i].TOTAL, Referencia: resp.RESULTADO[i].REFERENCIA, Pagado: EsPagado, IdRef: resp.RESULTADO[i].ID});
                         }
                         if (callBackResult != undefined) {
                             callBackResult({ ressult: 'tgp', message: null });

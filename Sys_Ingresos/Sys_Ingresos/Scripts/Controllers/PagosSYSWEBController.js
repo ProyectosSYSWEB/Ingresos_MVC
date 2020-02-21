@@ -114,8 +114,12 @@ var ObtenerCiclos = function () {
             });
         };
 
-        this.DatosRefSYSWEB = function (Referencia) {
+        this.DatosRefSYSWEB = function (Referencia, Matricula) {
             self.cve_referencia = Referencia;
+            self.cve_ciclo = "";
+            self.cve_tipo = "T";
+            self.cve_matricula = Matricula;
+            self.cve_semestre = "";
         };
     }]);
 })();

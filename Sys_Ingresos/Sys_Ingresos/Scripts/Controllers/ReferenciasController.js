@@ -9,19 +9,35 @@
             ObtenerCiclos();
             self.cve_dias_vigencia = "1";
             self.style = "NOT";
+            $("#txtBuscar").focus();
+
         };
         this.BuscarAlumno = function () {
             ObtenerAlumnos();
+            ObtenerReferenciasGeneradas();
+            self.cve_semestre = "";
+            self.cve_escuela = "";
+            self.cve_nombre = "";
+            self.cve_matricula = "";
         };
+
+        this.Pagado = function (Matricula) {
+            self.Matricula = Matricula;
+        }
+
+        this.getIdAA = function (Matricula) {
+            self.Matricula = Matricula;
+        }
         var ObtenerAlumnos = function () {
             document.getElementById("precarga").className = "show";
+            self.Matricula = "";
             referenciasContext.CatalogoAlumnos(self.cve_busca, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         self.catAlumnos = referenciasContext.alumnos;
                         if (referenciasContext.alumnos.length > 0) {
                             self.NoActv = "";
-                            ObtenerReferenciasGeneradas();
+                            //ObtenerReferenciasGeneradas();
                         }
                         else
                             self.NoActv = "No se encontraron datos.";
@@ -39,9 +55,30 @@
             });
 
         };
-        var ObtenerReferenciasGeneradas = function () {
+        this.ObtenerReferenciasSIAE = function (Matricula, Semestre,Escuela,Nombre) {
+            var SemestreActual = Semestre;
+            self.cve_semestre = parseInt(Semestre) + 1;
+            self.cve_escuela = Escuela;
+            self.cve_nombre = Nombre;
+            self.cve_matricula = Matricula;
+            self.style = "NOT";
+            switch (self.cve_semestre) {
+                case 1:
+                    self.cve_tipo = "I";
+                    break;
+                case 0:
+                    self.cve_tipo = "F";
+                    break;
+                default:
+                    self.cve_tipo = "R";
+                    break;
+            }
+            ObtenerReferenciasGeneradas(Matricula);
+        };
+
+        var ObtenerReferenciasGeneradas = function (Matricula) {
             document.getElementById("precarga").className = "show";
-            referenciasContext.ReferenciasGeneradas(self.cve_busca, self.cve_dependencia, function (resp) {
+            referenciasContext.ReferenciasGeneradas(Matricula, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         self.referencias_generadas = referenciasContext.referenciasGeneradas;
@@ -109,6 +146,7 @@
                         self.cve_id_referencia = referenciasContext.referencia[0].IdReferencia;
                         self.style = "OK";
                         document.getElementById("precarga").className = "hidden";
+                        //ObtenerReferenciasGeneradas(Matricula);
                         break;
                     case "notgp":
                         //self.mensaje_gral = resp.message;
@@ -121,6 +159,7 @@
                         break;
                 }
                 $scope.$apply();
+                ObtenerReferenciasGeneradas(self.cve_matricula);
             });
         };
         var ObtenerEscuelas = function () {

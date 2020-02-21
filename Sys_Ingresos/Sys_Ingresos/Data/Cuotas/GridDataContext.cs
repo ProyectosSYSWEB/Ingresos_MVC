@@ -620,8 +620,8 @@ namespace Sys_Ingresos.Data.Cuotas
 
             try
             {
-                string[] Parametros = { "P_Matricula", "P_Escuela" };
-                object[] Valores = { Matricula, Escuela };
+                string[] Parametros = { "P_Matricula" };
+                object[] Valores = { Matricula };
                 OracleDataReader dr = null;
                 cmd = exeProc.GenerarOracleCommandCursor("pkg_configuracion.Obt_Grid_ReferenciasGen", ref dr, Parametros, Valores);
                 List<SCE_REFERENCIAS> listarReferencias = new List<SCE_REFERENCIAS>();
@@ -638,6 +638,8 @@ namespace Sys_Ingresos.Data.Cuotas
                     objReferencia.PAGO_CONFIRMADO= Convert.ToString(dr[10]);
                     objReferencia.FECHA_GENERACION = Convert.ToString(dr[9]);
                     objReferencia.TOTAL = Convert.ToDouble(dr[15]);
+                    objReferencia.ID = Convert.ToInt32(dr[16]);
+                    objReferencia.REFERENCIA = Convert.ToString(dr[3]);
                     listarReferencias.Add(objReferencia);
                 }
                 return listarReferencias;

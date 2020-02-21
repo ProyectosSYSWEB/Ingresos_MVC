@@ -4,124 +4,175 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Referencias</h2>
+@*<h2>Referencias</h2>*@
 
 <div id="Referencias" ng-app="ReferenciasWeb" ng-controller="ReferenciasSYSWEBController as ctrl" ng-init="ctrl.Inicio()">
     <div class="form-inline">
-        <div class=".col-sm-1">
-            <div id="precarga" class="hidden"><input type="image" class="center" src="~/Images/loader.gif" /></div>
-        </div>
         <div id="divError" class="alert alert-danger hidden" role="alert">
             {{ctrl.mensaje_gral}}
         </div>
         <div class="panel-heading">
-            <div class="row">
-                <div class="col-sm-3">
-                    <label for="lblEscuela">Escuela:</label>
+            @*<div class="row">
+                    <div class="col-sm-3">
+                        <label for="lblEscuela">Escuela:</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <select class="form-control select2" name="cmbEscuela" id="cmbIEscuela" ng-options="option.Id as option.Descripcion for option in ctrl.dependencias" ng-model="ctrl.cve_dependencia"></select>
+                    </div>
+                </div>*@
+            @*<div class="row">
+                    <div class="col-sm-3">
+
+                    </div>
+                    <div class="col-sm-9">
+                        <div>
+
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    <select class="form-control select2" name="cmbEscuela" id="cmbIEscuela" ng-options="option.Id as option.Descripcion for option in ctrl.dependencias" ng-model="ctrl.cve_dependencia"></select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-3">
-                    <p>Buscar por Ficha/Matricula:</p>
-                </div>
-                <div class="col-sm-9">
-                    <div>
-                        <input class="form-control" name="txtBuscar" type="text" ng-model="ctrl.cve_busca" required />
+                <div>*@
+            @*<h3 class="font-weight-bold">Aspirantes/Alumno</h3>*@
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col col-xs-6">
+                        <h3 class="panel-title font-weight-bold">Aspirantes/Alumno</h3>
+                    </div>
+                    <div class="col col-xs-6 text-right">
+                        <div id="precarga" class="hidden"><input type="image" class="center" src="~/Images/loader.gif" style="width:20px; height:20px" /></div>
+
+                        <p>Buscar por Ficha/Matricula:</p>
+                        <input class="form-control" name="txtBuscar" id="txtBuscar" type="text" ng-model="ctrl.cve_busca" required />
                         <button type="button" class="btn btn-primary" ng-click="ctrl.BuscarAlumno()" style="width:50px">
                             <i class="fa fa-search" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            <div>
-                <h3 class="font-weight-bold">Aspirantes/Alumno</h3>
-                <div class="table-responsive" style="box-shadow: 10px 40px 96px rgba(0,0,0,.1)">
-                    <table class="table table-hover">
-                        <thead style="font-weight:bold">
-                            <tr>
-                                <td>TIPO</td>
-                                <td>CICLO ACTUAL</td>
-                                <td>DEPENDENCIA</td>
-                                <td>CARRERA</td>
-                                <td>FICHA/MATRICULA</td>
-                                <td>NOMBRE</td>
-                                <td>SEMESTRE ACTUAL</td>
-                                <td>CORREO</td>
-                            </tr>
-                        </thead>
-                        <tbody ng-pagination="cts in ctrl.catAlumnos |  itemsPerPage: 10 " pagination-id="PaginationGridAR">
-                            <tr>
-                                <td>{{cts.TipoAlumno}}</td>
-                                <td>{{cts.Ciclo}}</td>
-                                <td>{{cts.Dependencia}}</td>
-                                <td>{{cts.Carrera}}</td>
-                                <td>{{cts.Matricula}}</td>
-                                <td>{{cts.Nombre}}</td>
-                                <td>{{cts.Semestre}}</td>
-                                <td>{{cts.Correo}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="mb-5" style="text-align:center">{{ctrl.NoActv}}</div>
-                </div>
-                <ng-pagination-control boundary-links="true" pagination-id="PaginationGridAR"></ng-pagination-control>
+            <div class="table-responsive" style="box-shadow: 10px 40px 96px rgba(0,0,0,.1)">
+                <table class="table table-hover">
+                    <thead style="font-weight:bold">
+                        <tr>
+                            <td>TIPO</td>
+                            <td>CICLO ACTUAL</td>
+                            <td>DEPENDENCIA</td>
+                            <td>CARRERA</td>
+                            <td>FICHA/MATRICULA</td>
+                            <td>NOMBRE</td>
+                            <td>SEMESTRE ACTUAL</td>
+                            <td>CORREO</td>
+                        </tr>
+                    </thead>
+                    <tbody ng-pagination="cts in ctrl.catAlumnos |  itemsPerPage: 5 " pagination-id="PaginationGridAR">
+                        <tr ng-click="ctrl.ObtenerReferenciasSIAE(cts.Matricula,cts.Semestre,cts.Dependencia,cts.Nombre);  ctrl.getIdAA(cts.Matricula); AA= ctrl.Matricula" ng-class="{'Mybg': AA == ctrl.Matricula}" class="cursor-pointer">
+                            <td>{{cts.TipoAlumno}}</td>
+                            <td>{{cts.Ciclo}}</td>
+                            <td>{{cts.Dependencia}}</td>
+                            <td>{{cts.Carrera}}</td>
+                            <td>{{cts.Matricula}}</td>
+                            <td>{{cts.Nombre}}</td>
+                            <td>{{cts.Semestre}}</td>
+                            <td>{{cts.Correo}}</td>
+                            @*<td>
+                                    <button type="button" class="btn btn-info" ng-click="ctrl.ObtenerReferenciasSIAE(cts.Matricula,cts.Semestre,cts.Dependencia,cts.Nombre)">
+                                        Ver
+                                    </button>
+                                </td>*@
+                    </tbody>
+                </table>
+                <div class="mb-5" style="text-align:center">{{ctrl.NoActv}}</div>
             </div>
-            <div>
-                @*<h3 class="font-weight-bold">Referencias Generadas</h3>*@
-                <div class="panel-heading">
+            <ng-pagination-control boundary-links="true" pagination-id="PaginationGridAR"></ng-pagination-control>
+        </div>
+        <div>
+            @*<h3 class="font-weight-bold">Referencias Generadas</h3>*@
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col col-xs-6">
+                        <h3 class="panel-title font-weight-bold">Referencias Generadas</h3>
+                    </div>
+                    <div class="col col-xs-6 text-right">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Agregar" ng-click="LimpiarCampos();" @*ng-click="ctrl.Agregar(ctrl.Matricula,ctrl.Semestre,ctrl.Dependencia,ctrl.Nombre)"*@>
+                            Generar Referencia
+                        </button>
+                        <input type="button" class="btn btn-warning" data-toggle="modal" data-target="#Oficio" value="Agregar Oficio" />
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive" style="box-shadow: 10px 40px 96px rgba(0,0,0,.1)">
+                <table class="table table-hover" style="font-size:12px;">
+                    <thead style="font-weight:bold">
+                        <tr>
+                            <td></td>
+                            <td>FICHA / MATRICULA</td>
+                            <td>CICLO</td>
+                            <td>TIPO</td>
+                            <td>DEPENDENCIA</td>
+                            <td>CARRERA</td>
+                            <td>NOMBRE</td>
+                            <td>SEMESTRE</td>
+                            <td>REFERENCIA</td>
+                            <td>FECHA REFERENCIA</td>
+                            <td>PAGADO</td>
+                            <td>IMPORTE</td>
+                        </tr>
+                    </thead>
+                    <tbody ng-pagination="cts in ctrl.referencias_generadas |  itemsPerPage: 10 " pagination-id="PaginationGridRef">
+                        <tr>
+                            <td>{{cts.IdRef}}</td>
+                            <td>{{cts.Matricula}}</td>
+                            <td>{{cts.Ciclo}}</td>
+                            <td>{{cts.Tipo}}</td>
+                            <td>{{cts.Dependencia}}</td>
+                            <td>{{cts.Carrera}}</td>
+                            <td>{{cts.Nombre}}</td>
+                            <td>{{cts.Semestre}}</td>
+                            <td>{{cts.Referencia}}</td>
+                            <td>{{cts.FechaReferencia}}</td>
+                            <td>{{cts.PagoConfirmado}}</td>
+                            <td>{{cts.ImpTotal | currency}}</td>
+                            <td>
+                                <button type="button" class="btn btn-info" ng-disabled="cts.Pagado" data-toggle="modal" ng-click="ctrl.ObtReferencia(cts.IdRef)" data-target="#modalCorreo" style="width:50px">
+                                    <i class="fa fa-envelope-o"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mb-5" style="text-align:center">{{ctrl.NoActvRefGen}}</div>
+            </div>
+            <ng-pagination-control boundary-links="true" pagination-id="PaginationGridRef"></ng-pagination-control>
+        </div>
+    </div>
+    @*MODAL PARA CORREO*@
+    <div class="modal" id="modalCorreo" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Datos del Destinatario</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
                     <div class="row">
-                        <div class="col col-xs-6">
-                            <h3 class="panel-title font-weight-bold">Referencias Generadas</h3>
-                        </div>
-                        <div class="col col-xs-6 text-right">
-                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Agregar" ng-click="ctrl.Agregar(cts.Matricula,cts.Semestre,cts.Dependencia,cts.Nombre)">
-                                Generar Referencia
-                            </button>
-                            <input type="button" class="btn btn-warning" data-toggle="modal" data-target="#Oficio" value="Agregar Oficio" />
+
+                        <div class="input-group mb-3 col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Correo:</span>
+                            </div>
+                            <input ng-model="ctrl.cve_correo" type="text" class="form-control" placeholder="EMail" aria-describedby="basic-addon1">
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive" style="box-shadow: 10px 40px 96px rgba(0,0,0,.1)">
-                    <table class="table table-hover">
-                        <thead style="font-weight:bold">
-                            <tr>
-                                <td>FICHA/MATRICULA</td>
-                                <td>CICLO</td>
-                                <td>TIPO</td>
-                                <td>DEPENDENCIA</td>
-                                <td>CARRERA</td>
-                                <td>NOMBRE</td>
-                                <td>SEMESTRE</td>
-                                <td>FECHA REFERENCIA</td>
-                                <td>PAGO CONFIRMADO</td>
-                                <td>IMPORTE</td>
-                            </tr>
-                        </thead>
-                        <tbody ng-pagination="cts in ctrl.referencias_generadas |  itemsPerPage: 10 " pagination-id="PaginationGridRef">
-                            <tr>
-                                <td>{{cts.Matricula}}</td>
-                                <td>{{cts.Ciclo}}</td>
-                                <td>{{cts.Tipo}}</td>
-                                <td>{{cts.Dependencia}}</td>
-                                <td>{{cts.Carrera}}</td>
-                                <td>{{cts.Nombre}}</td>
-                                <td>{{cts.Semestre}}</td>
-                                <td>{{cts.FechaReferencia}}</td>
-                                <td>{{cts.PagoConfirmado}}</td>
-                                <td>{{cts.ImpTotal}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="mb-5" style="text-align:center">{{ctrl.NoActvRefGen}}</div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-click="ctrl.DatosFolio()">Enviar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 </div>
-                <ng-pagination-control boundary-links="true" pagination-id="PaginationGridRef"></ng-pagination-control>
             </div>
         </div>
     </div>
-
+    @*/**/*@
 
     @*MODAL PARA LOS OFICIOS*@
     <div id="Oficio" class="modal" tabindex="-1" role="dialog">
@@ -271,7 +322,7 @@
                                             <label class="form-check-label" for="inlineRadio1">No</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"  value="S" ng-model="ctrl.cve_cuota_extemporanea" checked>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="S" ng-model="ctrl.cve_cuota_extemporanea" checked>
                                             <label class="form-check-label" for="inlineRadio2">Si</label>
                                         </div>
                                     </div>
@@ -296,6 +347,14 @@
                                             <button type="button" ng-class="{'btn btn-danger': ctrl.style == 'OK', 'hidden': ctrl.style == 'ERROR'}" data-toggle="tooltip" data-placement="top" title="PDF" ng-click="ctrl.ObtReferencia()" style="width:40px">
                                                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                             </button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="font-weight-bold">¿Enviar por correo?</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <input type="checkbox" ng-model="all">
                                         </div>
                                     </div>
                                 </div>
