@@ -2,6 +2,7 @@
     var app = angular.module('ReferenciasWeb', ['ngPagination']);
     app.controller('ReferenciasSYSWEBController', ['$scope', '$compile', function ($scope, $compile) {
         var self = this;
+        let IdReferencia = "";
 
         this.Inicio = function () {
             ObtenerEscuelas();
@@ -183,7 +184,39 @@
             });
 
         };
-        this.ObtReferencia = function () {            
+
+        this.GuardarIdReferencia = (IdRef) => {
+            IdReferencia = IdRef;
+        };
+
+        this.EnviarCorreoReferencia = (correo, correoccp) => {
+            $("#cargandoCorreo").show();
+            $("#enviarCorreo").attr("disabled", true);
+            referenciasContext.EnviarCorreoReferencia(IdReferencia, correo, correoccp, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.cve_correo = "";
+                        alert('Se ha enviado el correo');
+                        $("#modalCorreo").modal("hide");
+                        $("#cargandoCorreo").hide();
+                        $("#enviarCorreo").attr("disabled", false);
+                        break;
+                    case "notgp":
+                        self.cve_correo = "";
+                        alert(resp.message);
+                        //$("#modalCorreo").modal("hide");
+                        $("#cargandoCorreo").hide();
+                        $("#enviarCorreo").attr("disabled", false);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+
+        this.ObtReferencia = function (IdRef) {            
             var xhr = new XMLHttpRequest();
             var ruta = urlServer + 'SIAE/ObtReferenciaPdf';            
             xhr.responseType = 'blob';
@@ -193,11 +226,12 @@
                 if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
                     var blob = new Blob([this.response], { type: 'application/pdf' });
                     var link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(blob);                                        
-                    window.open(link, "", "width=600,height=800");                    
+                    link.href = window.URL.createObjectURL(blob);
+                    window.open(link, "", "width=600,height=800");
                 }
-            }
-            xhr.send("IdReferencia=" + self.cve_id_referencia);
+                $("#modalGenerandoRpt").modal("hide");
+            };
+            xhr.send("IdReferencia=" + IdRef);
             //$("#modalCargandoDoc").modal("hide");
         };  
 

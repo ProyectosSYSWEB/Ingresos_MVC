@@ -177,4 +177,24 @@ var referenciasContext =
                 }
             });
     },
+    EnviarCorreoReferencia: function (IdFicha, Correo, CorreoCcp, callBackResult) {
+        $.ajax(
+            {
+                type: 'POST',
+                cache: false,
+                url: urlServer + 'SIAE/EnviarCorreo',
+                data: { IdFicha, Correo, CorreoCcp },
+                success: function (resp) {
+                    if (resp.ERROR === false)
+                        callBackResult({ ressult: 'tgp', message: null });
+                    else
+                        callBackResult({ ressult: 'notgp', message: resp.MENSAJE_ERROR });
+                },
+                error: function (ex) {
+                    if (callBackResult != undefined) {
+                        callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
+                    }
+                }
+            });
+    }
 }

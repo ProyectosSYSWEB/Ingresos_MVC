@@ -348,6 +348,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="DocsViaticos\" />
     <Folder Include="OficiosAdjuntos\" />
+    <Folder Include="ReferenciasAdjuntos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

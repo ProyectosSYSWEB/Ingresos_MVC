@@ -8,6 +8,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using System.Net.Mime;
+using System.Net.Mail;
 
 namespace Sys_Ingresos.Controllers
 {
@@ -1128,6 +1130,196 @@ namespace Sys_Ingresos.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+
+        //----------------------------------ENVIAR OFICIO POR CORREO-------------------------------------------------------//
+        
+        public JsonResult EnviarCorreo(string IdFicha, string Correo, string CorreoCcp)
+        {
+            RESULTADOCOMUN objResultado = new RESULTADOCOMUN();
+
+            string ruta = string.Empty;
+            string archivo = string.Empty;
+            string asunto = string.Empty;
+            string contenido = string.Empty;
+            string OrigenArchivo = string.Empty;            
+            try
+            {
+                //ruta = "../ReportesFicha/VisualizadorCrystal.aspx?cverep=4&Nombre=" + lblNombre_l.Text + "&Referencia=" + lblReferencia_l.Text + "&Importe=" + lblImporte_l.Text.TrimStart('$') + "&Vigencia=" + lblVigencia_l.Text + "&Concepto=" + hddnConceptos.Value + "&Observaciones=" + hddnObservaciones.Value;
+                ////string _open = "window.open('" + ruta + "', 'miniContenedor', 'toolbar=yes', 'location=no', 'menubar=yes', 'resizable=yes');";
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), Guid.NewGuid().ToString(), ruta, true);
+                objResultado = rptPDFAdjunto("\\Reports\\Ficha_Referenciada_SIAE.rpt", IdFicha);
+                if (objResultado.ERROR == false)
+                {
+                    archivo = Server.MapPath("~") + "ReferenciasAdjuntos\\" + IdFicha + ".PDF";
+                    System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();
+                    asunto = "Ficha Referenciada UNACH-SYSWEB";
+                    contenido = "<font size='2'>Para cualquier duda o aclaración te puedes comunicar a los siguientes telefonos:" + "<br /><br /><strong>DIRECCIÓN DE SISTEMAS DE INFORMACIÓN ADMINISTRATIVA</strong><br />Teléfono - (961) 617 80 00, Ext.: 5503, 5501, 5508 y 5509<br /><br />" +
+                    "<strong>DEPARTAMENTO DE FINANZAS</strong><br />Teléfono - (961) 617 80 00, Ext.: 5108</font>";
+                    string MsjError = string.Empty;
+                    EnvioCorreoAdjunto(ref mmsg, archivo, asunto, contenido, Correo, ref MsjError);
+                    if (MsjError == string.Empty)
+                    {
+                        if (mmsg != null)
+                        {
+                            //modalCorreo.Hide();
+                            //lblMensajeCorreo.Text = "La referencia se ha enviado correctamente al correo: " + txtCorreo.Text;
+                            objResultado.ERROR = false;
+                            objResultado.MENSAJE_ERROR = "";
+                            //OrigenArchivo = Server.MapPath("~") + "ReferenciasAdjuntos\\" + IdFicha + ".PDF";
+                            //if (System.IO.File.Exists(OrigenArchivo))
+                            //System.IO.File.Delete(OrigenArchivo);
+                            //chkCorreo.Visible = false;
+                        }
+                        else
+                        {
+                            objResultado.ERROR = true;
+                            objResultado.MENSAJE_ERROR = MsjError;
+                            //lblMensajeCorreo.Text = "Error en el envio de los archivos. " + MsjError; // ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "modal", "mostrar_modal( 0, '" + MsjError + "');", true);  //lblMsj.Text = ex.Message;
+                            //chkCorreo.Checked = false;
+                        }
+                    }
+                    else
+                    {
+                        //lblMensajeCorreo.Text = MsjError;
+                        objResultado.ERROR = true;
+                        objResultado.MENSAJE_ERROR = MsjError;
+                    }
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                //lblMensajeCorreo.Text = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        private RESULTADOCOMUN rptPDFAdjunto(String Reporte, String IdFicha)
+        {
+            RESULTADOCOMUN objResultado = new RESULTADOCOMUN();
+            ConnectionInfo connectionInfo = new ConnectionInfo();
+            System.Web.UI.Page p = new System.Web.UI.Page();
+            CrystalDecisions.CrystalReports.Engine.ReportDocument report = new CrystalDecisions.CrystalReports.Engine.ReportDocument();
+
+            try
+            {
+                objResultado.ERROR = false;
+                objResultado.MENSAJE_ERROR = "";
+                report.Load(p.Server.MapPath("~") + Reporte);
+                report.SetParameterValue(0, IdFicha);
+
+
+                connectionInfo.ServerName = "DSIA";
+                connectionInfo.UserID = "secadmin";
+                connectionInfo.Password = "secadmin34";
+                SetDBLogonForReport(connectionInfo, report);
+                Response.Buffer = false;
+                Response.ClearContent();
+                Response.ClearHeaders();
+
+
+                report.PrintOptions.PaperSize = PaperSize.PaperLetter;
+                string archivo = p.Server.MapPath("~") + "ReferenciasAdjuntos\\" + IdFicha + ".PDF";
+                report.ExportToDisk(ExportFormatType.PortableDocFormat, archivo); // "FichaReferenciada-" + Nombre.Substring(0, 15));
+                return objResultado;
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                return objResultado;
+                //lblMensajeCorreo.Text = ex.Message;
+            }
+            finally
+            {
+
+                //CR_Reportes.ReportSource = report;
+                report.Close();
+                report.Dispose();
+                //CR_Reportes.Dispose();
+            }
+        }
+
+
+        public void EnvioCorreoAdjunto(ref System.Net.Mail.MailMessage mmsg, string Ruta, string Asunto, string Contenido, string DirCorreo, ref string Error)
+        {
+
+
+            // -------------------------MENSAJE DE CORREO----------------------/
+            //System.Net.Mail.MailMessage mmsg = new System.Net.Mail.MailMessage();  //Creamos un nuevo Objeto de mensaje            
+            mmsg.To.Add(DirCorreo); //Direccion de correo electronico a la que queremos enviar el mensaje
+
+
+            //Asunto
+            mmsg.Subject = Asunto;
+            mmsg.SubjectEncoding = System.Text.Encoding.UTF8;
+
+            //Cuerpo del Mensaje
+            mmsg.Body = Contenido;
+            mmsg.BodyEncoding = System.Text.Encoding.UTF8;
+            mmsg.IsBodyHtml = true; //Si no queremos que se envíe como HTML
+
+            //Correo electronico desde la que enviamos el mensaje
+            mmsg.From = new System.Net.Mail.MailAddress("sysweb@unach.mx", "SYSWEB");
+
+            // Create  the file attachment for this e-mail message.
+            Attachment data = new Attachment(GetStreamFile(Ruta), Path.GetFileName(Ruta), "application/pdf");
+            ContentDisposition disposition = data.ContentDisposition;
+            disposition.CreationDate = System.IO.File.GetCreationTime(Ruta);
+            disposition.ModificationDate = System.IO.File.GetLastWriteTime(Ruta);
+            disposition.ReadDate = System.IO.File.GetLastAccessTime(Ruta);
+            // Add the file attachment to this e-mail message.
+            mmsg.Attachments.Add(data);
+            //Ruta = AppDomain.CurrentDomain.BaseDirectory + "/Facturas/PDF/";
+
+            // -------------------------CLIENTE DE CORREO----------------------/
+            //Creamos un objeto de cliente de correo
+            System.Net.Mail.SmtpClient cliente = new System.Net.Mail.SmtpClient();
+
+            //Hay que crear las credenciales del correo emisor
+            cliente.Credentials =
+                new System.Net.NetworkCredential("sysweb@unach.mx", "Dsia890#");
+
+            cliente.Port = 587; //25;
+            cliente.EnableSsl = true; //false;
+            cliente.Host = "smtp.gmail.com"; //"montebello.unach.mx"; //Para Gmail "smtp.gmail.com";
+
+            try
+            {
+                //Enviamos el mensaje      
+                cliente.Send(mmsg);
+
+            }
+            catch (System.Net.Mail.SmtpException ex)
+            {
+                //Aquí gestionamos los errores al intentar enviar el correo
+                Error = "V-" + (ex.Message);
+            }
+
+        }
+
+        public Stream GetStreamFile(string filePath)
+        {            
+            using (FileStream fileStream = System.IO.File.OpenRead(filePath))
+            {
+                MemoryStream memStream = new MemoryStream();
+                memStream.SetLength(fileStream.Length);
+                fileStream.Read(memStream.GetBuffer(), 0, (int)fileStream.Length);
+
+                return memStream;
+            }
+        }
+
+        
 
         // GET: SIAE/Details/5
         public ActionResult Details(int id)
