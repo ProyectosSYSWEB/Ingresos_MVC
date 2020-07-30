@@ -56,21 +56,40 @@
             });
 
         };
-        this.ObtenerReferenciasSIAE = function (Matricula, Semestre,Escuela,Nombre) {
+
+        this.ValidaSemestre = function () {
+            if (self.cve_tipo === "CN")
+                self.cve_semestre = "98";
+            else if (self.cve_tipo==="I")
+                self.cve_semestre = 1;
+            else if (self.cve_tipo === "R")
+                self.cve_semestre = parseInt(Semestre) + 1;
+
+
+        };
+
+        this.ObtenerReferenciasSIAE = function (Matricula, Semestre,Escuela,Nombre,Carrera) {
             var SemestreActual = Semestre;
-            self.cve_semestre = parseInt(Semestre) + 1;
+            //self.cve_semestre = parseInt(Semestre) + 1;
             self.cve_escuela = Escuela;
             self.cve_nombre = Nombre;
             self.cve_matricula = Matricula;
+            self.cve_carrera = Carrera;
             self.style = "NOT";
             switch (self.cve_semestre) {
                 case 1:
+                    //self.cve_semestre = parseInt(Semestre) + 1;
                     self.cve_tipo = "I";
                     break;
                 case 0:
                     self.cve_tipo = "F";
+                    break;                
+                case 98:
+                    //self.cve_semestre = "98";
+                    self.cve_tipo = "CN";
                     break;
                 default:
+                    //self.cve_semestre = parseInt(Semestre) + 1;
                     self.cve_tipo = "R";
                     break;
             }
@@ -140,7 +159,8 @@
         };
         this.GenerarReferencia = function (Semestre, Escuela, Nombre) {
             document.getElementById("precarga").className = "show";
-            referenciasContext.GenerarReferencia(self.cve_matricula, self.cve_escuela, self.cve_semestre, self.cve_ciclo, self.cve_tipo, self.cve_nombre, self.cve_dias_vigencia, self.cve_cuota_extemporanea, function (resp) {
+            self.Referencia = "";
+            referenciasContext.GenerarReferencia(self.cve_matricula, self.cve_escuela, self.cve_semestre, self.cve_ciclo, self.cve_tipo, self.cve_nombre, self.cve_dias_vigencia, self.cve_cuota_extemporanea, self.cve_carrera, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         self.Referencia = referenciasContext.referencia[0].Referencia;
@@ -216,7 +236,7 @@
         };
 
 
-        this.ObtReferencia = function (IdRef) {            
+        this.ObtReferencia = function () {            
             var xhr = new XMLHttpRequest();
             var ruta = urlServer + 'SIAE/ObtReferenciaPdf';            
             xhr.responseType = 'blob';
@@ -231,7 +251,7 @@
                 }
                 $("#modalGenerandoRpt").modal("hide");
             };
-            xhr.send("IdReferencia=" + IdRef);
+            xhr.send("IdReferencia=" + self.cve_id_referencia);
             //$("#modalCargandoDoc").modal("hide");
         };  
 

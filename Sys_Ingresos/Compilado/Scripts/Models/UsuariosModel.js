@@ -9,8 +9,10 @@ var usuarioContext =
     depenAsig: [],
     mnuAsig: [],
     grupos: [],
+    Opcionesgrupos: [],
     listaDependenciasTodas: [],
-    UsuariosIngresos: function (Sistema, callBackResult) {
+    usuario: [],
+    UsuariosIngresos: function (callBackResult) {
         var self = this;
         self.usuarios.length = 0;
         $.ajax(
@@ -18,15 +20,18 @@ var usuarioContext =
                 type: "GET",
                 cache: false,
                 url: urlServer + "Usuarios/ListarUsuarios",
-                data: { Sistema },
+                data: {},
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 success: function (resp) {
                     for (var i = 0; i < resp.length; i++) {
-                        self.usuarios.push({ UsuarioIng: resp[i].USUARIO, NombreIng: resp[i].NOMBRE, Contrasenia: resp[i].PASSWORD, Telefono: resp[i].TELEFONOS, EMail: resp[i].CORREO });
+                        self.usuarios.push({
+                            UsuarioIng: resp[i].USUARIO, NombreIng: resp[i].NOMBRE, Contrasenia: resp[i].PASSWORD, Telefono: resp[i].TELEFONOS, EMail: resp[i].CORREO,
+                            Status: resp[i].STATUS
+                        });
                     }
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "tgp", message: null });
                     }
                 },
@@ -46,13 +51,15 @@ var usuarioContext =
                 cache: false,
                 url: urlServer + "Usuarios/ObtUsuario",
                 success: function (resp) {
-                    for (var i = 0; i < resp.length; i++) {
-                        self.usuarios.push({
-                            UsuarioIng: resp[i].USUARIO, NombreIng: resp[i].NOMBRE, Contrasenia: resp[i].PASSWORD, Telefono: resp[i].TELEFONOS, EMail: resp[i].CORREO,
-                            Dependencia: resp[i].DIRECCION_DEPE
-                        });
+                    if (resp.ERROR === false) {
+                        for (var i = 0; i < resp.RESULTADO.length; i++) {
+                            self.usuarios.push({
+                                UsuarioIng: resp.RESULTADO[i].USUARIO, NombreIng: resp.RESULTADO[i].NOMBRE, Contrasenia: resp.RESULTADO[i].PASSWORD, Telefono: resp.RESULTADO[i].TELEFONOS, EMail: resp.RESULTADO[i].CORREO,
+                                Dependencia: resp.RESULTADO[i].DIRECCION_DEPE, Status: resp.RESULTADO[i].STATUS
+                            });
+                        }
                     }
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "tgp", message: null });
                     }
                 },
@@ -73,7 +80,10 @@ var usuarioContext =
                 url: urlServer + "Usuarios/ListarUsuariosAdmin",
                 success: function (resp) {
                     for (var i = 0; i < resp.length; i++) {
-                        self.usuarios.push({ UsuarioIng: resp[i].USUARIO, NombreIng: resp[i].NOMBRE, Contrasenia: resp[i].PASSWORD, Telefono: resp[i].TELEFONOS, EMail: resp[i].CORREO });
+                        self.usuarios.push({
+                            UsuarioIng: resp[i].USUARIO, NombreIng: resp[i].NOMBRE, Contrasenia: resp[i].PASSWORD, Telefono: resp[i].TELEFONOS, EMail: resp[i].CORREO,
+                            Status: resp[i].STATUS
+                        });
                     }
                     if (callBackResult != undefined) {
                         callBackResult({ ressult: "tgp", message: null });
@@ -282,13 +292,13 @@ var usuarioContext =
                 url: urlServer + "Usuarios/EliminarDatosMenu",
                 data: { Opciones: array },
                 success: function (resp) {
-                    if (resp === true) {
+                    if (resp === "0") {
                         if (callBackResult !== undefined) {
                             callBackResult({ ressult: "tgp", message: null });
                         }
                     }
                     else {
-                        callBackResult({ ressult: "notgp", message: "Ocurrio un error al eliminar la dependencia." });
+                        callBackResult({ ressult: "notgp", message: resp });
                     }
                 },
                 error: function (ex) {
@@ -313,7 +323,7 @@ var usuarioContext =
                     $("#loading").show();
                     for (var i = 0; i < resp.length; i++) {
                         self.listaDependenciasTodas.push({
-                            Id: resp[i].ID, Descripcion: resp[i].DESCRIPCION
+                            Id: resp[i].ID_GRUPO, Descripcion: resp[i].DESCRIPCION
                         });
                     }
                     $("#loading").hide();
@@ -332,22 +342,23 @@ var usuarioContext =
         });
     },
 
-    GuardarUsuario: function (usuario, nombre, contraseña, correo, telefono, dependencia,  callBackResult) {
-        var self = this;        
+    GuardarUsuario: function (usuario, nombre, contraseña, correo, telefono, dependencia, status, callBackResult) {
+        var self = this;
         $.ajax({
             type: "GET",
             cache: false,
             url: urlServer + "Usuarios/GuardarUsuario",
             data: {
-                Usuario: usuario, Nombre: nombre, Contraseña: contraseña, Correo: correo, Telefono: telefono, Dependencia: dependencia
+                Usuario: usuario, Nombre: nombre, Contraseña: contraseña, Correo: correo, Telefono: telefono, Dependencia: dependencia,
+                Status: status
             },
             success: function (resp) {
-                if (resp === true) {                   
+                if (resp.ERROR === false) {
                     callBackResult({ ressult: 'tgp' });
                 }
                 else {
                     $("#loading").hide();
-                    callBackResult({ ressult: 'notgp', message: resp });
+                    callBackResult({ ressult: 'notgp', message: resp.MENSAJE_ERROR });
                 }
             },
             error: function (ex) {
@@ -358,14 +369,15 @@ var usuarioContext =
         });
     },
 
-    EditarUsuario: function (nombre, contraseña, correo, telefono, dependencia, callBackResult) {
+    EditarUsuario: function (nombre, contraseña, correo, telefono, dependencia, status, callBackResult) {
         var self = this;
         $.ajax({
             type: "GET",
             cache: false,
             url: urlServer + "Usuarios/EditarUsuario",
             data: {
-                Nombre: nombre, Contraseña: contraseña, Correo: correo, Telefono: telefono, Dependencia: dependencia
+                Nombre: nombre, Contraseña: contraseña, Correo: correo, Telefono: telefono, Dependencia: dependencia,
+                Status: status
             },
             success: function (resp) {
                 if (resp === true) {
@@ -383,7 +395,7 @@ var usuarioContext =
             }
         });
     },
-    Salir: function (opciones, callBackResult) {        
+    Salir: function (opciones, callBackResult) {
         var self = this;
         //self.depenAsig.length = 0;
         $.ajax(
@@ -417,8 +429,8 @@ var usuarioContext =
             cache: false,
             url: urlServer + "Usuarios/GuardarGrupoUsuario",
             data: {
-                Grupo : grupo
-            },               
+                Grupo: grupo
+            },
             success: function (resp) {
                 if (resp === true) {
                     callBackResult({ ressult: 'tgp' });
@@ -467,6 +479,133 @@ var usuarioContext =
                 }
             }
         });
+    },
+
+    IniciarUsuario: function (callBackResult) {
+        var self = this;
+        self.usuario.length = 0;
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: urlServer + "Usuarios/IniciarUsuario",
+            data: {
+            },
+            success: function (resp) {
+                if (resp !== null) {
+                    self.usuario.push({
+                        Usuario: resp.USUARIO, Sistema: resp.NOMBRE_SISTEMA
+                    });
+                    $("#loading").hide();
+                    callBackResult({ ressult: 'tgp' });
+                }
+                else {
+                    $("#loading").hide();
+                    callBackResult({ ressult: 'notgp', message: resp });
+                }
+            },
+            error: function (ex) {
+                if (callBackResult !== undefined) {
+                    callBackResult({ ressult: 'notgp', message: ex.statusText });
+                }
+            }
+        });
+    },
+
+    ObtenerGrupoOpciones: function (grupo, callBackResult) {
+        var self = this;
+        var tituloMnuNvl = "";
+        var elementoMnuNvl = "";
+        var elementoMnuNvl4 = "";
+        var elementoMnuNvl5 = "";
+        var idSeccionTitulo = "";
+        var idSeccionMnuNvl = "";
+        var idSeccionMnuNvl4 = "";
+        var idOl = "";
+        var idOl2 = "";
+        var idSeccionMnuNvl4Ckb = "";
+        var idSeccionTituloCkb = "";
+        self.Opcionesgrupos.length = 0;
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: urlServer + "Usuarios/ObtenerMenuOpciones",
+            data: {
+                Grupo: grupo
+            },
+            success: function (resp) {
+                for (var i = 0; i < resp.length; i++) {
+                    if (resp[i].NIVEL === 2) {
+                        tituloMnuNvl = resp[i].DESCRIPCION;
+                        elementoMnuNvl = false;
+                        idSeccionTitulo = resp[i].ID;
+                        idSeccionMnuNvl = "";
+                    }
+                    else if (resp[i].NIVEL === 3) {
+                        tituloMnuNvl = false;
+                        elementoMnuNvl = resp[i].DESCRIPCION;
+                        idSeccionMnuNvl = resp[i].ID;
+                        elementoMnuNvl4 = "";
+                    }
+                    else if (resp[i].NIVEL === 4) {
+                        tituloMnuNvl = false;
+                        elementoMnuNvl = false;
+                        elementoMnuNvl4 = resp[i].DESCRIPCION;
+                        idSeccionMnuNvl4 = resp[i].ID;
+                    }
+                    else if (resp[i].NIVEL === 5) {
+                        tituloMnuNvl = false;
+                        elementoMnuNvl = false;
+                        elementoMnuNvl4 = false;
+                        elementoMnuNvl5 = resp[i].DESCRIPCION;
+                    }
+
+                    self.Opcionesgrupos.push({
+                        tituloMnuNvl, elementoMnuNvl4, elementoMnuNvl5, elementoMnuNvl, idSeccionTitulo,
+                        idSeccionMnuNvl, idSeccionMnuNvl4, idOl, asignado: resp[i].ASIGNADO, idSeccionTituloCkb,
+                        idSeccionMnuNvl4Ckb
+                    });
+                }
+                if (callBackResult !== undefined) {
+                    callBackResult({ ressult: "tgp", message: null });
+                }
+                else {
+                    $("#loading").hide();
+                    callBackResult({ ressult: 'notgp', message: resp });
+                }
+            },
+            error: function (ex) {
+                if (callBackResult !== undefined) {
+                    callBackResult({ ressult: 'notgp', message: ex.statusText });
+                }
+            }
+        });
+    },
+    OpcionesGrupoSelect: function (opciones, grupo, callBackResult) {
+        var array = JSON.stringify(opciones);
+        var self = this;
+        //self.depenAsig.length = 0;
+        $.ajax(
+            {
+                type: "GET",
+                cache: false,
+                url: urlServer + "Usuarios/EliminarDatosGrupoMenu",
+                data: { Opciones: array, Grupo: grupo },
+                success: function (resp) {
+                    if (resp === "0") {
+                        if (callBackResult !== undefined) {
+                            callBackResult({ ressult: "tgp", message: null });
+                        }
+                    }
+                    else {
+                        callBackResult({ ressult: "notgp", message: resp });
+                    }
+                },
+                error: function (ex) {
+                    if (callBackResult != undefined) {
+                        callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
+                    }
+                }
+            });
     }
 
 };

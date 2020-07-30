@@ -42,9 +42,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
-    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
-    <Reference Include="CrystalDecisions.Shared, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -52,6 +52,15 @@
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=6.7.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.6.7.1\lib\net45\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=6.7.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.6.7.1\lib\net45\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=6.7.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.6.7.1\lib\net45\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="Oracle.ManagedDataAccess, Version=4.122.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
       <HintPath>..\packages\Oracle.ManagedDataAccess.12.2.1100\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
       <Private>True</Private>
@@ -63,6 +72,9 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=6.7.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.6.7.1\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -131,12 +143,14 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\GraficasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SIAEController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Data\Cuotas\GuardarDataContext.cs" />
     <Compile Include="Data\Cuotas\GridDataContext.cs" />
     <Compile Include="Data\Cuotas\ObtenerDataContext.cs" />
+    <Compile Include="Data\Graficas\CursorDataContext.cs" />
     <Compile Include="Data\Usuarios\ComboDataContext.cs" />
     <Compile Include="Data\Usuarios\GridDataContext.cs" />
     <Compile Include="Data\Usuarios\GuardarDataContext.cs" />
@@ -148,8 +162,13 @@
     <Compile Include="Models\Conexion.cs" />
     <Compile Include="Models\ExeProcedimiento.cs" />
     <Compile Include="Models\FEL_FACTURA.cs" />
+    <Compile Include="Models\GRAFICAS.cs" />
     <Compile Include="Models\GRL_SISTEMAS.cs" />
     <Compile Include="Models\GRL_USUARIOS.cs" />
+    <Compile Include="Models\JWT\Managers\JWTService.cs" />
+    <Compile Include="Models\JWT\Managers\IAuthService.cs" />
+    <Compile Include="Models\JWT\Models\IAuthContainerModel.cs" />
+    <Compile Include="Models\JWT\Models\JWTContainerModel.cs" />
     <Compile Include="Models\Menus.cs" />
     <Compile Include="Models\PRES_UR.cs" />
     <Compile Include="Models\SCE_ALUMNOS_UNACH.cs" />
@@ -274,8 +293,10 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="Scripts\Controllers\CuotasLenguasController.js" />
+    <Content Include="Scripts\Controllers\GraficasController.js" />
     <Content Include="Scripts\Controllers\PagosSYSWEBController.js" />
     <Content Include="Scripts\Controllers\ReferenciasController.js" />
+    <Content Include="Scripts\Controllers\UsuariosController.js" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Reports\RepComprobanteFiscal_Posgrado.rpt" />
     <Content Include="Reports\rpt_CuotasPosgradoGral.rpt" />
@@ -289,7 +310,7 @@
     <Content Include="Scripts\Controllers\InicioController.js" />
     <Content Include="Scripts\Controllers\PagosPosgradoController.js" />
     <Content Include="Scripts\Controllers\PlantillaController.js" />
-    <Content Include="Scripts\Controllers\UsuariosController.js" />
+    <Content Include="Scripts\Controllers\Usuarios2Controller.js" />
     <Content Include="Scripts\funcionSubirArchivo.js" />
     <Content Include="Scripts\global.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -302,17 +323,20 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\Models\CuotasLenguasModel.js" />
     <Content Include="Scripts\Models\CuotasPosgradoModel.js" />
+    <Content Include="Scripts\Models\GraficasModel.js" />
     <Content Include="Scripts\Models\InicioModel.js" />
     <Content Include="Scripts\Models\PagosPosgradoModel.js" />
     <Content Include="Scripts\Models\PagosSYSWEBModel.js" />
     <Content Include="Scripts\Models\PlantillaModel.js" />
     <Content Include="Scripts\Models\ReferenciasModel.js" />
+    <Content Include="Scripts\Models\Usuarios2Model.js" />
     <Content Include="Scripts\Models\UsuariosModel.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\Controllers\PieChart.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\select2\css\select2.css" />
@@ -343,6 +367,10 @@
     <Content Include="Views\SIAE\CuotasLenguas.cshtml" />
     <Content Include="Views\SIAE\PagosSYSWEB_a_SIAE.cshtml" />
     <Content Include="Views\SIAE\Referencias.cshtml" />
+    <Content Include="Views\Usuarios\Index.cshtml" />
+    <Content Include="Views\Usuarios\Admin.cshtml" />
+    <Content Include="Views\Usuarios\OpcionesGrupo.cshtml" />
+    <Content Include="Views\Graficas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

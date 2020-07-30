@@ -17,8 +17,8 @@ namespace Sys_Ingresos.Data.Usuarios
             try
             {
                 OracleDataReader dr = null;
-                string[] Parametros = {"P_USUARIO", "P_NOMBRE", "P_PASSWORD", "P_CORREO", "P_TELEFONOS", "P_DEPENDENCIA"};
-                object[] Valores = { objUsuario.USUARIO, objUsuario.NOMBRE, objUsuario.PASSWORD, objUsuario.CORREO, objUsuario.TELEFONOS, objUsuario.DIRECCION_DEPE };
+                string[] Parametros = {"P_USUARIO", "P_NOMBRE", "P_PASSWORD", "P_CORREO", "P_TELEFONOS", "P_DEPENDENCIA", "P_STATUS", "P_ID_SISTEMA" };
+                object[] Valores = { objUsuario.USUARIO, objUsuario.NOMBRE, objUsuario.PASSWORD, objUsuario.CORREO, objUsuario.TELEFONOS, objUsuario.DIRECCION_DEPE, objUsuario.STATUS, "14" };
                 string[] ParametrosOut = { "P_BANDERA" };
                 cmd = exeProc.GenerarOracleCommand("SIGA09.INS_USUARIOS_MNU", ref Verificador, ref dr, Parametros, Valores, ParametrosOut);
                 

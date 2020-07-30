@@ -21,7 +21,7 @@ namespace Sys_Ingresos.Data.Usuarios
                 OracleDataReader dr = null;
                 string[] ParametrosIn = { "P_USUARIO" };
                 object[] Valores = { Usuario };
-                string[] ParametrosOut = { "P_NOMBRE", "P_PASSWORD", "P_CORREO", "P_TELEFONOS", "P_DEPENDENCIA", "P_BANDERA" };
+                string[] ParametrosOut = { "P_NOMBRE", "P_PASSWORD", "P_CORREO", "P_TELEFONOS", "P_DEPENDENCIA", "P_STATUS", "P_BANDERA" };
                 cmd = exeProc.GenerarOracleCommand("OBT_USUARIO", ref Verificador, ref dr, ParametrosIn, Valores, ParametrosOut);
                 objUsuario.USUARIO = Usuario;
                 objUsuario.NOMBRE = Convert.ToString(cmd.Parameters["P_NOMBRE"].Value);
@@ -29,6 +29,7 @@ namespace Sys_Ingresos.Data.Usuarios
                 objUsuario.CORREO = Convert.ToString(cmd.Parameters["P_CORREO"].Value);
                 objUsuario.TELEFONOS = Convert.ToString(cmd.Parameters["P_TELEFONOS"].Value);
                 objUsuario.DIRECCION_DEPE = Convert.ToString(cmd.Parameters["P_DEPENDENCIA"].Value);
+                objUsuario.STATUS = Convert.ToString(cmd.Parameters["P_STATUS"].Value);
                 list.Add(objUsuario);
 
             }

@@ -78,17 +78,17 @@ var lenguasContext =
                     url: urlServer + 'SIAE/ObtCuotaLenguas',
                     data: { Id },
                     success: function (resp) {
-                        if (resp.ERROR == false) {
+                        if (resp.ERROR === false) {
                             for (var i = 0; i < resp.RESULTADO.length; i++) {
                                 self.consulta_cuota.push({ Nivel: resp.RESULTADO[i].NIVEL, Status: resp.RESULTADO[i].STATUS, Ingles: resp.RESULTADO[i].IMPORTE_INGLES, Italiano: resp.RESULTADO[i].IMPORTE_ITALIANO, Frances: resp.RESULTADO[i].IMPORTE_FRANCES, Aleman: resp.RESULTADO[i].IMPORTE_ALEMAN, Chino: resp.RESULTADO[i].IMPORTE_CHINO, Tzotzil: resp.RESULTADO[i].IMPORTE_TZOTZIL, Tzental: resp.RESULTADO[i].IMPORTE_TZENTAL, Espaniol: resp.RESULTADO[i].IMPORTE_ESPANIOL });
                             }
                         }
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: resp.MENSAJE_ERROR });
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }

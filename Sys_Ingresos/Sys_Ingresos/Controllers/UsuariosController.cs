@@ -36,6 +36,11 @@ namespace Sys_Ingresos.Controllers
 
         }
 
+        public ActionResult OpcionesGrupo()
+        {
+            return View();
+        }
+
 
         public JsonResult Datos(string Usuario)
         {
@@ -49,25 +54,48 @@ namespace Sys_Ingresos.Controllers
 
         public JsonResult ObtUsuario()
         {
+            RESULTADO_GRL_USUARIOS objResultado = new RESULTADO_GRL_USUARIOS();
 
             if (Session["DatosUsuario"] != null)
             {
                 listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];
                 var Lista = ObtenerDataContext.ObtenerDatosUsuario(listUsuario[0].USUARIO, ref Verificador);
-                if(Verificador=="0")
-                    return Json(Lista, JsonRequestBehavior.AllowGet);
+                //if(Verificador=="0")
+                //    return Json(Lista, JsonRequestBehavior.AllowGet);
+                //else
+                //    return Json(false, JsonRequestBehavior.AllowGet);
+
+
+                if (Verificador == "0")
+                {
+                    objResultado.ERROR = false;
+                    objResultado.MENSAJE_ERROR = "";
+                    objResultado.RESULTADO = Lista;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
                 else
-                    return Json(false, JsonRequestBehavior.AllowGet);
+                {
+                    objResultado.ERROR = true;
+                    objResultado.MENSAJE_ERROR = Verificador;
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+
+                }
 
             }
             else
-                return Json(false, JsonRequestBehavior.AllowGet);
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = null;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
 
         }
 
-        public JsonResult ListarUsuarios(int Sistema)
+        public JsonResult ListarUsuarios()
         {
-            var Lista = GridDataContext.ObtenerUsuarios(Sistema);
+            var Lista = GridDataContext.ObtenerUsuarios(14);
             return Json(Lista, JsonRequestBehavior.AllowGet);
 
         }
@@ -220,8 +248,9 @@ namespace Sys_Ingresos.Controllers
             }
         }
 
-        public JsonResult GuardarUsuario(string Usuario, string Nombre, string Contraseña, string Correo, string Telefono, string Dependencia)
+        public JsonResult GuardarUsuario(string Usuario, string Nombre, string Contraseña, string Correo, string Telefono, string Dependencia, string Status)
         {
+            RESULTADO_GRL_USUARIOS objResultado = new RESULTADO_GRL_USUARIOS();
             string Verificador = string.Empty;
             GRL_USUARIOS objUsuario = new GRL_USUARIOS();
             objUsuario.USUARIO = Usuario.ToUpper();
@@ -229,14 +258,32 @@ namespace Sys_Ingresos.Controllers
             objUsuario.PASSWORD = Contraseña.ToUpper();
             objUsuario.CORREO = Correo;
             objUsuario.TELEFONOS = Telefono;
-            objUsuario.DIRECCION_DEPE = Dependencia;            
+            objUsuario.DIRECCION_DEPE = Dependencia;
+            objUsuario.STATUS = Status;
             try
             {
                 GuardarDataContext.GuardarUsuario(objUsuario, ref Verificador);
-                if(Verificador == "0")
-                    return Json(true, JsonRequestBehavior.AllowGet);
+                //if(Verificador == "0")
+                //    return Json(true, JsonRequestBehavior.AllowGet);
+                //else
+                //    return Json(false, JsonRequestBehavior.AllowGet);
+
+                if (Verificador == "0")
+                {
+                    objResultado.ERROR = false;
+                    objResultado.MENSAJE_ERROR = "";
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
                 else
-                    return Json(false, JsonRequestBehavior.AllowGet);
+                {
+                    objResultado.ERROR = true;
+                    objResultado.MENSAJE_ERROR = Verificador;
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+
+                }
+
             }
             catch (Exception ex)
             {

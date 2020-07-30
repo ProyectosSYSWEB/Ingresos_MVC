@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+    }
+</style>
+
+
+<link href="~/Content/CargandoInicio.css" rel="stylesheet" />
+<div ng-module="PieCharWeb" ng-controller="PieChartController as ctrl" ng-init="ctrl.obtNumFolios(1)">
+    <br />
+    <div id="chartdiv"></div>
+    <div class="container">
+        <p>Total de códigos generados: {{ctrl.universo}}</p>
+        <div class="row">
+            <div class="col-md-3 py-3">
+                <a href="" ng-click="ctrl.irA(1,1)">Ir a Iniciados</a>
+            </div>
+            <div class="col-md-3 py-3">
+                <a href="" ng-click="ctrl.irA(2,1)">Ir a códigos Turnados</a>
+            </div>
+            <div class="col-md-3 py-3">
+                <a href="" ng-click="ctrl.irA(3,1)">Ir a códigos Concluidos</a>
+            </div>
+            <div class="col-md-3 py-3">
+                <a href="" ng-click="ctrl.irA(4,1)">Ir a códigos Cancelados</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/global.js"></script>
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular.ng-modules.js"></script>
+<script src="~/Scripts/Models/FoliosModel.js"></script>
+<script src="~/Scripts/PieChart.js"></script>

@@ -1,32 +1,47 @@
 ﻿/// <reference path="../Models/UsuariosModel.js"/>
 /// <reference path="../global.js"/>
 
-
-
-
-
 (function () {
-    var app = angular.module('UsuariosIngresosWeb', []);
+    var app = angular.module('UsuariosIngresosWeb', ['ngPagination']);
     app.controller('UsuariosController', ['$scope', '$compile', function ($scope, $compile) {
         var self = this;
         var lista = [];
         var ListaDependenciasTodas = "";
         var grupos = "";
         var grupoSeleccionado = "";
+        var opcionesGrupo = "";
         this.UsuariosNormales = function () {
-
+            console.log("entrando");
             this.ObtenerUsuarios();
             document.getElementById("form-usuarios").className = "form-inline show";
             document.getElementById("bttn-usuarios").className = "form-inline hidden";
+        };
 
+        this.Grupo = function () {
+            window.location.href = urlServer + "Usuarios/OpcionesGrupo";
+        };
+
+        this.IniciarUsuario = function () {
+            usuarioContext.IniciarUsuario(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.Usuario = usuarioContext.usuario[0].Usuario;
+                        self.Sistema = usuarioContext.usuario[0].Sistema;
+                        break;
+                    case "notgp":
+                        self.mensaje = resp.message;
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
         };
 
         this.UsuariosAdministradores = function () {
-
             ObtenerUsuariosAdmin();
             document.getElementById("form-usuarios").className = "form-inline show";
             document.getElementById("bttn-usuarios").className = "form-inline hidden";
-
         };
 
         this.Regresar = function () {
@@ -37,12 +52,16 @@
 
         };
 
+        this.InicioOpcionesGrupos = function () {
+            ObtenerGrupos();
+        };
+
         this.InicioAdmin = function () {
             ObtenerTodasDependencias();
             this.DatosUsuario();
             ObtenerDependenciasDisponibles();
             ObtenerDependenciasAsignadas();
-            ObtenerMenuUsuario();            
+            ObtenerMenuUsuario();
         };
 
         this.DatosUsuario = function () {
@@ -52,13 +71,14 @@
                 switch (resp.ressult) {
                     case "tgp":
                         if (usuarioContext.usuarios.length !== 0) {
-                            $("#btnGuardar").hide();                            
+                            $("#btnGuardar").hide();
                             self.cve_usuario = usuarioContext.usuarios[0].UsuarioIng;
                             self.cve_nombre = usuarioContext.usuarios[0].NombreIng;
                             self.cve_password = usuarioContext.usuarios[0].Contrasenia;
                             self.cve_correo = usuarioContext.usuarios[0].EMail;
                             self.cve_telefono = usuarioContext.usuarios[0].Telefono;
                             self.cve_dep_ads = usuarioContext.usuarios[0].Dependencia;
+                            self.status = usuarioContext.usuarios[0].Status;
                             document.getElementById("txtUsuario").setAttribute("disabled", "false");
                             document.getElementById("precarga").className = "hidden";
                         }
@@ -70,6 +90,7 @@
                         }
                         break;
                     case "notgp":
+                        alert("Error al obtener los datos");
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -83,55 +104,55 @@
         this.ObtenerUsuarios = function () {
             this.usuarios = "";
             document.getElementById("precarga").className = "show";
-            usuarioContext.UsuariosIngresos(14, function (resp) {
+            usuarioContext.UsuariosIngresos(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         self.usuarios = usuarioContext.usuarios;
                         document.getElementById("precarga").className = "hidden";
-                        $("#tablaDatos").dataTable().fnDestroy();
-                        $('#tablaDatos').DataTable({
-                            language: {
-                                "decimal": "",
-                                "emptyTable": "No hay información",
-                                "info": "Mostrando START a END de TOTAL Entradas",
-                                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-                                "infoFiltered": "(Filtrado de MAX total entradas)",
-                                "infoPostFix": "",
-                                "thousands": ",",
-                                "loadingRecords": "Cargando...",
-                                "processing": "Procesando...",
-                                "search": "Buscar:",
-                                "zeroRecords": "Sin resultados encontrados",
-                                "paginate": {
-                                    "first": "Primero",
-                                    "last": "Ultimo",
-                                    "next": "Siguiente",
-                                    "previous": "Anterior"
-                                }
-                            },
-                            data: self.usuarios,
-                            pageLength: 5,
-                            columns: [
-                                { data: "UsuarioIng" },
-                                { data: "NombreIng" },
-                                { data: "Contrasenia" },
-                                { data: "Telefono" },
-                                { data: "EMail" },
-                                {
-                                    "data": "UsuarioIng",
-                                    render: function (data, type, row, meta) {
-                                        return '<button type="button" class="btn btn - secondary" ng-click="ctrl.ObtDatos(&quot;' + data + '&quot;)">Editar</button>';
-                                    }
-                                }
-                            ]
-                            ,
-                            rowCallback: function (row) {
-                                if (!row.compiled) {
-                                    $compile(angular.element(row))($scope);
-                                    row.compiled = true;
-                                }
-                            }
-                        });
+                        //$('#tablaDatos').DataTable({
+                        //    language: {
+                        //        "decimal": "",
+                        //        "emptyTable": "No hay información",
+                        //        "info": "Mostrando START a END de TOTAL Entradas",
+                        //        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                        //        "infoFiltered": "(Filtrado de MAX total entradas)",
+                        //        "infoPostFix": "",
+                        //        "thousands": ",",
+                        //        "loadingRecords": "Cargando...",
+                        //        "processing": "Procesando...",
+                        //        "search": "Buscar:",
+                        //        "zeroRecords": "Sin resultados encontrados",
+                        //        "paginate": {
+                        //            "first": "Primero",
+                        //            "last": "Ultimo",
+                        //            "next": "Siguiente",
+                        //            "previous": "Anterior"
+                        //        }
+                        //    },
+                        //    data: self.usuarios,
+                        //    pageLength: 5,
+                        //    columns: [
+                        //        { data: "UsuarioIng" },
+                        //        { data: "NombreIng" },
+                        //        { data: "Contrasenia" },
+                        //        { data: "Telefono" },
+                        //        { data: "EMail" },
+                        //        { data: "Status" },
+                        //        {
+                        //            "data": "UsuarioIng",
+                        //            render: function (data, type, row, meta) {
+                        //                return '<button type="button" class="btn btn - secondary" ng-click="ctrl.ObtDatos(&quot;' + data + '&quot;)">Editar</button>';
+                        //            }
+                        //        }
+                        //    ]
+                        //    ,
+                        //    rowCallback: function (row) {
+                        //        if (!row.compiled) {
+                        //            $compile(angular.element(row))($scope);
+                        //            row.compiled = true;
+                        //        }
+                        //    }
+                        //});
                         break;
                     case "notgp":
                         self.mensaje = resp.message;
@@ -181,6 +202,7 @@
                                 { data: "Contrasenia" },
                                 { data: "Telefono" },
                                 { data: "EMail" },
+                                { data: "Status" },
                                 {
                                     "data": "UsuarioIng",
                                     render: function (data, type, row, meta) {
@@ -258,9 +280,10 @@
         };
 
         this.ObtDatos = function (Usuario) {
+            alert(Usuario);
             usuarioContext.ObtDatos(Usuario, function (resp) {
                 switch (resp.ressult) {
-                    case "tgp":                        
+                    case "tgp":
                         window.location.href = urlServer + "Usuarios/Admin";
                         break;
                     case "notgp":
@@ -335,7 +358,7 @@
                                     lista.push(self.menu_Usuario[i].idSeccionMnuNvl4);
                                 }
                             }
-                        }                                                
+                        }
                         document.getElementById("precarga").className = "hidden";
                         break;
                     case "notgp":
@@ -348,12 +371,12 @@
             });
 
         };
-                              
+
         this.Salir = function () {
             window.location.href = urlServer + "Usuarios/Index";
             usuarioContext.Salir(function (resp) {
                 switch (resp.ressult) {
-                    case "tgp":                        
+                    case "tgp":
                         break;
                     case "notgp":
                         self.mensaje = resp.message;
@@ -366,30 +389,49 @@
 
         };
 
-        this.agregarMnu = function (valor) {            
-            var id = "#" + valor;            
+        this.agregarMnu = function (valor, valor2) {
+            var id = "#" + valor;//Obtenemos el id del padre o del hijo
+
             if ($(id).prop('checked') === true) {
                 lista.push(valor);
                 console.log(lista);
             }
-            else {                
+            else {
                 var elementoDelete = lista.indexOf(valor);
                 lista.splice(elementoDelete, 1);
                 console.log(lista);
             }
         };
-        this.dependencias = function () {            
+
+        this.dependencias = function () {
             for (var i = 0; i < lista.length; i++) {
                 var id = "#" + lista[i];
-                $(id).attr("checked", true);                
+                $(id).attr("checked", true);
             }
             ObtenerGrupos();
         };
 
-       
 
-        this.guardarElementosSeleccionados = function () {            
-            usuarioContext.OpcionesMenuSelect(lista, function ( resp) {
+
+        this.guardarElementosSeleccionados = function () {
+            usuarioContext.OpcionesMenuSelect(lista, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        alert("cambios realizados");
+                        break;
+                    case "notgp":
+                        self.mensaje = resp.message;
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+        this.guardarElementosGrupoSeleccionado = function (grupo) {
+            console.log(grupo);
+            usuarioContext.OpcionesGrupoSelect(lista, grupo, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         alert("cambios realizados");
@@ -409,24 +451,27 @@
         };
 
         this.GuardarUsuario = function () {
+            var statusUsuario = $("#cmbStatus option:selected").val();
             if (self.cve_password !== self.cve_password_confirm)
                 alert("Las contraseñas deben de coincidir");
             else {
-                usuarioContext.GuardarUsuario(self.cve_usuario, self.cve_nombre, self.cve_password, 
-                    self.cve_correo, self.cve_telefono, self.cve_dep_ads, function (resp) {
-                        switch (resp.ressult) {
+                usuarioContext.GuardarUsuario(self.cve_usuario, self.cve_nombre, self.cve_password,
+                    self.cve_correo, self.cve_telefono, self.cve_dep_ads, statusUsuario, function (resp) {
+                        switch (resp.ressult) { 
+
                             case "tgp":
-                                alert("cambios realizados");
+                                alert("Usuario registrado.");
                                 break;
                             case "notgp":
-                                self.mensaje = resp.message;
+                                alert("Error al guardar los datos: " + resp.message);
+                                //self.mensaje = resp.message;
                                 break;
                             default:
                                 break;
                         }
                         $scope.$apply();
                     });
-            }                
+            }
         };
 
 
@@ -448,16 +493,18 @@
         };
 
         this.ModificarCuota = function () {
+            var statusUsuario = $("#cmbStatus option:selected").val();
             if (self.cve_password !== self.cve_password_confirm)
                 alert("Las contraseñas deben de coincidir");
             else {
-                usuarioContext.EditarUsuario( self.cve_nombre, self.cve_password,
-                    self.cve_correo, self.cve_telefono, self.cve_dep_ads, function (resp) {
+                usuarioContext.EditarUsuario(self.cve_nombre, self.cve_password,
+                    self.cve_correo, self.cve_telefono, self.cve_dep_ads, statusUsuario, function (resp) {
                         switch (resp.ressult) {
                             case "tgp":
                                 alert("cambios realizados");
                                 break;
                             case "notgp":
+                                alert("Error al guardar los datos");
                                 self.mensaje = resp.message;
                                 break;
                             default:
@@ -501,6 +548,53 @@
                 $scope.$apply();
             });
         };
-        
+
+        this.ObtenerGrupoOpciones = (Grupo) => {
+            marcarMenu(2);
+            usuarioContext.ObtenerGrupoOpciones(Grupo, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.opcionesGrupo = usuarioContext.Opcionesgrupos;
+                        for (var i = 0; i < self.opcionesGrupo.length; i++) {
+                            if (self.opcionesGrupo[i].elementoMnuNvl !== false) {
+                                if (self.opcionesGrupo[i].asignado === "1") {
+                                    lista.push(self.opcionesGrupo[i].idSeccionMnuNvl);
+                                }
+                            }
+                            else if (self.opcionesGrupo[i].elementoMnuNvl4 !== false && self.opcionesGrupo[i].elementoMnuNvl4 !== "") {
+                                if (self.opcionesGrupo[i].asignado === "1") {
+                                    lista.push(self.opcionesGrupo[i].idSeccionMnuNvl4);
+                                }
+                            }
+                        }
+                        break;
+                    case "notgp":
+                        alert("ERROR-0016:\nContacte con el administrador del sitio" + resp.message);
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+                marcarMenu(1);
+            });
+        };
+
+        var marcarMenu = function (opcion) {
+            var id = "";
+            if (opcion === 1) {
+                for (var x = 0; x < lista.length; x++) {
+                    id = "#" + lista[x];
+                    $(id).attr("checked", true);
+                }
+            }
+            else if (opcion === 2) {
+                for (var c = 0; c < lista.length; c++) {
+                    id = "#" + lista[c];
+                    $(id).attr("checked", false);
+                    lista = [];
+                }
+            }
+        };
+
     }]);
 })();

@@ -6,7 +6,7 @@
     var app = angular.module('MenuWeb', []);
     app.controller('InicioController', ['$scope', function ($scope) {
         var self = this;
-
+        var Formulario;
         this.Inicio = function () {
             this.ObtenerUsuario();
 
@@ -18,18 +18,20 @@
             inicioContext.Usuario(function (resp) {
                switch (resp.ressult) {
                     case "tgp":
-                        if (inicioContext.datosUsuIng[0].Formulario=="CuotasPos")
-                            var Formulario = "SIAE/CuotasPosgrado";
-                        else if (inicioContext.datosUsuIng[0].Formulario=="PagosPos")
-                            var Formulario = "SIAE/PagosPosgrado";
-                        else if (inicioContext.datosUsuIng[0].Formulario == "CuotasLeng")
-                            var Formulario = "SIAE/CuotasLenguas";
-                        else if (inicioContext.datosUsuIng[0].Formulario == "PagosSYSWEB")
-                            var Formulario = "SIAE/PagosSYSWEB_a_SIAE";
-                        else if (inicioContext.datosUsuIng[0].Formulario == "ReferenciasSYS")
-                            var Formulario = "SIAE/Referencias";
+                        if (inicioContext.datosUsuIng[0].Formulario==="CuotasPos")
+                            Formulario = "SIAE/CuotasPosgrado";
+                        else if (inicioContext.datosUsuIng[0].Formulario==="PagosPos")
+                            Formulario = "SIAE/PagosPosgrado";
+                        else if (inicioContext.datosUsuIng[0].Formulario === "CuotasLeng")
+                            Formulario = "SIAE/CuotasLenguas";
+                        else if (inicioContext.datosUsuIng[0].Formulario === "PagosSYSWEB")
+                            Formulario = "SIAE/PagosSYSWEB_a_SIAE";
+                        else if (inicioContext.datosUsuIng[0].Formulario === "ReferenciasSYS")
+                            Formulario = "SIAE/Referencias";
+                        else if (inicioContext.datosUsuIng[0].Formulario === "UsuariosFinanzas")
+                            Formulario = "Usuarios/Index";
                         else
-                            var Formulario = "Home/Index";
+                            Formulario = "Home/Index";
 
                         window.location.href = urlServer + Formulario;
                        

@@ -14,5 +14,15 @@ namespace Sys_Ingresos.Models
         public string CORREO { get; set; }
         public string TIPO { get; set; }
         public string DIRECCION_DEPE { get; set; }
+        public string STATUS { get; set; }
+
+    }
+
+    public class RESULTADO_GRL_USUARIOS
+    {
+        public bool ERROR { get; set; }
+        public string MENSAJE_ERROR { get; set; }
+        public List<GRL_USUARIOS> RESULTADO { get; set; }
+
     }
 }

@@ -38,7 +38,6 @@ var pagosContext =
                     }
                 });
         },
-
         Ciclos: function (callBackResult) {
             var self = this;
             self.ciclos.length = 0;
@@ -67,8 +66,6 @@ var pagosContext =
                     }
                 });
         },
-
-
         ReferenciasSYSWEB: function (Referencia, callBackResult) {
             var self = this;
             self.ref_sysweb.length = 0;
@@ -98,8 +95,6 @@ var pagosContext =
                     }
                 });
         },
-
-
         ReferenciasSIAE: function (Referencia, callBackResult) {
             var self = this;
             self.ref_siae.length = 0;
@@ -112,7 +107,7 @@ var pagosContext =
                     success: function (resp) {
                         if (resp.ERROR == false) {
                             for (var i = 0; i < resp.RESULTADO.length; i++) {
-                                self.ref_siae.push({ Matricula: resp.RESULTADO[i].MATRICULA, Dependencia: resp.RESULTADO[i].DEPENDENCIA, Fecha_Pago: resp.RESULTADO[i].FECHA_FACTURA, FolioBanco: resp.RESULTADO[i].BANCO_FOLIO, Nombre: resp.RESULTADO[i].RECEPTOR_NOMBRE, Referencia: resp.RESULTADO[i].REFERENCIA, Nombre: resp.RESULTADO[i].RECEPTOR_NOMBRE });
+                                self.ref_siae.push({ Matricula: resp.RESULTADO[i].MATRICULA, Dependencia: resp.RESULTADO[i].DEPENDENCIA, Fecha_Pago: resp.RESULTADO[i].FECHA_FACTURA, FolioBanco: resp.RESULTADO[i].BANCO_FOLIO, Nombre: resp.RESULTADO[i].RECEPTOR_NOMBRE, Referencia: resp.RESULTADO[i].REFERENCIA, Nombre: resp.RESULTADO[i].RECEPTOR_NOMBRE, Tipo: resp.RESULTADO[i].TIPO });
                             }
                             if (callBackResult != undefined) {
                                 callBackResult({ ressult: 'tgp', message: null });
@@ -129,8 +124,6 @@ var pagosContext =
                     }
                 });
         },
-
-
         AgregarSIAE: function (Matricula, Ciclo, Semestre, Tipo, Referencia, callBackResult) {
             var self = this;
             self.ref_sysweb.length = 0;
@@ -158,5 +151,4 @@ var pagosContext =
                     }
                 });
         },
-
     }

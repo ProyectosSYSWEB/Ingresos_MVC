@@ -17,7 +17,7 @@ namespace Sys_Ingresos.Data.Usuarios
             try
             {
                 string[] Parametros = { "P_Sistema" };
-                object[] Valores = { Sistema };
+                object[] Valores = { 14 };
                 OracleDataReader dr = null;
                 cmd = exeProc.GenerarOracleCommandCursor("PKG_ADMINISTRACION.Obt_Grid_Usuarios_por_Sistema", ref dr, Parametros, Valores);
                 List<GRL_USUARIOS> listarUsuarios = new List<GRL_USUARIOS>();
@@ -90,10 +90,10 @@ namespace Sys_Ingresos.Data.Usuarios
 
             try
             {
-                string[] Parametros = { "p_usuario" };
-                object[] Valores = { Usuario };
+                string[] Parametros = { "p_usuario", "p_id_sistema" };
+                object[] Valores = { Usuario, 14 };
                 OracleDataReader dr = null;
-                cmd = exeProc.GenerarOracleCommandCursor("PKG_ADMINISTRACION.Obt_Grid_Urs_Disponibles", ref dr, Parametros, Valores);
+                cmd = exeProc.GenerarOracleCommandCursor("PKG_ADMINISTRACION.Obt_Grid_Urs_por_Sistema_Disp", ref dr, Parametros, Valores);
                 List<PRES_UR> listarDepenDisp = new List<PRES_UR>();
 
                 while (dr.Read())
@@ -126,10 +126,10 @@ namespace Sys_Ingresos.Data.Usuarios
 
             try
             {
-                string[] Parametros = { "p_usuario" };
-                object[] Valores = { Usuario };
+                string[] Parametros = { "p_usuario", "p_id_sistema" };
+                object[] Valores = { Usuario, 14 };
                 OracleDataReader dr = null;
-                cmd = exeProc.GenerarOracleCommandCursor("PKG_ADMINISTRACION.Obt_Grid_Urs_Asignados", ref dr, Parametros, Valores);
+                cmd = exeProc.GenerarOracleCommandCursor("PKG_ADMINISTRACION.Obt_Grid_Urs_por_Sistema_Asig", ref dr, Parametros, Valores);
                 List<PRES_UR> listarDepenDisp = new List<PRES_UR>();
 
                 while (dr.Read())

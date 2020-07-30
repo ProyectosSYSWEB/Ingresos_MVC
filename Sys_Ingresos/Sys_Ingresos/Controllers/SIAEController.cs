@@ -894,7 +894,7 @@ namespace Sys_Ingresos.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult GenerarReferencia(string Matricula, string Escuela, string Semestre, string Ciclo, string Movimiento, string Nombre, int DiasVigencia = 1, string Extemporaneo = "S")
+        public JsonResult GenerarReferencia(string Matricula, string Escuela, string Semestre, string Ciclo, string Movimiento, string Nombre, int Carrera, int DiasVigencia = 1, string Extemporaneo = "S")
         {
             string Verificador = string.Empty;
             SCE_REFERENCIAS objDatosAlumno = new SCE_REFERENCIAS();
@@ -909,6 +909,7 @@ namespace Sys_Ingresos.Controllers
             objDatosAlumno.NOMBRE = Nombre;
             objDatosAlumno.ES_EXTEMPORANEO = Extemporaneo;
             objDatosAlumno.MUNICIPIO_SEDE = "0";
+            objDatosAlumno.ID_CARRERA = Carrera;
             if (Session["UsuarioIng"] != null)
                 SesionUsu = (SESION)System.Web.HttpContext.Current.Session["UsuarioIng"];
 
