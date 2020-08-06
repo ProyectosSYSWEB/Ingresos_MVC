@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Sys_Ingresos.Models.JWT
 {
-    public class Managers
-    {
-    }
+    //public class Managers
+    //{
+    //}
 }

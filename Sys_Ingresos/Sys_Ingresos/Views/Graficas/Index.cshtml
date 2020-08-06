@@ -1,6 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -11,36 +12,38 @@
 </style>
 
 
-<link href="~/Content/CargandoInicio.css" rel="stylesheet" />
-<div ng-module="PieCharWeb" ng-controller="PieChartController as ctrl" ng-init="ctrl.obtNumFolios(1)">
+@*<link href="~/Content/CargandoInicio.css" rel="stylesheet" />*@
+<div ng-app="PieCharWeb" ng-controller="PieChartController as ctrl" ng-init="ctrl.ObtenerDatosGraficaPagados()">
     <br />
     <div id="chartdiv"></div>
     <div class="container">
-        <p>Total de códigos generados: {{ctrl.universo}}</p>
-        <div class="row">
-            <div class="col-md-3 py-3">
-                <a href="" ng-click="ctrl.irA(1,1)">Ir a Iniciados</a>
-            </div>
-            <div class="col-md-3 py-3">
-                <a href="" ng-click="ctrl.irA(2,1)">Ir a códigos Turnados</a>
-            </div>
-            <div class="col-md-3 py-3">
-                <a href="" ng-click="ctrl.irA(3,1)">Ir a códigos Concluidos</a>
-            </div>
-            <div class="col-md-3 py-3">
-                <a href="" ng-click="ctrl.irA(4,1)">Ir a códigos Cancelados</a>
-            </div>
-        </div>
+        @*<p>Total de códigos generados: {{ctrl.universo}}</p>*@
+        @*<div class="row">
+                <div class="col-md-3 py-3">
+                    <a href="" ng-click="ctrl.irA(1,1)">Ir a Iniciados</a>
+                </div>
+                <div class="col-md-3 py-3">
+                    <a href="" ng-click="ctrl.irA(2,1)">Ir a códigos Turnados</a>
+                </div>
+                <div class="col-md-3 py-3">
+                    <a href="" ng-click="ctrl.irA(3,1)">Ir a códigos Concluidos</a>
+                </div>
+                <div class="col-md-3 py-3">
+                    <a href="" ng-click="ctrl.irA(4,1)">Ir a códigos Cancelados</a>
+                </div>
+            </div>*@
     </div>
 </div>
 
 
 
-
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
 <script src="~/Scripts/angular.min.js"></script>
 <script src="~/Scripts/global.js"></script>
 <script src="~/Scripts/angular.js"></script>
 <script src="~/Scripts/angular.ng-modules.js"></script>
-<script src="~/Scripts/Models/FoliosModel.js"></script>
-<script src="~/Scripts/PieChart.js"></script>
+<script src="~/Scripts/Controllers/PieChart.js"></script>
+<script src="~/Scripts/Models/GraficasModel.js"></script>

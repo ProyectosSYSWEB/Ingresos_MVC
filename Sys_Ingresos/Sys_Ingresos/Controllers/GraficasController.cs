@@ -89,22 +89,42 @@ namespace Sys_Ingresos.Controllers
         }
 
 
-        public JsonResult ObtenerDatosInscripcion()
+        //public JsonResult ObtenerDatosInscripcion()
+        //{
+        //    RESULTADO_GRAFICAS objResultado = new RESULTADO_GRAFICAS();
+        //    try
+        //    {
+        //        var Lista = CursorDataContext.ObtenerDatosInscripciones(Referencia);
+        //        objResultado.ERROR = false;
+        //        objResultado.MENSAJE_ERROR = string.Empty;
+        //        objResultado.RESULTADO = Lista;
+        //        return Json(objResultado, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        objResultado.ERROR = true;
+        //        objResultado.MENSAJE_ERROR = ex.Message;
+        //        objResultado.RESULTADO = null;
+        //        return Json(objResultado, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
+
+
+        public JsonResult ObtenerDatosGraficaPagados (string Dependencia, string Ciclo_Escolar)
         {
             RESULTADO_GRAFICAS objResultado = new RESULTADO_GRAFICAS();
             try
             {
-                var Lista = CursorDataContext.ObtenerDatosInscripciones(Referencia);
+                objResultado.RESULTADO = CursorDataContext.ObtenerDatosGraficaPagados(Dependencia, Ciclo_Escolar);
                 objResultado.ERROR = false;
-                objResultado.MENSAJE_ERROR = string.Empty;
-                objResultado.RESULTADO = Lista;
+                objResultado.MENSAJE_ERROR = "";
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
+                objResultado.RESULTADO = null;
                 objResultado.ERROR = true;
                 objResultado.MENSAJE_ERROR = ex.Message;
-                objResultado.RESULTADO = null;
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }

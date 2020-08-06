@@ -45,49 +45,49 @@
     </script>
 </head>
 <body>
-    <div ng-module="IngresosWeb" ng-controller="PlantillaController as ctrl1">
-        @*<div class="navbar navbar-inverse navbar-fixed-top">
-            <div>                
-                <div class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav">
-                            <li class="menu-item dropdown btn-primary">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Posgrado<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li>@Html.ActionLink("Cuotas", "CuotasPosgrado", "SIAE")</li>
-                                    <li>@Html.ActionLink("Pagos", "PagosPosgrado", "SIAE")</li>
-                                    <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
+    <div ng-module="IngresosWeb" ng-controller="PlantillaController as ctrl1">        
+            @*<div class="navbar navbar-inverse navbar-fixed-top">
+                    <div>
+                        <div class="navbar-collapse collapse">
+                                <ul class="nav navbar-nav">
+                                    <li class="menu-item dropdown btn-primary">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Posgrado<b class="caret"></b></a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("Cuotas", "CuotasPosgrado", "SIAE")</li>
+                                            <li>@Html.ActionLink("Pagos", "PagosPosgrado", "SIAE")</li>
+                                            <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
+                                        </ul>
+                                    </li>
                                 </ul>
-                            </li>
-                        </ul>
-                    </div>               
-            </div>
-        </div>*@
+                            </div>
+                    </div>
+                </div>*@
 
 
 
 
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Mi aplicación ASP.NET</p>
-        </footer>
-    </div>
+        </div>
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Mi aplicación ASP.NET</p>
+            </footer>
+        </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
 
-    @RenderSection("scripts", required: false)
+        @RenderSection("scripts", required: false)
 
-    <script src="~/Scripts/angular.min.js"></script>
-    <script src="~/Scripts/global.js"></script>
-    <script src="~/Scripts/checklist-model.js"></script>
-    <script src="~/Scripts/angular.js"></script>
-    <script src="~/Scripts/angular.ng-modules.js"></script>
-    <script src="~/Scripts/Models/PlantillaModel.js"></script>
-    <script src="~/Scripts/Controllers/PlantillaController.js"></script>
-    <script src="~/Scripts/application.js"></script>
-    @*@RenderPage("~/Views/Shared/_Footer.cshtml")*@
+        <script src="~/Scripts/angular.min.js"></script>
+        <script src="~/Scripts/global.js"></script>
+        <script src="~/Scripts/checklist-model.js"></script>
+        <script src="~/Scripts/angular.js"></script>
+        <script src="~/Scripts/angular.ng-modules.js"></script>
+        <script src="~/Scripts/Models/PlantillaModel.js"></script>
+        <script src="~/Scripts/Controllers/PlantillaController.js"></script>
+        <script src="~/Scripts/application.js"></script>
+        @*@RenderPage("~/Views/Shared/_Footer.cshtml")*@
 </body>
 </html>
