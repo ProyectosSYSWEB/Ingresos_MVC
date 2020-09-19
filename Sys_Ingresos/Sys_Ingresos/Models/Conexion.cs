@@ -20,10 +20,21 @@ namespace Sys_Ingresos.Models
         }
         public OracleConnection getConexion(string Esquema)
         {
-            if (cn == null)
+            if (Esquema == "CONEXION_RECIBOS")
             {
-                string conexion = System.Configuration.ConfigurationManager.AppSettings["CONEXION_INGRESOS"].ToString();
-                cn = new OracleConnection(conexion);
+                if (cn == null)
+                {
+                    string conexion = System.Configuration.ConfigurationManager.AppSettings["CONEXION_FELECTRONICA"].ToString();
+                    cn = new OracleConnection(conexion);
+                }
+            }
+            else
+            {
+                if (cn == null)
+                {
+                    string conexion = System.Configuration.ConfigurationManager.AppSettings["CONEXION_INGRESOS"].ToString();
+                    cn = new OracleConnection(conexion);
+                }
             }
             return cn;
         }

@@ -14,7 +14,7 @@ var plantillaContext =
                     url: urlServer + 'Home/RedirectForm',
                     success: function (resp) {
 
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             if (resp.length > 0) {
                                 if (typeof (resp) == "string") {
                                     var dato = resp.substring(0, 6);
@@ -36,7 +36,7 @@ var plantillaContext =
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                         }
                     }
@@ -53,7 +53,7 @@ var plantillaContext =
                     url: urlServer + 'Home/ObtUsuario',
                     success: function (resp) {
 
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             if (resp.length > 0) {
                                 if (typeof (resp) == "string") {
                                     var dato = resp.substring(0, 6);
@@ -73,7 +73,7 @@ var plantillaContext =
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                         }
                     }

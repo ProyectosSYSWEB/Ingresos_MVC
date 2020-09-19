@@ -15,12 +15,12 @@ var lenguasContext =
                     cache: false,
                     url: urlServer + 'SIAE/ListarEscuelasLenguas',
                     success: function (resp) {
-                        if (resp.ERROR == false) {
+                        if (resp.ERROR === false) {
                             for (var i = 0; i < resp.RESULTADO.length; i++) {
 
                                 self.escuelas.push({ Id: resp.RESULTADO[i].ID, Descripcion: resp.RESULTADO[i].DESCRIPCION });
                             }
-                            if (callBackResult != undefined) {
+                            if (callBackResult !== undefined) {
                                 callBackResult({ ressult: 'tgp', message: null });
                             }
                         }
@@ -29,7 +29,7 @@ var lenguasContext =
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                         }
                     }
@@ -46,13 +46,13 @@ var lenguasContext =
                     url: urlServer + 'SIAE/ListarCuotasSabatinosLenguas',
                     data: { Escuela: escuela_lenguas, Tipo: tipo_cuota},
                     success: function (resp) {
-                        if(resp.ERROR==false)
+                        if(resp.ERROR===false)
                         {
                             for (var i = 0; i < resp.RESULTADO.length; i++) {
 
                                 self.cuotas.push({ Id: resp.RESULTADO[i].ID, Escuela: resp.RESULTADO[i].ESCUELA, Status: resp.RESULTADO[i].STATUS, Nivel: resp.RESULTADO[i].NIVEL, Ingles: resp.RESULTADO[i].IMPORTE_INGLES, Italiano: resp.RESULTADO[i].IMPORTE_ITALIANO, Frances: resp.RESULTADO[i].IMPORTE_FRANCES, Aleman: resp.RESULTADO[i].IMPORTE_ALEMAN, Chino: resp.RESULTADO[i].IMPORTE_CHINO, Tzotzil: resp.RESULTADO[i].IMPORTE_TZOTZIL, Tzental: resp.RESULTADO[i].IMPORTE_TZENTAL, Espaniol: resp.RESULTADO[i].IMPORTE_ESPANIOL });
                             }
-                            if (callBackResult != undefined) {
+                            if (callBackResult !== undefined) {
                                 callBackResult({ ressult: 'tgp', message: null });
                             }
                         }
@@ -61,7 +61,7 @@ var lenguasContext =
 
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                         }
                     }
@@ -105,8 +105,8 @@ var lenguasContext =
                     url: urlServer + 'SIAE/ModificarCuotasSabatinosLenguas',
                     data: { Id: IdLng, Nivel: SNivel, Status: Status, Ingles: ImpIngles, Italiano: ImpItaliano, Frances: ImpFrances, Aleman: ImpAleman, Chino: ImpChino, Tzotzil: ImpTzotzil, Tzental: ImpTzental, Espaniol: ImpEspaniol },
                     success: function (resp) {
-                        if (resp.ERROR == false) {                            
-                            if (callBackResult != undefined) {
+                        if (resp.ERROR === false) {                            
+                            if (callBackResult !== undefined) {
                                 callBackResult({ ressult: 'tgp', message: null });
                             }
                         }
@@ -115,7 +115,7 @@ var lenguasContext =
 
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al modificar los importes." });
                         }
                     }
@@ -132,8 +132,8 @@ var lenguasContext =
                     url: urlServer + 'SIAE/AgregarCuotasSabatinosLenguas',
                     data: { Escuela: Dependencia, Tipo:Tipo, Nivel: SNivel, Status: Status, Ingles: ImpIngles, Italiano: ImpItaliano, Frances: ImpFrances, Aleman: ImpAleman, Chino: ImpChino, Tzotzil: ImpTzotzil, Tzental: ImpTzental, Espaniol: ImpEspaniol },
                     success: function (resp) {
-                        if (resp.ERROR == false) {
-                            if (callBackResult != undefined) {
+                        if (resp.ERROR === false) {
+                            if (callBackResult !== undefined) {
                                 callBackResult({ ressult: 'tgp', message: null });
                             }
                         }
@@ -142,7 +142,7 @@ var lenguasContext =
 
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al modificar los importes." });
                         }
                     }
@@ -159,8 +159,8 @@ var lenguasContext =
                     url: urlServer + 'SIAE/EliminarCuotaLenguas',
                     data: { Id: Identificador },
                     success: function (resp) {
-                        if (resp.ERROR == false) {
-                            if (callBackResult != undefined) {
+                        if (resp.ERROR === false) {
+                            if (callBackResult !== undefined) {
                                 callBackResult({ ressult: 'tgp', message: null });
                             }
                         }
@@ -169,7 +169,7 @@ var lenguasContext =
 
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al modificar los importes." });
                         }
                     }

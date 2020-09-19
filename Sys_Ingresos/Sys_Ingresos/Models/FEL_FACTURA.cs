@@ -10,6 +10,11 @@ namespace Sys_Ingresos.Models
         public int ID { get; set; }
         public string FOLIO { get; set; }
         public string FECHA_FACTURA { get; set; }
+
+        public string FECHA_DISPERSADO { get; set; }
+
+        public string FECHA_DISPERSADO_NEW { get; set; }
+
         public double TOTAL { get; set; }
         public double IMPORTE { get; set; }
         public string DEPENDENCIA { get; set; }

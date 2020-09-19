@@ -60,7 +60,7 @@
         this.ValidaSemestre = function () {
             if (self.cve_tipo === "CN")
                 self.cve_semestre = "98";
-            else if (self.cve_tipo==="I")
+            else if (self.cve_tipo === "I")
                 self.cve_semestre = 1;
             else if (self.cve_tipo === "R")
                 self.cve_semestre = parseInt(Semestre) + 1;
@@ -68,7 +68,7 @@
 
         };
 
-        this.ObtenerReferenciasSIAE = function (Matricula, Semestre,Escuela,Nombre,Carrera) {
+        this.ObtenerReferenciasSIAE = function (Matricula, Semestre, Escuela, Nombre, Carrera) {
             var SemestreActual = Semestre;
             //self.cve_semestre = parseInt(Semestre) + 1;
             self.cve_escuela = Escuela;
@@ -83,7 +83,7 @@
                     break;
                 case 0:
                     self.cve_tipo = "F";
-                    break;                
+                    break;
                 case 98:
                     //self.cve_semestre = "98";
                     self.cve_tipo = "CN";
@@ -236,14 +236,14 @@
         };
 
 
-        this.ObtReferencia = function () {            
+        this.ObtReferencia = function (IdRef) {
             var xhr = new XMLHttpRequest();
-            var ruta = urlServer + 'SIAE/ObtReferenciaPdf';            
+            var ruta = urlServer + 'SIAE/ObtReferenciaPdf';
             xhr.responseType = 'blob';
             xhr.open("POST", ruta, true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {//Call a function when the state changes.
-                if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                     var blob = new Blob([this.response], { type: 'application/pdf' });
                     var link = document.createElement('a');
                     link.href = window.URL.createObjectURL(blob);
@@ -251,15 +251,34 @@
                 }
                 $("#modalGenerandoRpt").modal("hide");
             };
-            xhr.send("IdReferencia=" + self.cve_id_referencia);
+            xhr.send("IdReferencia=" + IdRef);
             //$("#modalCargandoDoc").modal("hide");
-        };  
+        };
+
+        this.GenerarLikPago = function (IdRef, Referencia) {
+            //alert(IdRef+"-"+Referencia);
+            self.cve_link_pago = "";
+            referenciasContext.LinkReferencia(IdRef, Referencia, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.cve_link_pago = "https://sysweb.unach.mx/fichaReferenciada/Form/PagoExclusivoSIAE.aspx?sw_acc=" + referenciasContext.link_pago;
+                        break;
+                    case "notgp":
+                        self.mensaje_gral = resp.message;
+                        document.getElementById("divError").className = "alert alert-danger";
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
 
 
 
         this.DatosFolio = () => {
             GuardarNombreOficioAdjunto();
-            SubirOficiosAdjuntos();            
+            SubirOficiosAdjuntos();
             let fechaOfc = self.ofc_fecha.toString();
             var d = new Date(fechaOfc);
             month = '' + (d.getMonth() + 1);
@@ -272,8 +291,8 @@
             fechaOfc = day + '/' + month + '/' + year;
 
             let asunto = self.ofc_asunto.toUpperCase();
-            let numOfc = self.ofc_numOfc.toUpperCase();                                    
-            var requestURL = 'https://sysweb.unach.mx/SUNVA/Folios/InsertarDatosCorrespondenciaFinanzas?Dependencia=42401&Emite=Prueba&Puesto=Prueba&Destinatario=72401&Asunto=' + asunto + '&Folio=' + numOfc + '&Fecha=' + fechaOfc + '&Ruta=ruta&Ejercicio='+ year+'&Usuario=ROSALES';
+            let numOfc = self.ofc_numOfc.toUpperCase();
+            var requestURL = 'https://sysweb.unach.mx/SUNVA/Folios/InsertarDatosCorrespondenciaFinanzas?Dependencia=42401&Emite=Prueba&Puesto=Prueba&Destinatario=72401&Asunto=' + asunto + '&Folio=' + numOfc + '&Fecha=' + fechaOfc + '&Ruta=ruta&Ejercicio=' + year + '&Usuario=ROSALES';
 
             var request = new XMLHttpRequest();
             request.open('POST', requestURL);
@@ -284,11 +303,11 @@
                 let resultado = request.response.Error;
                 if (resultado === false) {
                     alert("Oficio agregado");
-                   
+
                 }
                 else
                     alert(request.response.MensajeError);
-            };            
+            };
         };
 
         var SubirOficiosAdjuntos = () => {
@@ -343,12 +362,12 @@
 
 
 
-        var GuardarNombreOficioAdjunto = function () {            
+        var GuardarNombreOficioAdjunto = function () {
             referenciasContext.GuardarNombreOficioAdjunto(72401, self.ofc_numOfc, function (resp) {
                 switch (resp.ressult) {
-                    case "tgp":                        
+                    case "tgp":
                         break;
-                    case "notgp":                        
+                    case "notgp":
                         break;
                     default:
                         break;

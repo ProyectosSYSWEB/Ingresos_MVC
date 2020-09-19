@@ -1,12 +1,17 @@
-﻿using System;
+﻿using Sys_Ingresos.Models.JWT.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 
 namespace Sys_Ingresos.Models.JWT.Managers
 {
     public interface IAuthService
     {
-        string SECRETKEY { get; set; }
+        string SecretKey { get; set; }
+        bool IsTokenValid(string token);
+        string GenerateToken(IAuthContainerModel model);
+        IEnumerable<Claim> GetTokenClaims(string token);
     }
 }

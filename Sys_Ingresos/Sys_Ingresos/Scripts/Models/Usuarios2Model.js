@@ -26,12 +26,12 @@ var usuarioContext =
                     for (var i = 0; i < resp.length; i++) {
                         self.usuarios.push({ UsuarioIng: resp[i].USUARIO, NombreIng: resp[i].NOMBRE, Contrasenia: resp[i].PASSWORD, Telefono: resp[i].TELEFONOS, EMail: resp[i].CORREO });
                     }
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "tgp", message: null });
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                     }
                 }
@@ -52,12 +52,12 @@ var usuarioContext =
                             Dependencia: resp[i].DIRECCION_DEPE
                         });
                     }
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "tgp", message: null });
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                     }
                 }
@@ -75,12 +75,12 @@ var usuarioContext =
                     for (var i = 0; i < resp.length; i++) {
                         self.usuarios.push({ UsuarioIng: resp[i].USUARIO, NombreIng: resp[i].NOMBRE, Contrasenia: resp[i].PASSWORD, Telefono: resp[i].TELEFONOS, EMail: resp[i].CORREO });
                     }
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "tgp", message: null });
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                     }
                 }
@@ -98,12 +98,12 @@ var usuarioContext =
                     for (var i = 0; i < resp.length; i++) {
                         self.depenDisp.push({ ClaveUr: resp[i].ID_UR, Descripcion: resp[i].DESCRIPCION, Id: resp[i].ID });
                     }
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "tgp", message: null });
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                     }
                 }
@@ -121,12 +121,12 @@ var usuarioContext =
                     for (var i = 0; i < resp.length; i++) {
                         self.depenAsig.push({ ClaveUr: resp[i].ID_UR, Descripcion: resp[i].DESCRIPCION, Id: resp[i].ID });
                     }
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "tgp", message: null });
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                     }
                 }
@@ -206,13 +206,13 @@ var usuarioContext =
                 data: { Usuario },
                 success: function (resp) {
                     if (resp == true) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "tgp", message: null });
                         }
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                     }
                 }
@@ -230,7 +230,7 @@ var usuarioContext =
                 data: { Dependencia },
                 success: function (resp) {
                     if (resp == true) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "tgp", message: null });
                         }
                     }
@@ -239,7 +239,7 @@ var usuarioContext =
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                     }
                 }
@@ -256,7 +256,7 @@ var usuarioContext =
                 data: { Dependencia },
                 success: function (resp) {
                     if (resp == true) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "tgp", message: null });
                         }
                     }
@@ -265,7 +265,7 @@ var usuarioContext =
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                     }
                 }
@@ -292,7 +292,7 @@ var usuarioContext =
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                     }
                 }
@@ -403,7 +403,7 @@ var usuarioContext =
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error." });
                     }
                 }

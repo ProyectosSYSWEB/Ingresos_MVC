@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "EditarDispersadoFecha";
+}
+
+<div id="CambioDispersado" ng-app="AdministracionWeb" ng-controller="AdministracionController as ctrl">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                Fecha de Dispersado
+            </div>
+            <div class="col-md-6">
+                <div class="container">
+                    <div class="row">
+                        <div class='col-sm-6'>
+                            <div class="form-group">
+                                <div class='input-group date' id='datetimepicker1'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker1').datetimepicker();
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table id="tablaDatos" class="table table-hover">
+                    <thead class="thead-dark font-weight-bold" style="background-color:#d2af47; color:#fff; font-size:12px;">
+                        <tr>
+                            <td>DEPENDENCIA</td>
+                            <td>REFERENCIA</td>
+                            <td>NOMBRE</td>
+                            <td>BANCO</td>
+                            <td>IMPORTE</td>
+                            <td>FECHA</td>
+                            <td>
+                                NUEVA FECHA
+                            </td>
+                            <td>
+                                <input class="form-control" name="txtNuevaFecha" type="text" ng-model="ctrl.cve_fecha" required />
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-secondary" ng-click="ctrl.AgregarCuotaLenguas()" style="width:100%;" id="bttnTipo" data-toggle="modal" data-target="#Editar">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i> Cambiar
+                                </button>
+                            <td>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="cts in ctrl.cuotas_sabatinos">
+                        <tr>
+                            <td>{{cts.Escuela}}</td>
+                            <td>{{cts.Referencia}}</td>
+                            <td>{{cts.Nombre}}</td>
+                            <td>{{cts.Banco}}</td>
+                            <td>{{cts.Importe}}</td>
+                            <td>{{cts.Fecha}}</td>
+                            <td style="text-align:center">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/global.js"></script>
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular.ng-modules.js"></script>
+<script src="~/Scripts/funcionSubirArchivo.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script src="~/Scripts/Controllers/CuotasLenguasController.js"></script>
+<script src="~/Scripts/Models/CuotasLenguasModel.js"></script>

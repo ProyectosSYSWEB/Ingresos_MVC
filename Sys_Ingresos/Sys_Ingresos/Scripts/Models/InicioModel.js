@@ -14,7 +14,7 @@ var inicioContext =
                     url: urlServer + 'Home/ObtDatosUsuario',
                     success: function (resp) {
 
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             if (resp.length > 0) {
                                 if (typeof (resp) == "string") {
                                     var dato = resp.substring(0, 6);
@@ -36,7 +36,7 @@ var inicioContext =
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                         }
                     }

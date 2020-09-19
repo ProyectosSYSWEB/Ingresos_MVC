@@ -10,6 +10,8 @@ using System.Web.Mvc;
 using System.IO;
 using System.Net.Mime;
 using System.Net.Mail;
+using Sys_Ingresos.Models.JWT;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Sys_Ingresos.Controllers
 {
@@ -1202,6 +1204,25 @@ namespace Sys_Ingresos.Controllers
                 return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
 
+        }
+
+        public JsonResult ObtenerToken(int Id, string Referencia)
+        {
+            string cadena = string.Empty;
+            RESULTADO_TOKEN objResultado = new RESULTADO_TOKEN();
+            try
+            {
+                cadena = TOKEN.GenerarToken(Id, Referencia);
+                objResultado.ERROR = false;
+                objResultado.RESULTADO = cadena;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
         }
 
         private RESULTADOCOMUN rptPDFAdjunto(String Reporte, String IdFicha)

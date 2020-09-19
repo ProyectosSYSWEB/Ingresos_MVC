@@ -8,6 +8,7 @@ var referenciasContext =
     referencia: [],
     escuelas: [],
     referenciasGeneradas: [],
+    link_pago: "",
     CatalogoAlumnos: function (Matricula, callBackResult) {
         var self = this;
         self.alumnos.length = 0;
@@ -56,7 +57,7 @@ var referenciasContext =
                             else {
                                 EsPagado = false;
                             }
-                            self.referenciasGeneradas.push({ Matricula: resp.RESULTADO[i].MATRICULA, Ciclo: resp.RESULTADO[i].CICLO_ACTUAL, Tipo: resp.RESULTADO[i].MOVIMIENTO, Dependencia: resp.RESULTADO[i].DEPENDENCIA, Carrera: resp.RESULTADO[i].ID_CARRERA, Nombre: resp.RESULTADO[i].NOMBRE, Semestre: resp.RESULTADO[i].SEMESTRE, PagoConfirmado: resp.RESULTADO[i].PAGO_CONFIRMADO, FechaReferencia: resp.RESULTADO[i].FECHA_GENERACION, ImpTotal: resp.RESULTADO[i].TOTAL, Referencia: resp.RESULTADO[i].REFERENCIA, Pagado: EsPagado, IdRef: resp.RESULTADO[i].ID});
+                            self.referenciasGeneradas.push({ Matricula: resp.RESULTADO[i].MATRICULA, Ciclo: resp.RESULTADO[i].CICLO_ACTUAL, Tipo: resp.RESULTADO[i].MOVIMIENTO, Dependencia: resp.RESULTADO[i].DEPENDENCIA, Carrera: resp.RESULTADO[i].ID_CARRERA, Nombre: resp.RESULTADO[i].NOMBRE, Semestre: resp.RESULTADO[i].SEMESTRE, PagoConfirmado: resp.RESULTADO[i].PAGO_CONFIRMADO, FechaReferencia: resp.RESULTADO[i].FECHA_GENERACION, ImpTotal: resp.RESULTADO[i].TOTAL, Referencia: resp.RESULTADO[i].REFERENCIA, Pagado: EsPagado, IdRef: resp.RESULTADO[i].ID, FechaLimite: resp.RESULTADO[i].FECHA_LIMITE});
                         }
                         if (callBackResult != undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
@@ -73,6 +74,34 @@ var referenciasContext =
                 }
             });
     },
+    LinkReferencia: function (Id, Referencia, callBackResult) {
+        var self = this;
+        self.link_pago = "";
+        $.ajax(
+            {
+                type: 'GET',
+                cache: false,
+                url: urlServer + 'SIAE/ObtenerToken',
+                data: { Id, Referencia },
+                success: function (resp) {
+                    if (resp.ERROR === false) {
+                            self.link_pago=resp.RESULTADO;
+                        if (callBackResult !== undefined) {
+                            callBackResult({ ressult: 'tgp', message: null });
+                        }
+                    }
+                    else {
+                        callBackResult({ ressult: "notgp", message: resp.MENSAJE_ERROR });
+                    }
+                },
+                error: function (ex) {
+                    if (callBackResult !== undefined) {
+                        callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
+                    }
+                }
+            });
+    },
+
 
     Ciclos: function (callBackResult) {
         var self = this;

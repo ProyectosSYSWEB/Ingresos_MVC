@@ -8,6 +8,7 @@ var referenciasContext =
     referencia: [],
     escuelas: [],
     referenciasGeneradas: [],
+    link_pago: "",
     CatalogoAlumnos: function (Matricula, callBackResult) {
         var self = this;
         self.alumnos.length = 0;
@@ -18,11 +19,11 @@ var referenciasContext =
                 url: urlServer + 'SIAE/ListarAlumnos',
                 data: { Matricula },
                 success: function (resp) {
-                    if (resp.ERROR == false) {
+                    if (resp.ERROR === false) {
                         for (var i = 0; i < resp.RESULTADO.length; i++) {
                             self.alumnos.push({ Matricula: resp.RESULTADO[i].MATRICULA, Dependencia: resp.RESULTADO[i].DEPENDENCIA, Nombre: resp.RESULTADO[i].NOMBRE_COMPLETO, Semestre: resp.RESULTADO[i].SEMESTRE, Carrera: resp.RESULTADO[i].CARRERA, Correo: resp.RESULTADO[i].EMAIL, Ciclo: resp.RESULTADO[i].CICLO_ESCOLAR, TipoAlumno: resp.RESULTADO[i].TIPO });
                         }
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     }
@@ -31,7 +32,7 @@ var referenciasContext =
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener el catálogo de Alumnos." });
                     }
                 }
@@ -48,7 +49,7 @@ var referenciasContext =
                 url: urlServer + 'SIAE/ListarReferenciasGeneradas',
                 data: { Matricula },
                 success: function (resp) {
-                    if (resp.ERROR == false) {
+                    if (resp.ERROR === false) {
                         for (var i = 0; i < resp.RESULTADO.length; i++) {
                             if (resp.RESULTADO[i].PAGO_CONFIRMADO == "S") {
                                 EsPagado = true;
@@ -56,9 +57,9 @@ var referenciasContext =
                             else {
                                 EsPagado = false;
                             }
-                            self.referenciasGeneradas.push({ Matricula: resp.RESULTADO[i].MATRICULA, Ciclo: resp.RESULTADO[i].CICLO_ACTUAL, Tipo: resp.RESULTADO[i].MOVIMIENTO, Dependencia: resp.RESULTADO[i].DEPENDENCIA, Carrera: resp.RESULTADO[i].ID_CARRERA, Nombre: resp.RESULTADO[i].NOMBRE, Semestre: resp.RESULTADO[i].SEMESTRE, PagoConfirmado: resp.RESULTADO[i].PAGO_CONFIRMADO, FechaReferencia: resp.RESULTADO[i].FECHA_GENERACION, ImpTotal: resp.RESULTADO[i].TOTAL, Referencia: resp.RESULTADO[i].REFERENCIA, Pagado: EsPagado, IdRef: resp.RESULTADO[i].ID});
+                            self.referenciasGeneradas.push({ Matricula: resp.RESULTADO[i].MATRICULA, Ciclo: resp.RESULTADO[i].CICLO_ACTUAL, Tipo: resp.RESULTADO[i].MOVIMIENTO, Dependencia: resp.RESULTADO[i].DEPENDENCIA, Carrera: resp.RESULTADO[i].ID_CARRERA, Nombre: resp.RESULTADO[i].NOMBRE, Semestre: resp.RESULTADO[i].SEMESTRE, PagoConfirmado: resp.RESULTADO[i].PAGO_CONFIRMADO, FechaReferencia: resp.RESULTADO[i].FECHA_GENERACION, ImpTotal: resp.RESULTADO[i].TOTAL, Referencia: resp.RESULTADO[i].REFERENCIA, Pagado: EsPagado, IdRef: resp.RESULTADO[i].ID });
                         }
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     }
@@ -67,12 +68,40 @@ var referenciasContext =
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener las referencias generadas." });
                     }
                 }
             });
     },
+    LinkReferencia: function (Id, Referencia, callBackResult) {
+        var self = this;
+        self.link_pago = "";
+        $.ajax(
+            {
+                type: 'GET',
+                cache: false,
+                url: urlServer + 'SIAE/ObtenerToken',
+                data: { Id, Referencia },
+                success: function (resp) {
+                    if (resp.ERROR === false) {
+                        self.link_pago = resp.RESULTADO;
+                        if (callBackResult !== undefined) {
+                            callBackResult({ ressult: 'tgp', message: null });
+                        }
+                    }
+                    else {
+                        callBackResult({ ressult: "notgp", message: resp.MENSAJE_ERROR });
+                    }
+                },
+                error: function (ex) {
+                    if (callBackResult !== undefined) {
+                        callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
+                    }
+                }
+            });
+    },
+
 
     Ciclos: function (callBackResult) {
         var self = this;
@@ -83,11 +112,11 @@ var referenciasContext =
                 cache: false,
                 url: urlServer + 'SIAE/ListarCiclosLicenciatura',
                 success: function (resp) {
-                    if (resp.ERROR == false) {
+                    if (resp.ERROR === false) {
                         for (var i = 0; i < resp.RESULTADO.length; i++) {
                             self.ciclos.push({ Id: resp.RESULTADO[i].ID, Descripcion: resp.RESULTADO[i].DESCRIPCION });
                         }
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     }
@@ -96,7 +125,7 @@ var referenciasContext =
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                     }
                 }
@@ -110,13 +139,13 @@ var referenciasContext =
                 type: 'GET',
                 cache: false,
                 url: urlServer + 'SIAE/GenerarReferencia',
-                data: { Matricula, Escuela, Semestre, Ciclo, Movimiento, Nombre, Carrera , DiasVigencia, Extemporaneo},
+                data: { Matricula, Escuela, Semestre, Ciclo, Movimiento, Nombre, Carrera, DiasVigencia, Extemporaneo },
                 success: function (resp) {
-                    if (resp.ERROR == false) {
+                    if (resp.ERROR === false) {
                         for (var i = 0; i < resp.RESULTADO.length; i++) {
                             self.referencia.push({ IdReferencia: resp.RESULTADO[i].ID, Referencia: resp.RESULTADO[i].REFERENCIA });
                         }
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     }
@@ -125,7 +154,7 @@ var referenciasContext =
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                     }
                 }
@@ -146,24 +175,24 @@ var referenciasContext =
                         self.escuelas.push({ Id: resp[i].ID, Descripcion: resp[i].DESCRIPCION });
                     }
                     $("#precarga").hide();
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: 'tgp', message: null });
                     }
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                     }
                 }
             });
     },
-    GuardarNombreOficioAdjunto: function (Dependencia,NoOficio, callBackResult) {        
+    GuardarNombreOficioAdjunto: function (Dependencia, NoOficio, callBackResult) {
         $.ajax(
             {
                 type: 'POST',
                 cache: false,
                 url: urlServer + 'SIAE/GuardarNombreOficioAdjunto',
-                data: { Dependencia, NoOficio},
+                data: { Dependencia, NoOficio },
                 success: function (resp) {
                     if (resp.Error === false)
                         callBackResult({ ressult: 'tgp', message: null });
@@ -171,7 +200,7 @@ var referenciasContext =
                         callBackResult({ ressult: 'notgp', message: resp.MensajeError });
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                     }
                 }
@@ -191,7 +220,7 @@ var referenciasContext =
                         callBackResult({ ressult: 'notgp', message: resp.MENSAJE_ERROR });
                 },
                 error: function (ex) {
-                    if (callBackResult != undefined) {
+                    if (callBackResult !== undefined) {
                         callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                     }
                 }

@@ -1,0 +1,123 @@
+﻿
+@{
+    ViewBag.Title = "EditarDispersadoFecha";
+}
+
+<div id="CambioDispersado" ng-app="AdminWeb" ng-controller="AdminController as ctrl" ng-init="ctrl.Inicio()">
+    <div class="container">
+        <div id="divError" class="row">
+            <div class="col alert alert-danger">
+                {{ctrl.cve_error}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div id="precarga"><input type="image" class="center" src="~/Images/loader.gif" /></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Fecha de Dispersado
+            </div>
+            <div class="col-md-6">
+                <div class="container">
+                    <div class="row">
+                        <div class='col-md-6'>
+                            <div class="form-group">
+                                <div class="input-group date" id="fecha_dispersado">
+                                    <input type='text' class="form-control" ng-model="ctrl.cve_fecha_dispersado" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $("#fecha_dispersado").datetimepicker();
+                            });
+                        </script>
+
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-primary" ng-click="ctrl.ObtenerReferencias()">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                                Buscar
+                            </button>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="panel panel-default panel-table">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col col-xs-6">
+                                <input type="text" class="form-control  border border-success" placeholder="Busqueda" ng-model="ctrl.buscar" style="max-width:100%;">
+                            </div>
+                            <div class="col col-xs-2 text-right">
+                                Nueva Fecha
+                            </div>
+                            <div class="col col-xs-2">
+                                <input class="form-control" name="txtNuevaFecha" type="text" ng-model="ctrl.cve_nueva_fecha_dispersado" required />
+                            </div>
+
+                            <div class="col col-xs-2">
+                                <button type="button" class="btn btn-secondary" ng-click="ctrl.CambiarFechaDispersado()" style="width:100%;" id="bttnTipo" data-toggle="modal" data-target="#Editar">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i> Cambiar
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <table id="tablaDatos" class="table table-hover">
+                        <thead class="thead-dark font-weight-bold" style="background-color:#d2af47; color:#fff; font-size:12px;">
+                            <tr>
+                                <td>FECHA DE PAGO</td>
+                                <td>DEPENDENCIA</td>
+                                <td>REFERENCIA</td>
+                                <td>NOMBRE</td>
+                                <td>BANCO</td>
+                                <td>IMPORTE</td>
+                                <td>FECHA DE DISPERSIÓN</td>
+                                @*<td></td>*@
+                            </tr>
+                        </thead>
+                        <tbody ng-pagination="cts in ctrl.referencias |  itemsPerPage: 10  | filter:ctrl.buscar" pagination-id="PaginationGridRef">
+                            <tr>
+                                <td>{{cts.Fecha_Factura}}</td>
+                                <td>{{cts.Escuela}}</td>
+                                <td>{{cts.Referencia}}</td>
+                                <td>{{cts.Nombre}}</td>
+                                <td>{{cts.Banco}}</td>
+                                <td>{{cts.Importe}}</td>
+                                <td class="alert-warning">{{cts.Fecha_Dispersado}}</td>
+                                @*<td>
+                                    <input id="checkFollower" type="checkbox" ng-checked="leader" aria-label="Follower input">
+                                </td>*@
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ng-pagination-control boundary-links="true" pagination-id="PaginationGridRef"></ng-pagination-control>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/global.js"></script>
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular.ng-modules.js"></script>
+<script src="~/Scripts/angular-pagination.js"></script>
+<script src="~/Scripts/Controllers/DispersadoController.js"></script>
+<script src="~/Scripts/Models/DispersadoModel.js"></script>
