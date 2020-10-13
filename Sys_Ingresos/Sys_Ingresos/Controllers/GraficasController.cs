@@ -91,7 +91,29 @@ namespace Sys_Ingresos.Controllers
             }
         }
 
-        public JsonResult ObtenerToken()
+
+        //public JsonResult ObtenerDatosInscripcion()
+        //{
+        //    RESULTADO_GRAFICAS objResultado = new RESULTADO_GRAFICAS();
+        //    try
+        //    {
+        //        var Lista = CursorDataContext.ObtenerDatosInscripciones(Referencia);
+        //        objResultado.ERROR = false;
+        //        objResultado.MENSAJE_ERROR = string.Empty;
+        //        objResultado.RESULTADO = Lista;
+        //        return Json(objResultado, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        objResultado.ERROR = true;
+        //        objResultado.MENSAJE_ERROR = ex.Message;
+        //        objResultado.RESULTADO = null;
+        //        return Json(objResultado, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
+
+
+        public JsonResult ObtenerDatosGraficaPagados (string Dependencia, string Ciclo_Escolar)
         {
             string cadena=TOKEN.GenerarToken(165445,"41101");
 
