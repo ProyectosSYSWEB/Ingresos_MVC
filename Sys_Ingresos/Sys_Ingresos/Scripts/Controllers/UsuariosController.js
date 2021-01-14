@@ -6,10 +6,12 @@
     app.controller('UsuariosController', ['$scope', '$compile', function ($scope, $compile) {
         var self = this;
         var lista = [];
+        //var lstDepsSel = [];
         var ListaDependenciasTodas = "";
         var grupos = "";
         var grupoSeleccionado = "";
         var opcionesGrupo = "";
+        $("#inf_adicional").hide();
         this.UsuariosNormales = function () {
             console.log("entrando");
             this.ObtenerUsuarios();
@@ -22,6 +24,7 @@
         };
 
         this.IniciarUsuario = function () {
+            $("#error").hide();
             usuarioContext.IniciarUsuario(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
@@ -29,6 +32,7 @@
                         self.Sistema = usuarioContext.usuario[0].Sistema;
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -56,12 +60,60 @@
             ObtenerGrupos();
         };
 
+        $scope.getdetails = function () {
+            if ($scope.chkselct === true)
+                alert("S");
+            else
+                alert("N");
+        };
+
+        this.seleccionado_pruebas = function (chk, idOpcion) {
+            alert(chk);
+
+        };
+        this.seleccionado = function (chk, idOpcion) {
+            if (chk===true) {
+                usuarioContext.AgregarOpcion(idOpcion, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            self.tot_seleccionados = resp.message;
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+            else {
+                usuarioContext.EliminarOpcion(idOpcion, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            self.tot_seleccionados = resp.message;
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }            
+        };
+
+
+
+        //this.seleccionado = function () {
+        //    if (this.valido === true)
+        //        alert("S");
+        //    else
+        //        alert("n");
+        //};
+    
+
         this.InicioAdmin = function () {
+            $("#error").hide();
             ObtenerTodasDependencias();
             this.DatosUsuario();
             ObtenerDependenciasDisponibles();
             ObtenerDependenciasAsignadas();
             ObtenerMenuUsuario();
+            ObtenerGrupos();
         };
 
         this.DatosUsuario = function () {
@@ -90,7 +142,8 @@
                         }
                         break;
                     case "notgp":
-                        alert("Error al obtener los datos");
+                        //alert("Error al obtener los datos");
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -103,6 +156,7 @@
 
         this.ObtenerUsuarios = function () {
             this.usuarios = "";
+            $("#error").hide();
             document.getElementById("precarga").className = "show";
             usuarioContext.UsuariosIngresos(function (resp) {
                 switch (resp.ressult) {
@@ -155,6 +209,7 @@
                         //});
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -167,6 +222,7 @@
 
         var ObtenerUsuariosAdmin = function () {
             this.usuarios = "";
+            $("#error").hide();
             document.getElementById("precarga").className = "show";
             usuarioContext.UsuariosAdmin(function (resp) {
                 switch (resp.ressult) {
@@ -221,6 +277,7 @@
 
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -236,6 +293,7 @@
 
         var ObtenerDependenciasDisponibles = function () {
             this.dependenciasDisp = "";
+            $("#error").hide();
             document.getElementById("precarga").className = "show";
             usuarioContext.DependenciasDisp(function (resp) {
                 switch (resp.ressult) {
@@ -245,6 +303,7 @@
 
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -255,8 +314,28 @@
 
         };
 
+        //var AgregarDependenciasAsignadas = function () {
+        //    this.depenciasAsignadas = "";
+        //    document.getElementById("precarga").className = "show";
+        //    usuarioContext.DependenciasAsig(function (resp) {
+        //        switch (resp.ressult) {
+        //            case "tgp":
+        //                self.depenciasAsignadas = usuarioContext.depenAsig;
+        //                document.getElementById("precarga").className = "hidden";
+        //                break;
+        //            case "notgp":
+        //                self.mensaje = resp.message;
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //        $scope.$apply();
+        //    });
+        //};
+
         var ObtenerDependenciasAsignadas = function () {
             this.depenciasAsignadas = "";
+            $("#error").hide();
             document.getElementById("precarga").className = "show";
             usuarioContext.DependenciasAsig(function (resp) {
                 switch (resp.ressult) {
@@ -265,6 +344,7 @@
                         document.getElementById("precarga").className = "hidden";
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -279,14 +359,36 @@
 
         };
 
+        this.DepDisp = function (chk, id, DepsDisp, DepsAsig) {
+            if (chk === true) {
+                var Id = DepsDisp.Id;
+                var Descripcion = DepsDisp.Descripcion;
+                var ClaveUr = DepsDisp.ClaveUr; //identificador
+                $scope.depenAsig = [];
+                for (var i = 0; i < DepsAsig.length; i++) {
+                    $scope.depenAsig.push({ ClaveUr: DepsAsig[i].ClaveUr, Descripcion: DepsAsig[i].Descripcion, Id: DepsAsig[i].Id });
+                }
+
+
+                $scope.depenAsig.push({ Id: Id, Descripcion: Descripcion, ClaveUr: ClaveUr });
+                //self.depenciasAsignadas = $scope.depenAsig;
+
+
+            }
+            else
+                alert("NO");
+
+        };
+
         this.ObtDatos = function (Usuario) {
-            alert(Usuario);
+            $("#error").hide();
             usuarioContext.ObtDatos(Usuario, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         window.location.href = urlServer + "Usuarios/Admin";
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -296,7 +398,8 @@
             });
         };
 
-        this.EliminarDepUsu = function (Dependencia) {
+        this.EliminarDepUsu2 = function (Dependencia) {
+            $("#error").hide();
             //this.usuarios = "";
             //document.getElementById("precarga").className = "show";
             usuarioContext.EliminarDepUsu(Dependencia, function (resp) {
@@ -308,6 +411,7 @@
 
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -318,18 +422,16 @@
 
         };
 
-        this.AsignarDepUsu = function (Dependencia) {
-            //this.usuarios = "";
-            //document.getElementById("precarga").className = "show";
+        this.AsignarDepUsu2 = function (Dependencia) {
+            $("#error").hide();
             usuarioContext.AsignarDepUsu(Dependencia, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         ObtenerDependenciasDisponibles();
                         ObtenerDependenciasAsignadas();
-                        //document.getElementById("precarga").className = "hidden";
-
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -340,28 +442,133 @@
 
         };
 
-        var ObtenerMenuUsuario = function () {
+        //this.AsignarDepUsu = function () {
+        //    usuarioContext.AsignarDepUsu(this.cve_dep_disp, function (resp) {
+        //        switch (resp.ressult) {
+        //            case "tgp":
+        //                ObtenerDependenciasDisponibles();
+        //                ObtenerDependenciasAsignadas();
+        //                break;
+        //            case "notgp":
+        //                self.mensaje = resp.message;
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //        $scope.$apply();
+        //    });
+
+        //};
+        //self.depenDisp.push({ ClaveUr: resp[i].ID_UR, Descripcion: resp[i].DESCRIPCION, Id: resp[i].ID });
+
+
+        this.AsignarDepUsu = function (depciasDisponibles) {
+            $("#error").hide();
+            if (self.depDisp === true) {
+                usuarioContext.AsignarDependenciasTodas(function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            self.buscar_dep_disp = "";
+                            self.depDisp = false;
+                            ObtenerDependenciasDisponibles();
+                            ObtenerDependenciasAsignadas();
+                            break;
+                        case "notgp":
+                            $("#error").show();
+                            self.mensaje = resp.message;
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+            }
+
+            else {
+                $scope.lstDepsSel = [];
+                for (var i = 0; i < depciasDisponibles.length; i++) {
+                    if (depciasDisponibles[i].cve_dep_disp === true) {
+                        $scope.lstDepsSel.push(depciasDisponibles[i].Id);
+                    }
+                }
+                if ($scope.lstDepsSel.length > 0) {
+                    usuarioContext.AsignarDependencias($scope.lstDepsSel, function (resp) {
+                        switch (resp.ressult) {
+                            case "tgp":
+                                self.buscar_dep_disp = "";
+                                ObtenerDependenciasDisponibles();
+                                ObtenerDependenciasAsignadas();
+                                break;
+                            case "notgp":
+                                $("#error").show();
+                                self.mensaje = resp.message;
+                                break;
+                            default:
+                                break;
+                        }
+                        $scope.$apply();
+                    });
+                }
+            }
+        };
+        this.EliminarDepUsu = function (depciasAsignadas) {
+            $scope.lstDepsAsigSel = [];
+            //for (var i = 0; i < DepsAsig.length; i++) {
+            //    $scope.depenAsig.push({ ClaveUr: DepsAsig[i].ClaveUr, Descripcion: DepsAsig[i].Descripcion, Id: DepsAsig[i].Id });
+            //}
+
+            for (var i = 0; i < depciasAsignadas.length; i++) {
+                if (depciasAsignadas[i].cve_dep_asig === true) {
+                    $scope.lstDepsAsigSel.push(depciasAsignadas[i].Id);
+                }
+            }
+            if ($scope.lstDepsAsigSel.length > 0) {
+                usuarioContext.EliminarDependencias($scope.lstDepsAsigSel, function (resp) {
+                    switch (resp.ressult) {
+                        case "tgp":
+                            ObtenerDependenciasDisponibles();
+                            ObtenerDependenciasAsignadas();
+                            break;
+                        case "notgp":
+                            $("#error").show();
+                            self.mensaje = resp.message;
+                            break;
+                        default:
+                            break;
+                    }
+                    $scope.$apply();
+                });
+            }
+        };
+        this.Sel_Todos_Disp = function (depciasDisponibles) {
+            depciasDisponibles.cve_dep_disp = true;
+        };
+
+        var ObtenerMenuUsuario2 = function () {
             this.menu_Usuario = "";
+            $("#error").hide();
             document.getElementById("precarga").className = "show";
             usuarioContext.ObtenerMenuUsuario(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         self.menu_Usuario = usuarioContext.mnuAsig;
-                        for (var i = 0; i < self.menu_Usuario.length; i++) {
-                            if (self.menu_Usuario[i].elementoMnuNvl !== false) {
-                                if (self.menu_Usuario[i].asignado === "1") {
-                                    lista.push(self.menu_Usuario[i].idSeccionMnuNvl);
-                                }
-                            }
-                            else if (self.menu_Usuario[i].elementoMnuNvl4 !== false && self.menu_Usuario[i].elementoMnuNvl4 !== "") {
-                                if (self.menu_Usuario[i].asignado === "1") {
-                                    lista.push(self.menu_Usuario[i].idSeccionMnuNvl4);
-                                }
-                            }
-                        }
+                        //for (var i = 0; i < self.menu_Usuario.length; i++) {
+                        //    if (self.menu_Usuario[i].elementoMnuNvl !== false) {
+                        //        if (self.menu_Usuario[i].asignado === "1") {
+                        //            lista.push(self.menu_Usuario[i].idSeccionMnuNvl);
+                        //        }
+
+                        //    }
+                        //    else if (self.menu_Usuario[i].elementoMnuNvl4 !== false && self.menu_Usuario[i].elementoMnuNvl4 !== "") {
+                        //        if (self.menu_Usuario[i].asignado === "1") {
+                        //            lista.push(self.menu_Usuario[i].idSeccionMnuNvl4);
+                        //        }
+                        //    }
+                        //}
                         document.getElementById("precarga").className = "hidden";
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -369,16 +576,41 @@
                 }
                 $scope.$apply();
             });
-
         };
 
+        var ObtenerMenuUsuario = function () {
+            this.menu_Usuario = "";
+            $("#error").hide();
+            document.getElementById("precarga").className = "show";
+            usuarioContext.ObtenerMenuUsuario(function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.menu_Usuario = usuarioContext.mnuAsig;
+                        self.tot_seleccionados = usuarioContext.tot_sel;
+                        document.getElementById("precarga").className = "hidden";
+                        break;
+                    case "notgp":
+                        $("#error").show();
+                        self.mensaje = resp.message;
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+            });
+        };
+
+
+
         this.Salir = function () {
+            $("#error").hide();
             window.location.href = urlServer + "Usuarios/Index";
             usuarioContext.Salir(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -414,13 +646,51 @@
 
 
         this.guardarElementosSeleccionados = function () {
-            usuarioContext.OpcionesMenuSelect(lista, function (resp) {
+            document.getElementById("precarga").className = "show";
+            $("#error").hide();
+            $("#inf_adicional").hide();
+            usuarioContext.OpcionesMenuSelect(function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        alert("cambios realizados");
+                        $("#inf_adicional").show();
+                        self.cve_inf_adicional = "Menú generado correctamente";
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
+                        break;
+                    default:
+                        break;
+                }
+                $scope.$apply();
+                document.getElementById("precarga").className = "hidden";
+            });
+        };
+
+
+        this.AgregarOpcionesGrupo = function () {
+            document.getElementById("precarga").className = "show";
+            $("#error").hide();
+            $("#inf_adicional").hide();
+            self.cve_inf_adicional = "";
+            usuarioContext.GuardarGrupoUsuario(self.cve_grupo, function (resp) {
+                switch (resp.ressult) {
+                    case "tgp":
+                        self.mensaje = "";
+                        $("#inf_adicional").show();
+                        self.cve_inf_adicional = "El menú ya fue generado, click en MENÚ (opción izquierda).";
+                        //ObtenerMenuGpo();
+                        ObtenerMenuUsuario();
+                        //self.menu_Usuario = usuarioContext.mnuAsig;
+                        //self.tot_seleccionados = usuarioContext.tot_sel;
+                        document.getElementById("precarga").className = "hidden";
+
+
+                        break;
+                    case "notgp":
+                        $("#error").show();
+                        self.mensaje = resp.message;
+                        document.getElementById("precarga").className = "hidden";
                         break;
                     default:
                         break;
@@ -429,14 +699,19 @@
             });
         };
 
+
         this.guardarElementosGrupoSeleccionado = function (grupo) {
+            $("#error").hide();
+            $("#inf_adicional").hide();
             console.log(grupo);
             usuarioContext.OpcionesGrupoSelect(lista, grupo, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        alert("cambios realizados");
+                        $("#inf_adicional").show();
+                        self.cve_inf_adicional = "Menú generado correctamente.";
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -451,6 +726,7 @@
         };
 
         this.GuardarUsuario = function () {
+            $("#error").hide();
             var statusUsuario = $("#cmbStatus option:selected").val();
             if (self.cve_password !== self.cve_password_confirm)
                 alert("Las contraseñas deben de coincidir");
@@ -461,10 +737,15 @@
 
                             case "tgp":
                                 alert("Usuario registrado.");
+                                ObtenerMenuUsuario();
+                                ObtenerDependenciasDisponibles();
+                                ObtenerDependenciasAsignadas();
                                 break;
                             case "notgp":
-                                alert("Error al guardar los datos: " + resp.message);
-                                //self.mensaje = resp.message;
+                                $("#error").show();
+                                //alert("Error al guardar los datos: " + resp.message);
+                                self.mensaje = resp.message;
+
                                 break;
                             default:
                                 break;
@@ -476,13 +757,16 @@
 
 
         this.GuardarGrupoUsuario = function () {
+            $("#error").hide();
             usuarioContext.GuardarGrupoUsuario(self.cve_grupo, function (resp) {
                 switch (resp.ressult) {
                     case "tgp":
-                        alert("cambios realizados");
-                        window.location.href = urlServer + "Usuarios/Admin";
+                        alert("Cambios realizados.");
+                        ObtenerMenuUsuario();
+                        //window.location.href = urlServer + "Usuarios/Admin";
                         break;
                     case "notgp":
+                        $("#error").show();
                         self.mensaje = resp.message;
                         break;
                     default:
@@ -492,7 +776,9 @@
             });
         };
 
-        this.ModificarCuota = function () {
+        this.ModificarUsuario = function () {
+            $("#error").hide();
+
             var statusUsuario = $("#cmbStatus option:selected").val();
             if (self.cve_password !== self.cve_password_confirm)
                 alert("Las contraseñas deben de coincidir");
@@ -501,10 +787,12 @@
                     self.cve_correo, self.cve_telefono, self.cve_dep_ads, statusUsuario, function (resp) {
                         switch (resp.ressult) {
                             case "tgp":
-                                alert("cambios realizados");
+                                $("#inf_adicional").show();
+                                self.cve_inf_adicional = "Modificaciones realizadas correctamente.";
                                 break;
                             case "notgp":
-                                alert("Error al guardar los datos");
+                                //alert("Error al guardar los datos");
+                                $("#error").show();
                                 self.mensaje = resp.message;
                                 break;
                             default:
@@ -576,6 +864,7 @@
                 }
                 $scope.$apply();
                 marcarMenu(1);
+
             });
         };
 

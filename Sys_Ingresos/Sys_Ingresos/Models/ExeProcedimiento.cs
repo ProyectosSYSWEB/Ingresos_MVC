@@ -32,7 +32,7 @@ namespace Sys_Ingresos.Models
 
         public OracleCommand GenerarOracleCommandCursor(string SP, ref OracleDataReader dr, string[] Parametros, object[] Valores)
         {
-            cn = objConexion.getConexion("CONEXION_INGRESOS");// Agregué el llamado a este metodo para poder realizar la conexion
+            //cn = objConexion.getConexion("CONEXION_INGRESOS");// Agregué el llamado a este metodo para poder realizar la conexion
             cmd = new OracleCommand(SP, cn);
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             if (trans != null) cmd.Transaction = trans;

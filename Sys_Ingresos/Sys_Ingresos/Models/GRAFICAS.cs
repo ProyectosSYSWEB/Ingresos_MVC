@@ -9,6 +9,8 @@ namespace Sys_Ingresos.Models
     {
         public string DATO1 { get; set; }
         public string DATO2 { get; set; }
+        public string DATO3 { get; set; }
+
     }
 
     public class RESULTADO_GRAFICAS

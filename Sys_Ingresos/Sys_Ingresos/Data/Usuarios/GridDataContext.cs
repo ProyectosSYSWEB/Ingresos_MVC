@@ -176,6 +176,15 @@ namespace Sys_Ingresos.Data.Usuarios
                     objOpciones.NIVEL = Convert.ToInt32(dr[0]);
                     objOpciones.ID = Convert.ToInt16(dr[4]);
                     objOpciones.ASIGNADO = Convert.ToString(dr[6]);
+                    objOpciones.ID_PADRE = Convert.ToInt32(dr[7]);
+                    objOpciones.PADRE = Convert.ToString(dr[3]);
+                    objOpciones.TOT_NIVEL = Convert.ToInt32(dr[8]);
+
+                    if (Convert.ToString(dr[6]) == "1")
+                        objOpciones.VALIDO = true;
+                    else
+                        objOpciones.VALIDO = false;
+
                     //objOpciones.IMG2 = (Convert.ToInt32(dr[5]) == 3 || Convert.ToInt32(dr[5]) == 4) ? "../Images/nivel3.png" : "";
                     //objOpciones.IMG = (Convert.ToInt32(dr[5]) == 0) ? "../Images/folder.png" : "../Images/file.png";
                     listarMenu.Add(objOpciones);

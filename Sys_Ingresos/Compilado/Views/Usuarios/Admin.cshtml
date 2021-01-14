@@ -3,40 +3,132 @@
     ViewBag.Title = "Admin";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .tab {
+        margin-top: 30px;
+    }
+
+        .tab .nav-tabs {
+            border: none;
+            border-bottom: 1px solid #e4e4e4;
+        }
+
+    .nav-tabs li a {
+        padding: 15px 40px;
+        border: 1px solid #ededed;
+        border-top: 2px solid #dfdfdf;
+        border-right: 0px none;
+        background: #d2af47;
+        color: #fff;
+        border-radius: 0px;
+        margin-right: 0px;
+        font-weight: bold;
+        transition: all 0.3s ease-in 0s;
+    }
+
+        .nav-tabs li a:hover {
+            border-bottom-color: #b2b2b2;
+            border-right: 0px none;
+            background: #b2b2b2;
+            color: #fff;
+        }
+
+        .nav-tabs li a i {
+            display: inline-block;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+    .nav-tabs li:last-child {
+        border-right: 1px solid #ededed;
+    }
+
+    .nav-tabs li.active a,
+    .nav-tabs li.active a:focus,
+    .nav-tabs li.active a:hover {
+        border-top: 3px solid #d2af47;
+        border-right: 1px solid #d3d3d3;
+        margin-top: -15px;
+        color: #444;
+        padding: 22px 40px;
+    }
+
+    .tab .tab-content {
+        padding: 20px;
+        line-height: 22px;
+        box-shadow: 0px 1px 0px #808080;
+    }
+
+        .tab .tab-content h3 {
+            margin-top: 0;
+        }
+</style>
 
 <div ng-app="UsuariosIngresosWeb" ng-controller="UsuariosController as ctrl" ng-init="ctrl.InicioAdmin()">
-    <div class=" text-right">
-        <button type="button" class="btn btn-warning" ng-click="ctrl.Salir()" data-dismiss="modal" aria-label="Close">Salir</button>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="alert alert-danger" id="error">
+                {{ctrl.mensaje}}
+            </div>
+            <div class="alert alert-success" id="inf_adicional">
+                {{ctrl.cve_inf_adicional}}
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <button type="button" class="btn btn-dark" ng-click="ctrl.Salir()" data-dismiss="modal" aria-label="Close" style="width:100%">Salir</button>
+        </div>
     </div>
     <div id="Formulario">
         <div class=".col-sm-12">
             <div id="precarga" class="show"><input type="image" class="center" src="~/Images/loader.gif" /></div>
         </div>
 
-        <div class="container">
-            <h2>Configuración del Usuario</h2>
-            <p>Las opciones a las que tiene acceso el usuario.</p>
 
+        <div class="container">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#home">Usuario</a></li>
-                <li><a data-toggle="tab" href="#menu1">Menu</a></li>
-                <li><a data-toggle="tab" href="#menu2">Dependencias</a></li>
+                <li class="active">
+                    <a data-toggle="tab" href="#home">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        Usuario
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#menu1">
+                        <i class="fa fa-list-ul" aria-hidden="true"></i>
+                        Menu
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#menu2">
+                        <i class="fa fa-cog" aria-hidden="true"></i>
+                        Dependencias
+                    </a>
+                </li>
             </ul>
 
             <div class="tab-content">
                 <div id="home" class="tab-pane fade in active">
-                    <h3>DATOS GENERALES</h3>
+                    <br />
                     <form name="UserForms" novalidate>
+                        <div class="row">
+                            <div class="col-sm-12 text-center">
+                                <button ng-disabled="UserForms.txtUsuario.$invalid||UserForms.txtNombre.$invalid||UserForms.txtPassword.$invalid||UserForms.txtConfirmaPassword.$invalid||UserForms.txtCorreo.$invalid||UserForms.txtTelefono.$invalid||UserForms.cmbDepAds.$invalid||UserForms.cmbStatus.$invalid" type="button" style="width:25%" id="btnGuardar" class="btn btn-secondary" ng-click="ctrl.GuardarUsuario()" data-dismiss="modal">Guardar Datos Generales</button>
+                                <button ng-disabled="UserForms.txtPassword.$invalid||UserForms.txtConfirmaPassword.$invalid||UserForms.txtCorreo.$invalid||UserForms.txtTelefono.$invalid||UserForms.cve_dep_ads === false ||UserForms.cmbStatus === false" type="button" style="width:25%" id="btnModificar" class="btn btn-secondary" ng-click="ctrl.ModificarUsuario()" data-dismiss="modal">Modificar</button>
+                            </div>
+                        </div>
+                        <br />
                         <div class="row">
                             <div class="col-xs-6">
                                 <input type="hidden" ng-model="ctrl.valor_id" />
-                                <label for="lblUsuario">Usuario:</label>
+                                <label for="lblUsuario">Usuario</label>
                                 <input class="form-control" id="txtUsuario" name="txtUsuario" type="text" ng-model="ctrl.cve_usuario" ng-maxlength="50" ng-required="true" />
+
                                 <span style="color:red" ng-show="UserForms.txtUsuario.$invalid" />
                                 <span ng-show="UserForms.txtUsuario.$error.required">*Usuario Requerido</span>
                             </div>
                             <div class="col-xs-6">
-                                <label for="lblNombre">Nombre Completo:</label>
+                                <label for="lblNombre">Nombre Completo</label>
                                 <input class="form-control" name="txtNombre" id="txtNombre" type="text" ng-model="ctrl.cve_nombre" ng-maxlength="50" ng-required="true" />
                                 <span style="color:red" ng-show="UserForms.txtNombre.$invalid" />
                                 <span ng-show="UserForms.txtNombre.$error.required">*Nombre Requerido</span>
@@ -44,13 +136,13 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
-                                <label for="lblPassword">Contraseña:</label>
+                                <label for="lblPassword">Contraseña</label>
                                 <input class="form-control" name="txtPassword" id="txtPassword" type="text" ng-model="ctrl.cve_password" ng-maxlength="50" ng-required="true" />
                                 <span style="color:red" ng-show="UserForms.txtPassword.$invalid" />
                                 <span ng-show="UserForms.txtPassword.$error.required">*Contraseña Requerida</span>
                             </div>
                             <div class="col-xs-6">
-                                <label for="lblConfirmaPassword">Confirmar Contraseña:</label>
+                                <label for="lblConfirmaPassword">Confirmar Contraseña</label>
                                 <input class="form-control" name="txtConfirmaPassword" id="txtConfirmaPassword" ng-model="ctrl.cve_password_confirm" type="text" ng-maxlength="50" ng-required="true" />
                                 <span style="color:red" ng-show="UserForms.txtConfirmaPassword.$invalid" />
                                 <span ng-show="UserForms.txtConfirmaPassword.$error.required">*Contraseña Requerida</span>
@@ -58,13 +150,13 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
-                                <label for="lblCorreo">Correo:</label>
+                                <label for="lblCorreo">Correo</label>
                                 <input class="form-control" name="txtCorreo" id="txtCorreo" type="text" ng-model="ctrl.cve_correo" ng-maxlength="50" ng-required="true" />
                                 <span style="color:red" ng-show="UserForms.txtCorreo.$invalid" />
                                 <span ng-show="UserForms.txtCorreo.$error.required">*Correo Requerido</span>
                             </div>
                             <div class="col-xs-6">
-                                <label for="lblTelefono">Teléfono(s):</label>
+                                <label for="lblTelefono">Teléfono(s)</label>
                                 <input class="form-control" name="txtTelefono" id="txtTelefono" type="text" ng-model="ctrl.cve_telefono" ng-maxlength="50" ng-required="true" />
                                 <span style="color:red" ng-show="UserForms.txtTelefono.$invalid" />
                                 <span ng-show="UserForms.txtTelefono.$error.required">*Teléfono Requerido</span>
@@ -72,13 +164,13 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
-                                <label for="lblDepAds">Dependencia de Adscripción:</label>
+                                <label for="lblDepAds">Dependencia de Adscripción</label>
                                 <select class="form-control" id="cmbDepAds" name="cmbDepAds" ng-options="option.Id as option.Descripcion for option in ctrl.ListaDependenciasTodas" ng-model="ctrl.cve_dep_ads" required></select>
                                 <span style="color:red" ng-show="UserForms.cmbDepAds.$invalid" />
                                 <span ng-show="UserForms.cmbDepAds.$error.required">*Dependencia Requerida</span>
                             </div>
                             <div class="col-xs-6">
-                                <label for="lblDepAds">Estatus:</label>
+                                <label for="lblDepAds">Estatus</label>
                                 <select class="form-control" id="cmbStatus" name="cmbStatus" ng-model="ctrl.status" required>
                                     <option value="A">ACTIVO</option>
                                     <option value="B">BAJA</option>
@@ -87,137 +179,217 @@
                                 <span ng-show="UserForms.cmbStatus.$error.required">*Estatus Requerido</span>
                             </div>
                             @*<div class="col-xs-6">
-                    <label for="lblTelefono">Telefono(s):</label>
-                    <input class="form-control" name="txtTelefono" type="text" ng-model="ctrl.cve_telefono" ng-maxlength="50" ng-required="true" />
-                    <span style="color:red" ng-show="UserForms.txtConfirmaPassword.$invalid" />
-                    <span ng-show="UserForms.txtConfirmaPassword.$error.required">*Área Requerida</span>
-                </div>*@
+                                    <label for="lblTelefono">Telefono(s):</label>
+                                    <input class="form-control" name="txtTelefono" type="text" ng-model="ctrl.cve_telefono" ng-maxlength="50" ng-required="true" />
+                                    <span style="color:red" ng-show="UserForms.txtConfirmaPassword.$invalid" />
+                                    <span ng-show="UserForms.txtConfirmaPassword.$error.required">*Área Requerida</span>
+                                </div>*@
                         </div>
-                        <div class="row">
-                            <div class="col-sm-12 text-right">
-                                <button ng-disabled="UserForms.txtUsuario.$invalid||UserForms.txtNombre.$invalid||UserForms.txtPassword.$invalid||UserForms.txtConfirmaPassword.$invalid||UserForms.txtCorreo.$invalid||UserForms.txtTelefono.$invalid||UserForms.cmbDepAds.$invalid||UserForms.cmbStatus.$invalid" type="button" id="btnGuardar" class="btn btn-success" ng-click="ctrl.GuardarUsuario()" data-dismiss="modal">Guardar Datos Generales</button>
-                                <button ng-disabled="UserForms.txtPassword.$invalid||UserForms.txtConfirmaPassword.$invalid||UserForms.txtCorreo.$invalid||UserForms.txtTelefono.$invalid||UserForms.cve_dep_ads === false ||UserForms.cmbStatus === false" type="button" id="btnModificar" class="btn btn-primary" ng-click="ctrl.ModificarCuota()" data-dismiss="modal">Modificar</button>
-                            </div>
-                        </div>
+
                     </form>
                 </div>
                 <div id="menu1" class="tab-pane fade">
-                    <h3>Opciones en el Menú</h3>
-                    <label for="lblDepAds">Grupo <select id="grupo" class="form-control" ng-options="option.Id as option.Descripcion for option in ctrl.grupos" ng-model="ctrl.cve_grupo"></select></label>
-                    <input type="button" class="form-control btn btn-success" ng-click="ctrl.GuardarGrupoUsuario()" value="Agregar al grupo" />
+                    <br />
+                    <div class="container">
 
-                    <ol style="list-style-type:none" ng-repeat="mnuTree in ctrl.menu_Usuario">
+                        <div class="tab-content">
 
-                        <li style="color:#009aff" class="fa fa-check" ng-if="mnuTree.tituloMnuNvl" ng-click="ctrl.MostarMnu2(mnuTree.idSeccionTitulo)">{{mnuTree.tituloMnuNvl}}
+                            <!-- Panel 1 -->
+                            <div class="tab-pane fade in show active" id="panel555" role="tabpanel">
 
-                        <li style="list-style-type:none">
+                                <!-- Nav tabs -->
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <ul class="nav md-pills pills-primary flex-column" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab" href="#panel21" role="tab">
+                                                    <i class="fa fa-users" aria-hidden="true"></i>
+                                                    Opciones Predefinidas
+                                                </a>
+                                            </li>
+                                            <li class="nav-item" style="color:grey">
+                                                <a class="nav-link" data-toggle="tab" href="#panel22" role="tab">
+                                                    <i class="fa fa-cog" aria-hidden="true"></i>
+                                                    Menú
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <!-- Tab panels -->
+                                        <div class="tab-content vertical">
+                                            <!-- Panel 1 -->
+                                            <div class="tab-pane fade in show active" id="panel21" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <select class="form-control" id="cmbGrupos" name="cmbGrupos" ng-options="option.Id as option.Descripcion for option in ctrl.grupos" ng-model="ctrl.cve_grupo"></select>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input ng-click="ctrl.AgregarOpcionesGrupo()" type="button" class="btn btn-secondary" value="Agregar" style="width:100%" />
+                                                    </div>
+                                                
+                                                   
+                                                </div>
 
-                            <ul>
-                                <li class="fa fa-folder" ng-if="mnuTree.elementoMnuNvl">
-                                    {{mnuTree.elementoMnuNvl}}
-                                    <input id="{{mnuTree.idSeccionMnuNvl}}" ng-click="ctrl.agregarMnu(mnuTree.idSeccionMnuNvl)" type="checkbox" />
-                                </li>
+                                            </div>
+                                            <div class="tab-pane fade" id="panel22" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="alert alert-secondary" style="font-size:large">Elementos seleccionados:<strong> {{ctrl.tot_seleccionados}}</strong></div>
+                                                        <input ng-click="ctrl.guardarElementosSeleccionados()" type="button" class="btn btn-secondary" value="Generar Menú" style="width:100%" />
 
-                                <li style="list-style-type:none">
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div id="accordion">
+                                                            <div ng-repeat="i in ctrl.menu_Usuario">
+                                                                <div ng-if="i.Id_Padre === 14 ">
+                                                                    <div class="card">
+                                                                        <div class="card-header" id="{{i.Id}}" style="background-color:#fff; border-color:#fff">
+                                                                            <input type="checkbox" id="chk{{i.Id}}" class="form-check-input" ng-model="i.valido" ng-change="ctrl.seleccionado(i.valido, i.Id)" />
+                                                                            <button class="btn btn-info" style="font-weight:bold; color: #343a40;" data-toggle="collapse" data-target="#C-{{i.Id}}" aria-expanded="true" aria-controls="{{i.Id}}">
+                                                                                <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                                                                {{i.Descripcion}}
+                                                                            </button>
 
-                                    <ul>
+                                                                        </div>
 
-                                        <li class="fa fa-file-text-o" ng-if="mnuTree.elementoMnuNvl4">
+                                                                        <div id="C-{{i.Id}}" class="collapse" aria-labelledby="{{i.id}}" data-parent="#accordion">
+                                                                            <div class="card-body" style="background-color:#fff">
+                                                                                <table ng-repeat="j in ctrl.menu_Usuario" width="100%" ng-if="j.idPadrePrin == i.Id">
+                                                                                    <tr>
+                                                                                        <td ng-style="{'font-weight': j.TotNivel>0 ? 'bold' : 'none'}">
+                                                                                            <div ng-style="{'display': j.Nivel===3 ? 'block' : 'none'} ">
+                                                                                                &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="{{j.Id}}" class="form-check-input" ng-model="j.valido" ng-change="ctrl.seleccionado(j.valido, j.Id)" />
+                                                                                                {{j.Descripcion}}
+                                                                                            </div>
+                                                                                            <div ng-style="{'display': j.Nivel===4 ? 'block' : 'none'}">
+                                                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="{{j.Id}}" class="form-check-input" ng-model="j.valido" ng-change="ctrl.seleccionado(j.valido, j.Id)" />
+                                                                                                {{j.Descripcion}}
+                                                                                            </div>
+                                                                                            <div ng-style="{'display': j.Nivel===5 ? 'block' : 'none'}">
+                                                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="{{j.Id}}" class="form-check-input" ng-model="j.valido" ng-change="ctrl.seleccionado(j.valido, j.Id)" />
+                                                                                                {{j.Descripcion}}
+                                                                                            </div>
 
-                                            {{mnuTree.elementoMnuNvl4}}
-                                            <input class="{{mnuTree.idSeccionMnuNvl}}" id="{{mnuTree.idSeccionMnuNvl4}}" type="checkbox" ng-click="ctrl.agregarMnu(mnuTree.idSeccionMnuNvl4, mnuTree.idSeccionMnuNvl)" />
-                                        </li>
+                                                                                        </td>
+                                                                                    </tr>
 
-                                    </ul>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
 
-                                </li>
 
-                            </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Nav tabs -->
 
-                        </li>
-                    </ol>
-                    <div>
-                        <input ng-click="ctrl.guardarElementosSeleccionados()" type="button" class="btn btn-success" value="Generar Menú" />
+                            </div>
+                        </div>
+                        <!-- Tab panels -->
+
                     </div>
-
-
-                    <table style="width:80%">
-                        <tbody ng-repeat="mnu in ctrl.menu_Usuario">
-                            <tr>
-                                <td ng-style="{'font-weight':((mnu.nivelMnu==0)?'bold':'normal')}">
-                                    <img ng-src="{{mnu.imageUrlN}}"><img ng-src="{{mnu.imageUrl}}">
-                                    {{mnu.descMnu}}
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-
-
                 </div>
                 <div id="menu2" class="tab-pane fade">
-                    <h3>Depedencias Asignadas</h3>
+                    <br />
                     <div class="container">
                         <div class="row">
                             <div class="col-xs-6">
+                                <input type="text" class="form-control  border border-success" placeholder="Busqueda" ng-model="ctrl.buscar_dep_disp" style="max-width:100%;">
                                 <div id="TablaDatos" style="overflow-y:scroll; height:400px;">
                                     <table class="table">
-                                        <thead class="thead-dark">
+                                        <thead class="thead-dark" style="background-color:#ddd;">
                                             <tr>
-                                                <td>CLAVE UR</td>
-                                                <td>DESCRIPCIÓN</td>
-                                                <td><button type="button" class="btn btn-primary" ng-click="ctrl.AsignarDepUsu(00000)">Agregar Todas</button></td>
+                                                <td>Clave UR</td>
+                                                <td>Descripción</td>
+                                                <td>
+                                                    <input type="checkbox" id="chkDepDisp" class="form-check-input" ng-model="ctrl.depDisp" />
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-secondary" ng-click="ctrl.AsignarDepUsu(ctrl.depenciasDisponibles)">Agregar</button>
+                                                </td>
                                             </tr>
 
                                         </thead>
-                                        <tbody ng-repeat="disp in ctrl.depenciasDisponibles">
+                                        <tbody ng-pagination="disp in ctrl.depenciasDisponibles | orderBy:sortType:sortReverse | filter:ctrl.buscar_dep_disp  | itemsPerPage: 40 " pagination-id="PaginationModalAR">
                                             <tr>
                                                 <td>{{disp.ClaveUr}}</td>
                                                 <td>{{disp.Descripcion}}</td>
-                                                <td class=".col-7 .col-sm-4"><button type="button" class="btn btn-primary" ng-click="ctrl.AsignarDepUsu(disp.Id)">Agregar</button></td>
+                                                <td class=".col-7 .col-sm-4" colspan="2">
+                                                    @*<button type="button" class="btn btn-dark" ng-click="ctrl.AsignarDepUsu(disp.Id)">Agregar</button>*@
+                                                    <input type="checkbox" id="chkDepDisp" class="form-check-input" ng-model="disp.cve_dep_disp" ng-checked="ctrl.depDisp" />
+                                                    @*ng-change="ctrl.DepDisp(disp.cve_dep_disp,disp.Id,disp,ctrl.depenciasAsignadas)"*@
+
+                                                </td>
                                             </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="4">
+                                                    <ng-pagination-control boundary-links="true" pagination-id="PaginationModalAR"></ng-pagination-control>
+                                                </th>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
                             <div class="col-xs-6">
+                                <input type="text" class="form-control  border border-success" placeholder="Busqueda" ng-model="ctrl.buscar_dep_asig" style="max-width:100%;">
                                 <div id="TablaDatos" style="overflow-y:scroll; height:400px;">
                                     <table class="table">
-                                        <thead class="thead-dark">
+                                        <thead class="thead-dark" style="background-color:#ddd;">
                                             <tr>
-                                                <td><button type="button" class="btn btn-danger" ng-click="ctrl.EliminarDepUsu(00000)">Eliminar Todas</button></td>
-                                                <td>CLAVE UR</td>
-                                                <td>DESCRIPCIÓN</td>
+                                                <td>
+                                                    <input type="checkbox" class="form-check-input" ng-model="ctrl.depAsig" />
+                                                </td>
+                                                <td>
+                                                    @*<button type="button" class="btn btn-danger" ng-click="ctrl.EliminarDepUsu(00000)">Eliminar</button>*@
+                                                    <button type="button" class="btn btn-secondary" ng-click="ctrl.EliminarDepUsu(ctrl.depenciasAsignadas)">Eliminar</button>
+                                                </td>
+                                                <td>Clave UR</td>
+                                                <td>Descripción</td>
                                             </tr>
 
                                         </thead>
-                                        <tbody ng-repeat="disp in ctrl.depenciasAsignadas">
+                                        @*<tbody ng-repeat="asig in ctrl.depenciasAsignadas">*@
+                                        <tbody ng-pagination="asig in ctrl.depenciasAsignadas | orderBy:sortType:sortReverse | filter:ctrl.buscar_dep_asig  | itemsPerPage: 40 " pagination-id="PaginationModalAsig">
+
                                             <tr>
-                                                <td class=".col-7 .col-sm-4"><button type="button" class="btn btn-danger" ng-click="ctrl.EliminarDepUsu(disp.Id)">Eliminar</button></td>
-                                                <td>{{disp.ClaveUr}}</td>
-                                                <td>{{disp.Descripcion}}</td>
+                                                <td class=".col-7 .col-sm-4" colspan="2">
+                                                    @*<button type="button" class="btn btn-danger" ng-click="ctrl.EliminarDepUsu(asig.Id)">Eliminar</button>*@
+                                                    <input type="checkbox" id="chkDepAsig_{{asig.id}}" class="form-check-input" ng-model="asig.cve_dep_asig" ng-checked="ctrl.depAsig" />
+                                                </td>
+                                                <td>{{asig.ClaveUr}}</td>
+                                                <td>{{asig.Descripcion}}</td>
                                             </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="4">
+                                                    <ng-pagination-control boundary-links="true" pagination-id="PaginationModalAsig"></ng-pagination-control>
+                                                </th>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
                         </div>
-                    </div>                </div>
-                
+                    </div>
+                </div>
             </div>
         </div>
-
-        
-
-
-
-        
     </div>
 
 </div>
 <script src="~/Scripts/angular.min.js"></script>
 <script src="~/Scripts/global.js"></script>
-<script src="~/Scripts/angular.js"></script>
 <script src="~/Scripts/angular.ng-modules.js"></script>
 <script src="~/Scripts/angular-pagination.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

@@ -13,10 +13,56 @@
 
 
 @*<link href="~/Content/CargandoInicio.css" rel="stylesheet" />*@
-<div ng-app="PieCharWeb" ng-controller="PieChartController as ctrl" ng-init="ctrl.ObtenerDatosGraficaPagados()">
-    <br />
+<div ng-app="PieCharWeb" ng-controller="PieChartController as ctrl" ng-init="ctrl.Inicio()">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                Escuelas
+            </div>
+            <div class="col-md-10">
+                <select class="form-control select2" name="cmbEscuela" id="cmbIEscuela" ng-options="option.Id as option.Descripcion for option in ctrl.dependencias" ng-model="ctrl.cve_dependencia"></select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Ciclo Escolar
+            </div>
+            <div class="col-md-3">
+                <select class="form-control select2" name="cmbCiclo" id="cmbCiclo" ng-options="option.Id as option.Descripcion for option in ctrl.ciclos_escolares" ng-model="ctrl.cve_ciclo">
+                </select>
+            </div>
+            <div class="col-md-1">
+                Tipo
+            </div>
+            <div class="col-md-4">
+                <select class="form-control select2" style="width:100%" name="cmbTipo" id="cmbTipo" ng-model="ctrl.cve_tipo">
+                    <option value="F">EXAMEN DE SELECCIÓN</option>
+                    <option value="CN">CURSO DE NIVELACIÓN</option>
+                    <option value="I">INSCRIPCIÓN</option>
+                    <option value="R" selected>REINSCRIPCIÓN</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary" ng-click="ctrl.ObtenerGrafica()" style="width:50px">
+                    <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btn btn-danger" ng-click="ctrl.ObtenerPDF(ctrl.cve_ciclo, ctrl.cve_tipo, ctrl.cve_dependencia)">
+                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btn btn-success" ng-click="ctrl.ObtenerExcel(ctrl.cve_ciclo, ctrl.cve_tipo, ctrl.cve_dependencia)">
+                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <br />       
+    </div>
     <div id="chartdiv"></div>
     <div class="container">
+        @*<div class="row">
+                <div class="col text-right">
+                    kasjkajs
+                </div>
+            </div>*@
         @*<p>Total de códigos generados: {{ctrl.universo}}</p>*@
         @*<div class="row">
                 <div class="col-md-3 py-3">

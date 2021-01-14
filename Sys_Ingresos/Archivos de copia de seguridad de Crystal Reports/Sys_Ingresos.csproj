@@ -42,9 +42,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
-    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
-    <Reference Include="CrystalDecisions.Shared, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -143,6 +143,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdministracionController.cs" />
     <Compile Include="Controllers\GraficasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SIAEController.cs" />
@@ -150,6 +151,8 @@
     <Compile Include="Data\Cuotas\GuardarDataContext.cs" />
     <Compile Include="Data\Cuotas\GridDataContext.cs" />
     <Compile Include="Data\Cuotas\ObtenerDataContext.cs" />
+    <Compile Include="Data\Facturas\CursorDataContext.cs" />
+    <Compile Include="Data\Facturas\DataContext.cs" />
     <Compile Include="Data\Graficas\CursorDataContext.cs" />
     <Compile Include="Data\Usuarios\ComboDataContext.cs" />
     <Compile Include="Data\Usuarios\GridDataContext.cs" />
@@ -165,6 +168,7 @@
     <Compile Include="Models\GRAFICAS.cs" />
     <Compile Include="Models\GRL_SISTEMAS.cs" />
     <Compile Include="Models\GRL_USUARIOS.cs" />
+    <Compile Include="Models\JWT\TOKEN.cs" />
     <Compile Include="Models\JWT\Managers\JWTService.cs" />
     <Compile Include="Models\JWT\Managers\IAuthService.cs" />
     <Compile Include="Models\JWT\Models\IAuthContainerModel.cs" />
@@ -190,6 +194,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap2.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\jquery.datetimepicker.css" />
     <Content Include="Content\Precarga.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -293,6 +298,7 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="Scripts\Controllers\CuotasLenguasController.js" />
+    <Content Include="Scripts\Controllers\DispersadoController.js" />
     <Content Include="Scripts\Controllers\GraficasController.js" />
     <Content Include="Scripts\Controllers\PagosSYSWEBController.js" />
     <Content Include="Scripts\Controllers\ReferenciasController.js" />
@@ -315,6 +321,7 @@
     <Content Include="Scripts\global.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery.datetimepicker.js" />
     <Content Include="Scripts\jquery.ui.datepicker-es.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -323,6 +330,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\Models\CuotasLenguasModel.js" />
     <Content Include="Scripts\Models\CuotasPosgradoModel.js" />
+    <Content Include="Scripts\Models\DispersadoModel.js" />
     <Content Include="Scripts\Models\GraficasModel.js" />
     <Content Include="Scripts\Models\InicioModel.js" />
     <Content Include="Scripts\Models\PagosPosgradoModel.js" />
@@ -371,6 +379,7 @@
     <Content Include="Views\Usuarios\Admin.cshtml" />
     <Content Include="Views\Usuarios\OpcionesGrupo.cshtml" />
     <Content Include="Views\Graficas\Index.cshtml" />
+    <Content Include="Views\Administracion\EditarDispersadoFecha.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

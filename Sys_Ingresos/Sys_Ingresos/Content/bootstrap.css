@@ -254,7 +254,7 @@ table {
     word-wrap: break-word;
     background-color: #fff;
     background-clip: border-box;
-    border: 1px solid #d6d8db;
+    /*border: 1px solid; #d6d8db;*/
     border-radius: .25rem;
     background-color: #e2e3e5;
 }

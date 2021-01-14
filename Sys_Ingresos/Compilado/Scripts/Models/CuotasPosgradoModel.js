@@ -35,12 +35,12 @@ var posgradoContext =
                             }
                         }
                         $("#precarga").hide();
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }
@@ -57,7 +57,7 @@ var posgradoContext =
                     //data: { WXI },
                     success: function (resp) {
 
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             if (resp.length > 0) {
                                 if (typeof (resp) == "string") {
                                     var dato = resp.substring(0, 6);
@@ -79,7 +79,7 @@ var posgradoContext =
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                         }
                     }
@@ -100,12 +100,12 @@ var posgradoContext =
                             self.escuelas.push({ Id: resp[i].ID, Descripcion: resp[i].DESCRIPCION });
                         }
                         $("#precarga").hide();
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                         }
                     }
@@ -127,12 +127,12 @@ var posgradoContext =
                             self.escuelas.push({ Id: resp[i].ID, Descripcion: resp[i].DESCRIPCION });
                         }
                         $("#precarga").hide();
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                         }
                     }
@@ -150,12 +150,12 @@ var posgradoContext =
                     success: function (resp) {                        
                         //tipoUsuarioPosg=resp;                        
 
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null, tipoUsuarioPosg:resp });
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos en ListarEscuelas." });
                         }
                     }
@@ -176,12 +176,12 @@ var posgradoContext =
                                 self.consulta_cuotas.push({ Nivel: resp[i].NIVEL, NumPago: resp[i].NO_PAGO, Semestre: resp[i].SEMESTRE, Tipo: resp[i].TIPO, Importe: resp[i].CUOTA, ImportePaquete: resp[i].CUOTA_PAQUETE, NumPaquete: resp[i].NO_PAQUETE, FechaLimite: resp[i].FECHA_LIMITE, Porcentaje: resp[i].VALOR, Concepto: resp[i].CONCEPTO, Ciclo: resp[i].GENERACION, TipoProg: resp[i].TIPO_PROGRAMA });
                             }
                         }
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null, TipoProg: null });
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }
@@ -201,12 +201,12 @@ var posgradoContext =
 
                             self.carreras.push({ Id: resp[i].ID, Descripcion: resp[i].DESCRIPCION });
                         }
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }
@@ -225,7 +225,7 @@ var posgradoContext =
                     url: urlServer + 'SIAE/GuardarCuotasPosgrado',
                     data: { Dependencia, Carrera, Ciclo, NumPago, Nivel, Semestre, Concepto, ConceptoDesc, Cuota, CuotaPaq, NumPaq, FechaLimite, Valor, Dias, TipoProg },
                     success: function (resp) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             if (resp == "0") {
 
                                 callBackResult({ ressult: 'tgp', message: null });
@@ -236,7 +236,7 @@ var posgradoContext =
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }
@@ -253,7 +253,7 @@ var posgradoContext =
                     url: urlServer + 'SIAE/ModificarCuotasPosgrado',
                     data: { Id, NumPago, Nivel, Semestre, Concepto, ConceptoDesc, Cuota, CuotaPaq, NumPaq, FechaLimite, Valor, Dias, TipoProg },
                     success: function (resp) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             if (resp == "0") {
                                 callBackResult({ ressult: 'tgp', message: null });
                             }
@@ -263,7 +263,7 @@ var posgradoContext =
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }
@@ -280,7 +280,7 @@ var posgradoContext =
                     url: urlServer + 'SIAE/EliminarCuotasPosgrado',
                     data: { Id },
                     success: function (resp) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             if (resp == "0") {
                                 callBackResult({ ressult: 'tgp', message: null });
                             }
@@ -290,7 +290,7 @@ var posgradoContext =
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }
@@ -308,7 +308,7 @@ var posgradoContext =
                     url: urlServer + 'SIAE/EliminarCuotasSel',
                     data: { Generacion },
                     success: function (resp) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             if (resp == "0") {
                                 callBackResult({ ressult: 'tgp', message: null });
                             }
@@ -318,7 +318,7 @@ var posgradoContext =
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }
@@ -338,12 +338,12 @@ var posgradoContext =
 
                             self.ciclos_posg.push({ Id: resp[i].ID, Descripcion: resp[i].DESCRIPCION, Grupo: resp[i].GRUPO });
                         }
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }
@@ -363,12 +363,12 @@ var posgradoContext =
 
                             self.conceptos.push({ Id: resp[i].ID, Descripcion: resp[i].DESCRIPCION });
                         }
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }
@@ -384,7 +384,7 @@ var posgradoContext =
                     url: urlServer + 'SIAE/GuardarCuotaSel',
                     data: { Cve, Generacion, Selec },
                     success: function (resp) {                        
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             if(resp=="S")
                                 callBackResult({ ressult: 'tgp', message: null });
                             else
@@ -392,7 +392,7 @@ var posgradoContext =
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }
@@ -418,12 +418,12 @@ var posgradoContext =
                         }
 
                         //}
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }

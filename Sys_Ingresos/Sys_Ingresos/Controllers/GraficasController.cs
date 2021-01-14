@@ -1,10 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using Newtonsoft.Json;
 using Sys_Ingresos.Data.Graficas;
 using Sys_Ingresos.Models;
 using Sys_Ingresos.Models.JWT;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -113,25 +116,101 @@ namespace Sys_Ingresos.Controllers
         //}
 
 
-        public JsonResult ObtenerDatosGraficaPagados (string Dependencia, string Ciclo_Escolar)
+        public JsonResult ObtenerDatosGraficaPagados(string Dependencia, string Ciclo_Escolar, string Tipo)
         {
-            string cadena=TOKEN.GenerarToken(165445,"41101");
-
-
-            var handler = new JwtSecurityTokenHandler();
-
-            var token = handler.ReadJwtToken(cadena);
-            //string IdRef = token.Payload.First().Value;
-            //Console.WriteLine(token.Payload.First().Value);
-            bool Valido=TOKEN.ValidateToken(cadena);
-            if(Valido==true)
-                return Json(token.Payload.First().Value, JsonRequestBehavior.AllowGet);
-            else
-                return Json(false, JsonRequestBehavior.AllowGet);
+            RESULTADO_GRAFICAS objResultado = new RESULTADO_GRAFICAS();
+            try
+            {
+                objResultado.RESULTADO = CursorDataContext.ObtenerDatosGraficaPagados(Dependencia, Ciclo_Escolar, Tipo);
+                objResultado.ERROR = false;
+                objResultado.MENSAJE_ERROR = "";
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.RESULTADO = null;
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
         }
 
+        public ActionResult ObtFaltanporPagarPdf(string ciclo, string tipo, string dependencia)
+        {
+
+            ConnectionInfo connectionInfo = new ConnectionInfo();
+            System.Web.UI.Page p = new System.Web.UI.Page();
+            ReportDocument rd = new ReportDocument();
+            string Ruta = Path.Combine(Server.MapPath("~/Reports"), "REP067.rpt");
+            rd.Load(Path.Combine(Server.MapPath("~/Reports"), "REP067.rpt"));
+            rd.SetParameterValue(0, ciclo);
+            rd.SetParameterValue(1, tipo);
+            rd.SetParameterValue(2, dependencia);
+            rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
+            connectionInfo.ServerName = "DSIA";
+            connectionInfo.UserID = "FELECTRONICA";
+            connectionInfo.Password = "unach09";
+            SetDBLogonForReport(connectionInfo, rd);
+
+            Response.Buffer = false;
+            Response.ClearContent();
+            Response.ClearHeaders();
 
 
+            Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            stream.Seek(0, SeekOrigin.Begin);
+            //fs.Read(imgbyte, 0, imgbyte.Length);
+            //fs.Close();
+            return File(stream, "application/pdf", "faltan_por_pagar.pdf");
+        }
+
+        public ActionResult ObtFaltanporPagarExcel(string ciclo, string tipo, string dependencia)
+        {
+
+            ConnectionInfo connectionInfo = new ConnectionInfo();
+            System.Web.UI.Page p = new System.Web.UI.Page();
+            ReportDocument rd = new ReportDocument();
+            string Ruta = Path.Combine(Server.MapPath("~/Reports"), "REP067.rpt");
+            rd.Load(Path.Combine(Server.MapPath("~/Reports"), "REP067.rpt"));
+            rd.SetParameterValue(0, ciclo);
+            rd.SetParameterValue(1, tipo);
+            rd.SetParameterValue(2, dependencia);
+            rd.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.PaperLetter;
+            connectionInfo.ServerName = "DSIA";
+            connectionInfo.UserID = "FELECTRONICA";
+            connectionInfo.Password = "unach09";
+            SetDBLogonForReport(connectionInfo, rd);
+
+            Response.Buffer = false;
+            Response.ClearContent();
+            Response.ClearHeaders();
+
+
+            Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.Excel);            
+            stream.Seek(0, SeekOrigin.Begin);
+            //fs.Read(imgbyte, 0, imgbyte.Length);
+            //fs.Close();
+            return File(stream, "application/vnd.ms-excel", "faltan_por_pagar.xls");
+        }
+        private void SetDBLogonForReport(ConnectionInfo connectionInfo, ReportDocument reportDocument)
+        {
+            try
+            {
+                Tables tables = reportDocument.Database.Tables;
+
+                foreach (CrystalDecisions.CrystalReports.Engine.Table table in tables)
+                {
+                    TableLogOnInfo tableLogonInfo = table.LogOnInfo;
+                    tableLogonInfo.ConnectionInfo = connectionInfo;
+                    table.ApplyLogOnInfo(tableLogonInfo);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
         //public JsonResult ObtenerDatosInscripcion()
         //{
         //    RESULTADO_GRAFICAS objResultado = new RESULTADO_GRAFICAS();

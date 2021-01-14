@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using System.Xml;
 
 namespace Sys_Ingresos.Controllers
@@ -17,7 +18,7 @@ namespace Sys_Ingresos.Controllers
     {
         // GET: Usuarios
         GRL_USUARIOS objUsuario = new GRL_USUARIOS();
-        List<GRL_USUARIOS> listUsuario =new List<GRL_USUARIOS>();
+        List<GRL_USUARIOS> listUsuario = new List<GRL_USUARIOS>();
         string Verificador = string.Empty;
         public ActionResult Index()
         {
@@ -48,7 +49,7 @@ namespace Sys_Ingresos.Controllers
             objUsuario.USUARIO = Usuario;
             listUsuario.Add(objUsuario);
             Session["DatosUsuario"] = listUsuario;
-            return Json(true, JsonRequestBehavior.AllowGet);           
+            return Json(true, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -143,10 +144,16 @@ namespace Sys_Ingresos.Controllers
 
         public JsonResult ListarMenuUsuario()
         {
+            List<GRL_SISTEMAS> lstSistemas = new List<GRL_SISTEMAS>();
             if (Session["DatosUsuario"] != null)
             {
                 listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];
                 var Lista = GridDataContext.ObtenerMnuUsuario(listUsuario[0].USUARIO);
+                var lstAsignados = (from lst in Lista
+                                    where lst.ASIGNADO == "1"
+                                    select lst).ToArray();
+                lstSistemas = lstAsignados.ToList<GRL_SISTEMAS>();
+                Session["opcAsignadas"] = lstSistemas;
                 return Json(Lista, JsonRequestBehavior.AllowGet);
             }
             else
@@ -154,10 +161,14 @@ namespace Sys_Ingresos.Controllers
 
         }
 
+
+
+
+
         public JsonResult EliminarDepenAsig(string Dependencia)
         {
             Verificador = string.Empty;
-            if(Session["DatosUsuario"] !=null)
+            if (Session["DatosUsuario"] != null)
             {
                 listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];
                 ObtenerDataContext.EliminarDepUsu(listUsuario[0].USUARIO, Dependencia, ref Verificador);
@@ -169,6 +180,7 @@ namespace Sys_Ingresos.Controllers
             else
                 return Json(false, JsonRequestBehavior.AllowGet);
         }
+
 
         public JsonResult AsignarDepen(string Dependencia)
         {
@@ -186,17 +198,137 @@ namespace Sys_Ingresos.Controllers
                 return Json(false, JsonRequestBehavior.AllowGet);
         }
 
+        [System.Web.Services.WebMethod]
+        public JsonResult AsignarDependencias(string lstDepsAsig)
+        {
+            RESULTADO_GRL_USUARIOS objResultado = new RESULTADO_GRL_USUARIOS();
+
+            lstDepsAsig = lstDepsAsig.Replace("[", string.Empty);
+            lstDepsAsig = lstDepsAsig.Replace("]", string.Empty);
+            string[] lst = lstDepsAsig.Split(',');
+            Verificador = string.Empty;
+            if (Session["DatosUsuario"] != null)
+            {
+                for (int i = 0; i < lst.Length; i++)
+                {
+                    listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];
+                    ObtenerDataContext.AsignarDepen(listUsuario[0].USUARIO, lst[i].ToString(), ref Verificador);
+                    //if (Verificador == "0")
+                    //    return Json(true, JsonRequestBehavior.AllowGet);
+                    //else
+
+                }
+                if (Verificador == "0")
+                {
+                    objResultado.ERROR = false;
+                    objResultado.MENSAJE_ERROR = "";
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    objResultado.ERROR = true;
+                    objResultado.MENSAJE_ERROR = Verificador;
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            else
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = "Usuario sin definir.";
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult AsignarDependenciasTodas()
+        {
+            RESULTADO_GRL_USUARIOS objResultado = new RESULTADO_GRL_USUARIOS();
+            Verificador = string.Empty;
+            if (Session["DatosUsuario"] != null)
+            {
+                listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];
+                ObtenerDataContext.AsignarDepen(listUsuario[0].USUARIO, "0", ref Verificador);
+                if (Verificador == "0")
+                {
+                    objResultado.ERROR = false;
+                    objResultado.MENSAJE_ERROR = "";
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    objResultado.ERROR = true;
+                    objResultado.MENSAJE_ERROR = Verificador;
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            else
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = "Usuario sin definir.";
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult EliminarDependencias(string lstDepsEliminadas)
+        {
+            RESULTADO_GRL_USUARIOS objResultado = new RESULTADO_GRL_USUARIOS();
+
+            lstDepsEliminadas = lstDepsEliminadas.Replace("[", string.Empty);
+            lstDepsEliminadas = lstDepsEliminadas.Replace("]", string.Empty);
+            string[] lst = lstDepsEliminadas.Split(',');
+            Verificador = string.Empty;
+            if (Session["DatosUsuario"] != null)
+            {
+                for (int i = 0; i < lst.Length; i++)
+                {
+                    listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];
+                    ObtenerDataContext.EliminarDepen(listUsuario[0].USUARIO, lst[i].ToString(), ref Verificador);
+                    //if (Verificador == "0")
+                    //    return Json(true, JsonRequestBehavior.AllowGet);
+                    //else
+
+                }
+                if (Verificador == "0")
+                {
+                    objResultado.ERROR = false;
+                    objResultado.MENSAJE_ERROR = "";
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    objResultado.ERROR = true;
+                    objResultado.MENSAJE_ERROR = Verificador;
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            else
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = "Usuario sin definir.";
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         public void EliminarDatosMenu(string Opciones)
         {
-            char[] charsToTrim = { '[', ']'};            
+            char[] charsToTrim = { '[', ']' };
             string result = Opciones.Trim(charsToTrim);
 
             string[] IdInfoReq = result.Split(',');
 
             int[] IdMnu = new int[IdInfoReq.Length];
 
-            for(int i = 0; i < IdInfoReq.Length; i ++)
+            for (int i = 0; i < IdInfoReq.Length; i++)
             {
                 IdMnu[i] = Convert.ToInt32(IdInfoReq[i]);
             }
@@ -206,33 +338,50 @@ namespace Sys_Ingresos.Controllers
             {
                 listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];
                 ObtenerDataContext.EliminarDatosMenu(listUsuario[0].USUARIO, ref Verificador);
-                if (Verificador == "0")
-                    InsOpcionesMenu(IdMnu);
-            }          
+                //if (Verificador == "0")
+                //    InsOpcionesMenu(IdMnu);
+            }
         }
 
-        public JsonResult InsOpcionesMenu(int [] Opciones)
+        public JsonResult InsOpcionesMenu()
         {
             Verificador = string.Empty;
+            string Error = string.Empty;
+            List<GRL_SISTEMAS> Lista = new List<GRL_SISTEMAS>();
+
             if (Session["DatosUsuario"] != null)
             {
-                listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];       
-                for(int i = 0; i < Opciones.Length; i++)
-                {
-                    ObtenerDataContext.InsOpcionesMenu(listUsuario[0].USUARIO, Opciones[i], ref Verificador);
-                    if (Verificador != "0" )
-                        return Json(Verificador + "id: " + Opciones[i], JsonRequestBehavior.AllowGet);
-                }                
+                listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];
+
+                if (Session["opcAsignadas"] != null)
+                    Lista = (List<GRL_SISTEMAS>)Session["opcAsignadas"];
+                else
+                    Lista = null;
+
+                ObtenerDataContext.EliminarDatosMenu(listUsuario[0].USUARIO, ref Verificador);
                 if (Verificador == "0")
                 {
-                    GenerateXMLFile();
-                    return Json(true, JsonRequestBehavior.AllowGet);
-                }                    
+                    for (int i = 0; i < Lista.Count; i++)
+                    {
+                        ObtenerDataContext.InsOpcionesMenu(listUsuario[0].USUARIO, Lista[i].ID, ref Verificador);
+                        if(Verificador!="0")
+                            Error = Error + Verificador;
+                    }
+
+                    if (Verificador == string.Empty || Verificador == "0")
+                    {
+                        GenerateXMLFile();
+                        return Json(true, JsonRequestBehavior.AllowGet);
+                    }
+
+                    else
+                        return Json(Verificador, JsonRequestBehavior.AllowGet);
+                }
                 else
                     return Json(Verificador, JsonRequestBehavior.AllowGet);
             }
             else
-                return Json(false, JsonRequestBehavior.AllowGet);
+                return Json("No se ha seleccionado ningún elemento.", JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult ObtenerDependenciasTodas()
@@ -273,6 +422,10 @@ namespace Sys_Ingresos.Controllers
                     objResultado.ERROR = false;
                     objResultado.MENSAJE_ERROR = "";
                     objResultado.RESULTADO = null;
+                    Session["DatosUsuario"] = null;
+                    objUsuario.USUARIO = Usuario.ToUpper(); ;
+                    listUsuario.Add(objUsuario);
+                    Session["DatosUsuario"] = listUsuario;
                     return Json(objResultado, JsonRequestBehavior.AllowGet);
                 }
                 else
@@ -310,7 +463,7 @@ namespace Sys_Ingresos.Controllers
                 if (Verificador == "0")
                     return Json(true, JsonRequestBehavior.AllowGet);
                 else
-                    return Json(false, JsonRequestBehavior.AllowGet);
+                    return Json(Verificador, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -323,22 +476,35 @@ namespace Sys_Ingresos.Controllers
             string Verificador = string.Empty;
             listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];
             string usuario = listUsuario[0].USUARIO;
+            RESULTADO_GRL_SISTEMAS objResultado = new RESULTADO_GRL_SISTEMAS();
+
             try
-            {                
+            {
                 ObtenerDataContext.EliminarDatosMenu(usuario, ref Verificador);
-                if(Verificador == "0")
+                if (Verificador == "0")
                     GuardarDataContext.GuardarGrupoUsuario(usuario, Grupo, ref Verificador);
-                if(Verificador == "0")
+                if (Verificador == "0")
                 {
-                    GenerateXMLFile();
-                    return Json(true, JsonRequestBehavior.AllowGet);
-                }                    
+
+                    objResultado.ERROR = false;
+                    objResultado.MENSAJE_ERROR = string.Empty;
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
                 else
-                    return Json(false, JsonRequestBehavior.AllowGet);
-            }            
+                {
+                    objResultado.ERROR = true;
+                    objResultado.MENSAJE_ERROR = Verificador;
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+            }
             catch (Exception ex)
             {
-                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -355,11 +521,145 @@ namespace Sys_Ingresos.Controllers
             }
         }
 
+        public JsonResult ObtenerOpcionesGrupo()
+        {
+            List<GRL_SISTEMAS> lstOpcGpo = new List<GRL_SISTEMAS>();
+            GRL_SISTEMAS objOpciones = new GRL_SISTEMAS();
+            RESULTADO_GRL_SISTEMAS objResultado = new RESULTADO_GRL_SISTEMAS();
+
+            try
+            {
+                lstOpcGpo = ObtenerDataContext.ObtenerOpcionesGrupo("3", "14");
+                Session["opcAsignadas"] = null;
+                Session["opcAsignadas"] = lstOpcGpo;
+
+
+                //listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];
+                //var Lista = GridDataContext.ObtenerMnuUsuario(listUsuario[0].USUARIO);
+                var lstAsignados = (from lst in lstOpcGpo
+                                    where lst.ASIGNADO == "1"
+                                    select lst).ToArray();
+                lstOpcGpo = lstAsignados.ToList<GRL_SISTEMAS>();
+                Session["opcAsignadas"] = lstOpcGpo;
+                //return Json(Lista, JsonRequestBehavior.AllowGet);
+
+
+
+                objResultado.ERROR = false;
+                objResultado.MENSAJE_ERROR = string.Empty;
+                objResultado.RESULTADO = lstOpcGpo;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        public JsonResult AgregarOpcion(int idOpcion)
+        {
+            string Verificador = string.Empty;
+            List<GRL_SISTEMAS> Lista = new List<GRL_SISTEMAS>();
+            GRL_SISTEMAS objOpciones = new GRL_SISTEMAS();
+            RESULTADO_GRL_USUARIOS objResultado = new RESULTADO_GRL_USUARIOS();
+            try
+            {
+                if (Session["opcAsignadas"] != null)
+                {
+
+                    Lista = (List<GRL_SISTEMAS>)Session["opcAsignadas"];
+                    objOpciones.ID = idOpcion;
+                    Lista.Add(objOpciones);
+                    Session["opcAsignadas"] = Lista;
+                    objResultado.ERROR = false;
+                    objResultado.MENSAJE_ERROR = Convert.ToString(Lista.Count);
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    objOpciones.ID = idOpcion;
+                    Lista.Add(objOpciones);
+                    Session["opcAsignadas"] = Lista;
+                    objResultado.ERROR = false;
+                    objResultado.MENSAJE_ERROR = string.Empty;
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult EliminarOpcion(int idOpcion)
+        {
+            string Verificador = string.Empty;
+            List<GRL_SISTEMAS> Lista = new List<GRL_SISTEMAS>();
+            List<GRL_SISTEMAS> lstSistemas = new List<GRL_SISTEMAS>();
+            GRL_SISTEMAS objOpciones = new GRL_SISTEMAS();
+            RESULTADO_GRL_USUARIOS objResultado = new RESULTADO_GRL_USUARIOS();
+            try
+            {
+                if (Session["opcAsignadas"] != null)
+                {
+
+                    Lista = (List<GRL_SISTEMAS>)Session["opcAsignadas"];
+                    var lstAsignados = (from lst in Lista
+                                        where lst.ID != idOpcion
+                                        select lst).ToArray();
+                    lstSistemas = lstAsignados.ToList<GRL_SISTEMAS>();
+                    Session["opcAsignadas"] = lstSistemas;
+                    objResultado.ERROR = false;
+                    objResultado.MENSAJE_ERROR = Convert.ToString(lstSistemas.Count);
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    objResultado.ERROR = true;
+                    objResultado.MENSAJE_ERROR = "No se puede eliminar la opción, por que no hay elementos agregados.";
+                    objResultado.RESULTADO = null;
+                    return Json(objResultado, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                objResultado.ERROR = true;
+                objResultado.MENSAJE_ERROR = ex.Message;
+                objResultado.RESULTADO = null;
+                return Json(objResultado, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult EliminarOpcion2(int idOpcion)
+        {
+            string Verificador = string.Empty;
+            List<GRL_SISTEMAS> Lista = new List<GRL_SISTEMAS>();
+            GRL_SISTEMAS objOpcion = new GRL_SISTEMAS();
+            if (Session["opcAsignadas"] != null)
+            {
+                Lista = (List<GRL_SISTEMAS>)Session["opcAsignadas"];
+                objOpcion.ID = idOpcion;
+                Lista.Remove(objOpcion);
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            else
+                return Json(false, JsonRequestBehavior.AllowGet);
+        }
 
         public JsonResult Salir()
         {
             Session["DatosUsuario"] = null;
-            return Json(true, JsonRequestBehavior.AllowGet);                   
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -367,95 +667,94 @@ namespace Sys_Ingresos.Controllers
         {
             Menus menu = new Menus();
             menu.NombreMenu = "MenuTop";
-            menu.UsuarioNombre = listUsuario[0].USUARIO;
             menu.Grupo = 14;
             string ruta = @"C:\inetpub\wwwroot\Ingresos\ArchivosMenu";
-            listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];            
-            string siteMap = listUsuario[0].USUARIO + ".sitemap";
+            listUsuario = (List<GRL_USUARIOS>)Session["DatosUsuario"];
+            string siteMap = "Web"+listUsuario[0].USUARIO + ".sitemap";
             string fullPath = Path.Combine(ruta, siteMap);
             bool existe = System.IO.File.Exists(fullPath);
-            if(existe == true)
+            if (existe == true)
                 System.IO.File.Delete(fullPath);
 
-            ExeProcedimiento CDDatos = new ExeProcedimiento();
-            OracleCommand Cmd = null;
-            //Create XML
-            Encoding enc = Encoding.UTF8;
-            XmlTextWriter objXMLTW = new XmlTextWriter(fullPath, enc);
-            try
-            {
-                OracleDataReader dr = null;
-                string[] Parametros = { "p_usuario", "p_grupo" };
-                object[] Valores = { menu.UsuarioNombre, 14 };
-                Cmd = CDDatos.GenerarOracleCommandCursor("Pkg_Contratos.Obt_Sistemas", ref dr, Parametros, Valores);
-                if (dr.HasRows)
-                {
+            //ExeProcedimiento CDDatos = new ExeProcedimiento();
+            //OracleCommand Cmd = null;
+            ////Create XML
+            //Encoding enc = Encoding.UTF8;
+            //XmlTextWriter objXMLTW = new XmlTextWriter(fullPath, enc);
+            //try
+            //{
+            //    OracleDataReader dr = null;
+            //    string[] Parametros = { "p_usuario", "p_grupo" };
+            //    object[] Valores = { menu.UsuarioNombre, 14 };
+            //    Cmd = CDDatos.GenerarOracleCommandCursor("Pkg_Contratos.Obt_Sistemas", ref dr, Parametros, Valores);
+            //    if (dr.HasRows)
+            //    {
 
-                    objXMLTW.WriteStartDocument();//xml document open
-                    //'Top level (Parent element)
-                    //root node open
-                    objXMLTW.WriteStartElement("siteMap");
-                    //first Node of the Menu open
-                    objXMLTW.WriteStartElement("siteMapNode");
-                    //Title attribute set
-                    objXMLTW.WriteAttributeString("title", "INICIO");
-                    objXMLTW.WriteAttributeString("description", "INICIO");//Description attribute set
-                    objXMLTW.WriteAttributeString("url", "Default.aspx");//URL attribu
+            //        objXMLTW.WriteStartDocument();//xml document open
+            //        //'Top level (Parent element)
+            //        //root node open
+            //        objXMLTW.WriteStartElement("siteMap");
+            //        //first Node of the Menu open
+            //        objXMLTW.WriteStartElement("siteMapNode");
+            //        //Title attribute set
+            //        objXMLTW.WriteAttributeString("title", "INICIO");
+            //        objXMLTW.WriteAttributeString("description", "INICIO");//Description attribute set
+            //        objXMLTW.WriteAttributeString("url", "Default.aspx");//URL attribu
 
-                    while (dr.Read())
-                    {
-                        if (dr["padre"].ToString() == string.Empty)
-                        {
-                            int MasterID = Convert.ToInt32(dr["id"].ToString());
-                            objXMLTW.WriteStartElement("siteMapNode");
-                            objXMLTW.WriteAttributeString("title", dr["descripcion"].ToString().ToUpper());
-                            objXMLTW.WriteAttributeString("description", dr["descripcion"].ToString().ToUpper());
-                            if (dr["clave"].ToString().Contains(".aspx"))
-                                objXMLTW.WriteAttributeString("url", dr["clave"].ToString());
-                            else
-                                objXMLTW.WriteAttributeString("url", "Default.aspx?cve=" + dr["id"].ToString());
-
-
-
-                            //objXMLTW.WriteAttributeString("url", dr["clave"].ToString());
-                            ChildMaster(objXMLTW, menu, MasterID);
-                            objXMLTW.WriteEndElement();
-                        }
-                    }
-                    dr.Close();
+            //        while (dr.Read())
+            //        {
+            //            if (dr["padre"].ToString() == string.Empty)
+            //            {
+            //                int MasterID = Convert.ToInt32(dr["id"].ToString());
+            //                objXMLTW.WriteStartElement("siteMapNode");
+            //                objXMLTW.WriteAttributeString("title", dr["descripcion"].ToString().ToUpper());
+            //                objXMLTW.WriteAttributeString("description", dr["descripcion"].ToString().ToUpper());
+            //                if (dr["clave"].ToString().Contains(".aspx"))
+            //                    objXMLTW.WriteAttributeString("url", dr["clave"].ToString());
+            //                else
+            //                    objXMLTW.WriteAttributeString("url", "Default.aspx?cve=" + dr["id"].ToString());
 
 
-                    objXMLTW.WriteStartElement("siteMapNode");
-                    objXMLTW.WriteAttributeString("title", "PASSWORD");
-                    objXMLTW.WriteAttributeString("description", "PASSWORD");
-                    objXMLTW.WriteAttributeString("url", "http://www.sysweb.unach.mx/administrator/");
-                    objXMLTW.WriteEndElement();
 
-                    objXMLTW.WriteStartElement("siteMapNode");
-                    objXMLTW.WriteAttributeString("title", "SALIR");
-                    objXMLTW.WriteAttributeString("description", "SALIR");
-                    objXMLTW.WriteAttributeString("url", "Acceso.aspx");
-                    objXMLTW.WriteEndElement();
+            //                //objXMLTW.WriteAttributeString("url", dr["clave"].ToString());
+            //                ChildMaster(objXMLTW, menu, MasterID);
+            //                objXMLTW.WriteEndElement();
+            //            }
+            //        }
+            //        dr.Close();
 
-                    objXMLTW.WriteEndElement();
-                    objXMLTW.WriteEndDocument();
-                }
+
+            //        objXMLTW.WriteStartElement("siteMapNode");
+            //        objXMLTW.WriteAttributeString("title", "PASSWORD");
+            //        objXMLTW.WriteAttributeString("description", "PASSWORD");
+            //        objXMLTW.WriteAttributeString("url", "http://www.sysweb.unach.mx/administrator/");
+            //        objXMLTW.WriteEndElement();
+
+            //        objXMLTW.WriteStartElement("siteMapNode");
+            //        objXMLTW.WriteAttributeString("title", "SALIR");
+            //        objXMLTW.WriteAttributeString("description", "SALIR");
+            //        objXMLTW.WriteAttributeString("url", "Acceso.aspx");
+            //        objXMLTW.WriteEndElement();
+
+            //        objXMLTW.WriteEndElement();
+            //        objXMLTW.WriteEndDocument();
+            //    }
 
                 //Close the siteMapNode        
                 //objXMLTW.WriteEndElement();//Close the first siteMapNode
                 //objXMLTW.WriteEndDocument();//xml document closed
-            }
+            //}
 
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                objXMLTW.Flush();
-                objXMLTW.Close();
-                CDDatos.LimpiarOracleCommand(ref Cmd);
-            }
+            //catch (Exception ex)
+            //{
+            //    throw new Exception(ex.Message);
+            //}
+            //finally
+            //{
+            //    objXMLTW.Flush();
+            //    objXMLTW.Close();
+            //    CDDatos.LimpiarOracleCommand(ref Cmd);
+            //}
         }
         protected void ChildMaster(XmlTextWriter objXMLTW, Menus mnu, Int32 Id)
         {

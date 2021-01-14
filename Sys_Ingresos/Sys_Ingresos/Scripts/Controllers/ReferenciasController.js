@@ -5,8 +5,8 @@
         let IdReferencia = "";
 
         this.Inicio = function () {
-            ObtenerEscuelas();
-            ObtenerAlumnos();
+            //ObtenerEscuelas();
+            //ObtenerAlumnos();
             ObtenerCiclos();
             self.cve_dias_vigencia = "1";
             self.style = "NOT";
@@ -24,11 +24,12 @@
 
         this.Pagado = function (Matricula) {
             self.Matricula = Matricula;
-        }
+        };
 
         this.getIdAA = function (Matricula) {
             self.Matricula = Matricula;
-        }
+        };
+
         var ObtenerAlumnos = function () {
             document.getElementById("precarga").className = "show";
             self.Matricula = "";
@@ -58,10 +59,15 @@
         };
 
         this.ValidaSemestre = function () {
+            var e = document.getElementById("cmbTipo");
+            var descTipo = e.options[e.selectedIndex].text;
+
             if (self.cve_tipo === "CN")
                 self.cve_semestre = "98";
             else if (self.cve_tipo === "I")
                 self.cve_semestre = 1;
+            //else if (self.cve_tipo === "I" && descTipo ==="CURSO DE SELECCIÓN")
+            //    self.cve_semestre = 99;
             else if (self.cve_tipo === "R")
                 self.cve_semestre = parseInt(Semestre) + 1;
 

@@ -43,15 +43,15 @@ namespace Sys_Ingresos.Data.Graficas
 
         }
 
-        public static List<GRAFICAS> ObtenerDatosGraficaPagados(string Dependencia, string Ciclo_Escolar)
+        public static List<GRAFICAS> ObtenerDatosGraficaPagados(string Dependencia, string Ciclo_Escolar, string Tipo)
         {
             OracleCommand cmd = null;
-            ExeProcedimiento exeProc = new ExeProcedimiento();
+            ExeProcedimiento exeProc = new ExeProcedimiento("CONEXION_INGRESOS");
 
             try
             {
-                string[] Parametros = { "P_Dependencia", "P_Ciclo_Escolar" };
-                object[] Valores = { Dependencia, Ciclo_Escolar };
+                string[] Parametros = { "P_Dependencia", "P_Ciclo_Escolar", "P_Tipo" };
+                object[] Valores = { Dependencia, Ciclo_Escolar, Tipo };
 
                 OracleDataReader dr = null;
                 cmd = exeProc.GenerarOracleCommandCursor("PKG_PAGOS_2016.Obt_Grafica_Pagados", ref dr, Parametros, Valores);
@@ -61,6 +61,7 @@ namespace Sys_Ingresos.Data.Graficas
                     GRAFICAS objGrafica = new GRAFICAS();
                     objGrafica.DATO1 = Convert.ToString(dr[0]);
                     objGrafica.DATO2 = Convert.ToString(dr[1]);
+                    objGrafica.DATO3 = Convert.ToString(dr[2]);
                     list.Add(objGrafica);
                 }
                 return list;

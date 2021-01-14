@@ -30,6 +30,8 @@
                             Formulario = "SIAE/Referencias";
                         else if (inicioContext.datosUsuIng[0].Formulario === "UsuariosFinanzas")
                             Formulario = "Usuarios/Index";
+                        else if (inicioContext.datosUsuIng[0].Formulario === "Graficas")
+                            Formulario = "Graficas/Index";
                         else
                             Formulario = "Home/Index";
 

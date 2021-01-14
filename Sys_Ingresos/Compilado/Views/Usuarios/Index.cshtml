@@ -3,9 +3,19 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .ajax__tab_header{
+        font-size:14px;
+    }
 
-    <div class="row">
-        <div ng-app="UsuariosIngresosWeb" ng-controller="UsuariosController as ctrl">
+    .ajax__tab_xp .ajax__tab_header .ajax__tab_active .ajax__tab_inner {
+                font-size:14px;
+    }
+</style>
+
+<div ng-app="UsuariosIngresosWeb" ng-controller="UsuariosController as ctrl">
+    <div class="content">
+        <div class="row">
             <div class="col-md-1">
             </div>
             <div id="bttn-usuarios" class="bd-example bd-example-images container col-md-10">
@@ -18,68 +28,89 @@
             </div>
             <div class="col-md-1">
             </div>
-            <div id="form-usuarios" class="form-inline hidden">
-                <div class=".col-sm-12" style="margin-left: auto; margin-right: auto;">
+        </div>
+    </div>
+    <div id="form-usuarios" class="form-inline hidden">
+        <div class="content">
+            <div class="row">
+                <div class="col text-center" style="margin-left: auto; margin-right: auto;">
                     <div id="precarga" class="show"><input type="image" src="~/Images/loader.gif" /></div>
                 </div>
+            </div>
+            <div class="row">
                 <div id="divError" class="alert alert-danger hidden" role="alert">
                     {{ctrl.mensaje}}
                 </div>
-                @*style="overflow-y:scroll; height:400px;"*@
-                <div class="content">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label for="lbusqueda" class="text-success">Busqueda</label>
-                            </div>
-                            <div class="col-md-9">
-
-                                <input type="text" class="form-control  border border-success" placeholder="Busqueda" ng-model="ctrl.buscar" style="max-width:100%;">
-                            </div>
-
-                        </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    Busqueda
                 </div>
-                    <div class="table-responsive" style="box-shadow: 10px 40px 96px rgba(0,0,0,.1)">
-                        <table class="table table-hover" style="font-size:12px;">
+                <div class="col-md-9">
+                    <input type="text" class="form-control  border border-success" placeholder="Busqueda" ng-model="ctrl.buscar" style="max-width:100%;">
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col">
+                    <table class="table table-striped" style="font-size:12px;">
+                        <thead style="background-color:#d2af47; color:#fff">
+                            <tr>
+                                <td>USUARIO</td>
+                                <td>NOMBRE COMPLETO</td>
+                                <td>PASSWORD</td>
+                                <td>TELEFONO</td>
+                                <td>CORREO</td>
+                                <td>ESTATUS</td>
+                                <td><button type="button" class="btn btn-secondary" ng-click="ctrl.AgregarUsuario()">Nuevo Usuario</button></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-pagination="usu in ctrl.usuarios | orderBy:sortType:sortReverse | filter:ctrl.buscar  | itemsPerPage: 7  ">
 
-                            <thead class="thead-dark">
-                                <tr>
-                                    <td>USUARIO</td>
-                                    <td>NOMBRE COMPLETO</td>
-                                    <td>PASSWORD</td>
-                                    <td>TELEFONO</td>
-                                    <td>CORREO</td>
-                                    <td>ESTATUS</td>
-                                    <td><button type="button" class="btn btn-primary" ng-click="ctrl.AgregarUsuario()">Nuevo Usuario</button></td>
-                                </tr>
-                            </thead>
-                            @*<tbody ng-repeat="usu in ctrl.usuarios">*@
-                            <tbody ng-pagination="usu in ctrl.usuarios |  itemsPerPage: 10  | filter:ctrl.buscar" pagination-id="PaginationGridRef">
-                                <tr>
-                                    <td>{{usu.UsuarioIng}}</td>
-                                    <td>{{usu.NombreIng}}</td>
-                                    <td>{{usu.Contrasenia}}</td>
-                                    <td>{{usu.Telefono}}</td>
-                                    <td>{{usu.EMail}}</td>
-                                    <td>{{usu.Status}}</td>
-                                    <td><button type="button" class="btn btn - secondary" ng-click="ctrl.ObtDatos(usu.UsuarioIng)">Editar</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <ng-pagination-control boundary-links="true" pagination-id="PaginationGridRef"></ng-pagination-control>
-
+                            <tr>
+                                <td>{{usu.UsuarioIng}}</td>
+                                <td>{{usu.NombreIng}}</td>
+                                <td>{{usu.Contrasenia}}</td>
+                                <td>{{usu.Telefono}}</td>
+                                <td>{{usu.EMail}}</td>
+                                <td>{{usu.Status}}</td>
+                                <td class="text-center"><button type="button" class="btn btn-secondary" ng-click="ctrl.ObtDatos(usu.UsuarioIng)">Editar</button></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4">
+                                    <ng-pagination-control boundary-links="true"></ng-pagination-control>
+                                </th>
+                                <th></th>
+                                <th style="text-align:right" colspan="3">
+                                    <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Generar Reporte en Excel" ng-click="ctrl.exportTableToExcel('table_basico')" style="width:50px">
+                                        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Generar Reporte en PDF" ng-click="ctrl.BorrarImpViatico($index)" style="width:50px">
+                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                    </button>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
                     <button type="button" class="btn btn-secondary" ng-click="ctrl.Regresar()">Regresar</button>
-
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <script src="~/Scripts/angular.min.js"></script>
-        <script src="~/Scripts/global.js"></script>
-        <script src="~/Scripts/angular.js"></script>
-        <script src="~/Scripts/angular.ng-modules.js"></script>
-        <script src="~/Scripts/angular-pagination.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-        <script src="~/Scripts/Models/UsuariosModel.js"></script>
-        <script src="~/Scripts/Controllers/UsuariosController.js"></script>
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/global.js"></script>
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular.ng-modules.js"></script>
+<script src="~/Scripts/angular-pagination.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script src="~/Scripts/Models/UsuariosModel.js"></script>
+<script src="~/Scripts/Controllers/UsuariosController.js"></script>
 

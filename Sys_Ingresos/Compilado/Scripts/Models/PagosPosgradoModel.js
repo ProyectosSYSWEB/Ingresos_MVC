@@ -17,12 +17,12 @@ var posgradoPagosContext =
                         for (var i = 0; i < resp.length; i++) {
                             self.pagos.push({ Concepto: resp[i].CONCEPTO, NoPago: resp[i].NO_PAGO, Importe: resp[i].IMPORTE, Referencia: resp[i].REFERENCIA, FechaPago: resp[i].FECHA_PAGO, Semestre: resp[i].SEMESTRE });
                         }
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: 'tgp', message: null });
                         }
                     },
                     error: function (ex) {
-                        if (callBackResult != undefined) {
+                        if (callBackResult !== undefined) {
                             callBackResult({ ressult: "notgp", message: "Ocurrio un error al obtener los datos." });
                         }
                     }
